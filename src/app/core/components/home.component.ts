@@ -16,6 +16,13 @@ import {ApiService} from '../services/api.service';
             <button (click)='onRenewToken()'>Renew Token</button>
             <button (click)='onLogout()'>Logout</button>
         </div>
+        <div>
+            For login you can use a demo user with the following credentials:
+            <ul>
+                <li>Username: <code>user1@example.com</code></li>
+                <li>Password: <code>greatPlaceToBe!</code></li>
+            </ul>
+        </div>
         <pre>{{currentUserJson}}</pre>
         <div>
             <h2>Messages</h2>
