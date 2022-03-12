@@ -27,7 +27,11 @@ export class AuthService {
     }
 
     public login(): Promise<void> {
-        return this.userManager.signinRedirect();
+        return this.userManager.signinRedirect({
+            extraQueryParams: {
+                "cancel_redirect_uri": environment.clientRoot
+            },
+        });
     }
 
     public renewToken(): Promise<User> {

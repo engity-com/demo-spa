@@ -1,22 +1,31 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <title>Demo Single Page Application using Engity IdP</title>
-  <base href="/">
+    <meta charset="utf-8">
+    <title>Home | Engity IdP Demo</title>
+    <base href="/">
 
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32x32.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16x16.png">
-  <link rel="manifest" href="/icons/site.webmanifest">
-  <link rel="mask-icon" href="/icons/safari-pinned-tab.svg" color="#144681">
-  <link rel="shortcut icon" href="/icons/favicon.ico">
-  <meta name="msapplication-TileColor" content="#ff0000">
-  <meta name="msapplication-config" content="/icons/browserconfig.xml">
-  <meta name="theme-color" content="#144681">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" href='/logo.svg'>
+    <style>
+        html {
+            /* Source: https://www.pexels.com/photo/brown-mountains-2559941/ */
+            background-image: url('/background/pexels-2559941-1900.jpg') !important;
+            background-image: -webkit-image-set(
+                    url("/background/pexels-2559941-1900.webp") 1x,
+                    url("/background/pexels-2559941-3840.webp") 2x
+            ) !important;
+            background-image: image-set(
+                    url("/background/pexels-2559941-1900.webp") 1x,
+                    url("/background/pexels-2559941-3840.webp") 2x
+            ) !important;
+        }
+    </style>
 </head>
 <body>
-  <app-root></app-root>
+    <main>
+        <app-root class="widget widget-main app"></app-root>
+    </main>
 </body>
 </html>

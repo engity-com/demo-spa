@@ -1,0 +1,250 @@
+*, :after, :before {
+  box-sizing: border-box;
+}
+
+html {
+  --bg: #ffffff;
+  --fg: #000000;
+  --passive: rgba(0, 0, 0, 0.2);
+  --passive-2: rgba(0, 0, 0, 0.05);
+  --passive-3: rgba(0, 0, 0, 0.03);
+  --active: #14628b;
+  --active-2: #1a92bd;
+  --problem: #be310c;
+  --problem-2: #e35b41;
+
+  font-family: sans-serif;
+  font-size: 14px;
+  background: var(--passive-2);
+}
+
+.initially-hidden {
+  visibility: hidden;
+  display: none;
+
+  &.visible {
+    visibility: visible;
+    display: initial;
+  }
+}
+
+.widget.widget-main {
+  --main-padding: 30px;
+  --main-width: 430px;
+
+  color: var(--fg);
+  width: var(--main-width);
+  margin: auto;
+  display: block;
+
+  &> * {
+    width: var(--main-width);
+    position: absolute;
+    top: 50%;
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
+
+    background: var(--bg);
+    box-shadow: 0 0 5em var(--passive);
+    border: 0.1em solid var(--passive-2);
+    border-radius: 1rem;
+
+    header {
+      padding: var(--main-padding) var(--main-padding) 15px var(--main-padding);
+      text-align: center;
+    }
+
+    div.forms {
+      padding: 0 var(--main-padding) var(--main-padding) var(--main-padding);
+    }
+  }
+}
+
+form {
+  border: none;
+  margin: 0;
+  padding: 0;
+}
+
+input, textarea, .input-like {
+  color: var(--fg);
+  padding: 0.7em 1em;
+  border-radius: 0.2rem;
+  border: 0.05em solid var(--passive);
+  outline: none;
+  width: 100%;
+  resize: none;
+  margin:0;
+
+  &::placeholder {
+    color: var(--passive);
+  }
+  &:-ms-input-placeholder {
+    color: var(--passive);
+  }
+  &::-ms-input-placeholder {
+    color: var(--passive);
+  }
+  &:focus {
+    outline: none;
+    color: var(--active);
+    border-color: var(--active);
+    box-shadow: 0 0 0.4em var(--active-2);
+  }
+
+  list-style: none;
+}
+
+.control {
+  margin-bottom: 1em;
+
+  &> label {
+    color: var(--fg);
+    display: block;
+  }
+
+  &> input {
+    margin-top: 0.25em;
+  }
+}
+
+form.procedure-external {
+  & > * {
+    margin-bottom: 0.8em;
+  }
+
+  & > *:last-child {
+    margin-bottom: 0;
+  }
+}
+
+ul.problems {
+  margin: 0.2em 0 0 0;
+  padding: 0;
+  &>li {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    color: var(--problem);
+  }
+}
+
+.has-problems label, label.has-problems,
+.has-problems input, input.has-problems,
+.has-problems li, li.has-problems {
+  color: var(--problem);
+}
+
+.has-problems input, input.has-problems {
+  outline: none;
+  border-color: var(--problem);
+
+  &:focus {
+    box-shadow: 0 0 0.4em var(--problem-2);
+  }
+}
+
+
+div.horizontal-divider {
+  color: var(--passive);
+  margin: 1em 0;
+  text-align: center;
+  display: flex;
+  flex-wrap: nowrap;
+  -webkit-box-align: center;
+  align-items: center;
+  gap: 1em;
+  font-size: 0.8em;
+  font-weight: bold;
+
+  &::before,
+  &::after {
+    content: "";
+    display: inline-block;
+    border-bottom: 0.05em solid var(--passive);
+    -webkit-box-flex: 1;
+    flex-grow: 1;
+  }
+
+}
+
+div.button-bar {
+  display: flex;
+  gap: 0.5em;
+}
+
+div.button-bar > * {
+  flex: 1;
+}
+
+button {
+  border: 0.05em solid var(--passive);
+  border-radius: 0.2rem;
+  background: var(--passive-2);
+  color: var(--fg);
+  padding: 0.7em 1em;
+  margin: 0;
+  cursor: pointer;
+
+  &[disabled] {
+    background: var(--passive-3);
+    color: var(--passive);
+    cursor: not-allowed;
+  }
+
+  &.hidden {
+    display: none;
+  }
+
+  &:active {
+    background: var(--passive-3);
+  }
+
+  &.primary {
+    border-color: transparent;
+    background: var(--active);
+    color: var(--bg);
+
+    &:active {
+      background: var(--active-2);
+    }
+
+    &[disabled],
+    &[disabled]:active {
+      background: var(--active-2);
+      color: var(--passive);
+    }
+  }
+
+  &.secondary {
+    border-color: var(--passive);
+    background: var(--bg);
+    color: var(--fg);
+  }
+
+  &:focus {
+    border-color: var(--active);
+    box-shadow: 0 0 0.4em var(--active-2);
+    outline: none;
+  }
+
+  &.single {
+    width: 100%;
+    display: flex;
+    padding: 0.3em;
+    align-items: center;
+
+    &:active {
+      background: var(--passive-3);
+    }
+
+    &> img {
+      width: 2em;
+      margin: 0 1em 0 0;
+    }
+  }
+}
+
+simple-modal-holder {
+
+}
