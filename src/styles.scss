@@ -2,20 +2,20 @@
   box-sizing: border-box;
 }
 
-html {
-  --bg: #ffffff;
-  --fg: #000000;
-  --passive: rgba(0, 0, 0, 0.2);
-  --passive-2: rgba(0, 0, 0, 0.05);
-  --passive-3: rgba(0, 0, 0, 0.03);
-  --active: #14628b;
-  --active-2: #1a92bd;
-  --problem: #be310c;
-  --problem-2: #e35b41;
+$bg: #ffffff;
+$fg: #000000;
+$passive: rgba(0, 0, 0, 0.2);
+$passive-2: rgba(0, 0, 0, 0.05);
+$passive-3: rgba(0, 0, 0, 0.03);
+$active: #14628b;
+$active-2: #1a92bd;
+$problem: #be310c;
+$problem-2: #e35b41;
 
+html {
   font-family: sans-serif;
   font-size: 14px;
-  background: var(--passive-2);
+  background: $passive-2;
 }
 
 .initially-hidden {
@@ -28,34 +28,55 @@ html {
   }
 }
 
-.widget.widget-main {
-  --main-padding: 30px;
-  --main-width: 430px;
+body, html {
+  margin: 0;
+  padding: 0;
+}
 
-  color: var(--fg);
-  width: var(--main-width);
+.widget.widget-main {
+  $main-padding: 30px;
+  $main-width: 430px;
+  $mobile-threshold-width: $main-width * 1.5;
+
+  color: $fg;
+  width: $main-width;
   margin: auto;
   display: block;
 
+  @media only screen and (max-width: $mobile-threshold-width) {
+    & {
+      width: 100%;
+    }
+  }
+
   &> * {
-    width: var(--main-width);
+    width: $main-width;
     position: absolute;
     top: 50%;
     -ms-transform: translateY(-50%);
     transform: translateY(-50%);
 
-    background: var(--bg);
-    box-shadow: 0 0 5em var(--passive);
-    border: 0.1em solid var(--passive-2);
+    background: $bg;
+    box-shadow: 0 0 5em $passive;
+    border: 0.1em solid $passive-2;
     border-radius: 1rem;
 
+    @media only screen and (max-width: $mobile-threshold-width) {
+      & {
+        width: 100%;
+        box-shadow: none;
+        border-radius: 0;
+        border: 0.1em 0 0.1em 0 solid $passive-2;
+      }
+    }
+
     header {
-      padding: var(--main-padding) var(--main-padding) 15px var(--main-padding);
+      padding: $main-padding $main-padding 15px $main-padding;
       text-align: center;
     }
 
     div.forms {
-      padding: 0 var(--main-padding) var(--main-padding) var(--main-padding);
+      padding: 0 $main-padding $main-padding $main-padding;
     }
   }
 }
@@ -67,29 +88,29 @@ form {
 }
 
 input, textarea, .input-like {
-  color: var(--fg);
+  color: $fg;
   padding: 0.7em 1em;
   border-radius: 0.2rem;
-  border: 0.05em solid var(--passive);
+  border: 0.05em solid $passive;
   outline: none;
   width: 100%;
   resize: none;
   margin:0;
 
   &::placeholder {
-    color: var(--passive);
+    color: $passive;
   }
   &:-ms-input-placeholder {
-    color: var(--passive);
+    color: $passive;
   }
   &::-ms-input-placeholder {
-    color: var(--passive);
+    color: $passive;
   }
   &:focus {
     outline: none;
-    color: var(--active);
-    border-color: var(--active);
-    box-shadow: 0 0 0.4em var(--active-2);
+    color: $active;
+    border-color: $active;
+    box-shadow: 0 0 0.4em $active-2;
   }
 
   list-style: none;
@@ -99,7 +120,7 @@ input, textarea, .input-like {
   margin-bottom: 1em;
 
   &> label {
-    color: var(--fg);
+    color: $fg;
     display: block;
   }
 
@@ -125,28 +146,28 @@ ul.problems {
     margin: 0;
     padding: 0;
     list-style: none;
-    color: var(--problem);
+    color: $problem;
   }
 }
 
 .has-problems label, label.has-problems,
 .has-problems input, input.has-problems,
 .has-problems li, li.has-problems {
-  color: var(--problem);
+  color: $problem;
 }
 
 .has-problems input, input.has-problems {
   outline: none;
-  border-color: var(--problem);
+  border-color: $problem;
 
   &:focus {
-    box-shadow: 0 0 0.4em var(--problem-2);
+    box-shadow: 0 0 0.4em $problem-2;
   }
 }
 
 
 div.horizontal-divider {
-  color: var(--passive);
+  color: $passive;
   margin: 1em 0;
   text-align: center;
   display: flex;
@@ -161,7 +182,7 @@ div.horizontal-divider {
   &::after {
     content: "";
     display: inline-block;
-    border-bottom: 0.05em solid var(--passive);
+    border-bottom: 0.05em solid $passive;
     -webkit-box-flex: 1;
     flex-grow: 1;
   }
@@ -178,17 +199,17 @@ div.button-bar > * {
 }
 
 button {
-  border: 0.05em solid var(--passive);
+  border: 0.05em solid $passive;
   border-radius: 0.2rem;
-  background: var(--passive-2);
-  color: var(--fg);
+  background: $passive-2;
+  color: $fg;
   padding: 0.7em 1em;
   margin: 0;
   cursor: pointer;
 
   &[disabled] {
-    background: var(--passive-3);
-    color: var(--passive);
+    background: $passive-3;
+    color: $passive;
     cursor: not-allowed;
   }
 
@@ -197,34 +218,34 @@ button {
   }
 
   &:active {
-    background: var(--passive-3);
+    background: $passive-3;
   }
 
   &.primary {
     border-color: transparent;
-    background: var(--active);
-    color: var(--bg);
+    background: $active;
+    color: $bg;
 
     &:active {
-      background: var(--active-2);
+      background: $active-2;
     }
 
     &[disabled],
     &[disabled]:active {
-      background: var(--active-2);
-      color: var(--passive);
+      background: $active-2;
+      color: $passive;
     }
   }
 
   &.secondary {
-    border-color: var(--passive);
-    background: var(--bg);
-    color: var(--fg);
+    border-color: $passive;
+    background: $bg;
+    color: $fg;
   }
 
   &:focus {
-    border-color: var(--active);
-    box-shadow: 0 0 0.4em var(--active-2);
+    border-color: $active;
+    box-shadow: 0 0 0.4em $active-2;
     outline: none;
   }
 
@@ -235,7 +256,7 @@ button {
     align-items: center;
 
     &:active {
-      background: var(--passive-3);
+      background: $passive-3;
     }
 
     &> img {
@@ -243,8 +264,4 @@ button {
       margin: 0 1em 0 0;
     }
   }
-}
-
-simple-modal-holder {
-
 }

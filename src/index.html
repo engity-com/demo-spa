@@ -10,6 +10,10 @@
     <link rel="shortcut icon" href='/logo.svg'>
     <style>
         html {
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            background-repeat: no-repeat;
             /* Source: https://www.pexels.com/photo/brown-mountains-2559941/ */
             background-image: url('/background/pexels-2559941-1900.jpg') !important;
             background-image: -webkit-image-set(
@@ -22,10 +26,10 @@
             ) !important;
         }
         html.logged-in {
+            background-size: initial;
             background-position: top left;
             background-repeat: no-repeat;
-            background-color: #444444;
-            background-blend-mode: overlay;
+            background-color: #1F1F1F;
             /* http://material-angular-dashboard.creativeit.io/#/app/dashboard */
             background-image: url('/background/loggedin_1x.png') !important;
             background-image: -webkit-image-set(
