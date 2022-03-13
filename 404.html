@@ -8,6 +8,10 @@
     <link rel="shortcut icon" href="/logo.svg">
     <style>
         html {
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            background-repeat: no-repeat;
             /* Source: https://www.pexels.com/photo/brown-mountains-2559941/ */
             background-image: url('/background/pexels-2559941-1900.jpg') !important;
             background-image: -webkit-image-set(
@@ -20,10 +24,10 @@
             ) !important;
         }
         html.logged-in {
+            background-size: initial;
             background-position: top left;
             background-repeat: no-repeat;
-            background-color: #444444;
-            background-blend-mode: overlay;
+            background-color: #1F1F1F;
             /* http://material-angular-dashboard.creativeit.io/#/app/dashboard */
             background-image: url('/background/loggedin_1x.png') !important;
             background-image: -webkit-image-set(
@@ -36,7 +40,7 @@
             ) !important;
         }
     </style>
-<style>*,:after,:before{box-sizing:border-box}html{--bg:#ffffff;--fg:#000000;--passive:rgba(0, 0, 0, .2);--passive-2:rgba(0, 0, 0, .05);--passive-3:rgba(0, 0, 0, .03);--active:#14628b;--active-2:#1a92bd;--problem:#be310c;--problem-2:#e35b41;font-family:sans-serif;font-size:14px;background:var(--passive-2)}.widget.widget-main{--main-padding:30px;--main-width:430px;color:var(--fg);width:var(--main-width);margin:auto;display:block}</style><link rel="stylesheet" href="styles.7a744bc00e306bb9.css" media="print" onload="this.media='all'"><noscript><link rel="stylesheet" href="styles.7a744bc00e306bb9.css"></noscript></head>
+<style>*,:after,:before{box-sizing:border-box}html{font-family:sans-serif;font-size:14px;background:rgba(0,0,0,.05)}body,html{margin:0;padding:0}.widget.widget-main{color:#000;width:430px;margin:auto;display:block}@media only screen and (max-width: 645px){.widget.widget-main{width:100%}}</style><link rel="stylesheet" href="styles.ea8f7dacda336fc0.css" media="print" onload="this.media='all'"><noscript><link rel="stylesheet" href="styles.ea8f7dacda336fc0.css"></noscript></head>
 <body>
     <main>
         <app-root class="widget widget-main app"></app-root>
