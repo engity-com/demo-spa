@@ -1,4 +1,4 @@
-import {Component, HostBinding, OnInit, ViewChild} from "@angular/core";
+import {AfterViewInit, Component, ElementRef, HostBinding, OnChanges, OnInit, SimpleChanges, ViewChild} from "@angular/core";
 import {SimpleModalService} from 'ngx-simple-modal';
 import {User} from 'oidc-client-ts';
 import {AuthService} from "../services/auth.service";
@@ -29,24 +29,26 @@ import {ConsoleComponent} from './console.component';
                 <button (click)='onLogout()' *ngIf="currentUser" class="primary">Logout</button>
             </div>
 
-            <div class="horizontal-divider">
-                <span>Information</span>
-            </div>
+            <ng-container *ngIf="!currentUser">
+                <div class="horizontal-divider">
+                    <span>Information</span>
+                </div>
 
-            <p *ngIf="!currentUser">
-                For login you can use a demo user with the following credentials:<br>
-                <strong>Username</strong>: <code>user1@example.com</code><br>
-                <strong>Password</strong>: <code>greatPlaceToBe!</code>
-            </p>
-
-            <p>
-                Please find the full source code and documentation of this demo
-                <a href="https://github.com/engity-com/demo-spa" rel="noopener" target="_blank">here</a>.
-            </p>
+                <p>
+                    For login you can use a demo user with the following credentials:<br>
+                    <strong>Username</strong>: <code>user1@example.com</code><br>
+                    <strong>Password</strong>: <code>greatPlaceToBe!</code>
+                </p>
+            </ng-container>
 
             <div class="horizontal-divider">
                 <span>For developers</span>
             </div>
+
+            <p *ngIf="developerMode">
+                Please find the full source code and documentation of this demo
+                <a href="https://github.com/engity-com/demo-spa" rel="noopener" target="_blank">here</a>.
+            </p>
 
             <div class="button-bar">
                 <button (click)='onToggleDeveloperMode()'>{{developerMode ? "Simple View" : "Enable Advanced View" }}</button>
@@ -61,7 +63,9 @@ export class HomeComponent implements OnInit {
     constructor(
         public authService: AuthService,
         public apiService: ApiService,
-        private simpleModalService: SimpleModalService) {
+        private simpleModalService: SimpleModalService,
+        private elementRef: ElementRef,
+    ) {
     }
 
     messages: Message[] = [];
@@ -77,7 +81,7 @@ export class HomeComponent implements OnInit {
     private triggerGetUser(): void {
         this.authService.getUser().then(user => {
             this.currentUser = user;
-
+            this.ensureHtmlElementState(user);
             if (user) {
                 this.messages.push({ content: `Logged In as: ${user.profile['nickname']} (${user.profile['email']})` });
             } else {
@@ -88,6 +92,17 @@ export class HomeComponent implements OnInit {
 
     ngOnInit(): void {
         this.triggerGetUser();
+    }
+
+    private ensureHtmlElementState(user: User): void {
+        const html = this.elementRef.nativeElement.ownerDocument.getElementsByTagName("html")[0];
+        if (html) {
+            if (user) {
+                html.classList.add("logged-in");
+            } else {
+                html.classList.remove("logged-in");
+            }
+        }
     }
 
     clearMessages() {
@@ -127,6 +142,7 @@ export class HomeComponent implements OnInit {
         this.authService.renewToken()
             .then(user => {
                 this.currentUser = user;
+                this.ensureHtmlElementState(user);
                 this.messages.push({ content: 'Silent Renew Success' });
             })
             .catch(err => this.addError(err));
