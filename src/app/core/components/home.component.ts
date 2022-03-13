@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild} from "@angular/core";
+import {Component, HostBinding, OnInit, ViewChild} from "@angular/core";
 import {SimpleModalService} from 'ngx-simple-modal';
 import {User} from 'oidc-client-ts';
 import {AuthService} from "../services/auth.service";
@@ -16,7 +16,7 @@ import {ConsoleComponent} from './console.component';
 
         </header>
         <div class="forms">
-            <div class="control">
+            <div class="control" *ngIf="hasAtLeastOneImportantMessage || developerMode">
                 <label for="status">Status</label>
                 <ul class="statuses input-like">
                     <li *ngIf="messages.length == 0">...</li>
@@ -25,16 +25,15 @@ import {ConsoleComponent} from './console.component';
             </div>
 
             <div class="button-bar">
-                <button (click)='onLogin()' [disabled]="currentUser" [class]="!currentUser ? 'primary' : ''">Login</button>
-                <button (click)='onRenewToken()' [disabled]="!currentUser">Renew Token</button>
-                <button (click)='onLogout()' [disabled]="!currentUser">Logout</button>
+                <button (click)='onLogin()' *ngIf="!currentUser" class="primary">Login</button>
+                <button (click)='onLogout()' *ngIf="currentUser" class="primary">Logout</button>
             </div>
 
             <div class="horizontal-divider">
                 <span>Information</span>
             </div>
 
-            <p>
+            <p *ngIf="!currentUser">
                 For login you can use a demo user with the following credentials:<br>
                 <strong>Username</strong>: <code>user1@example.com</code><br>
                 <strong>Password</strong>: <code>greatPlaceToBe!</code>
@@ -45,8 +44,14 @@ import {ConsoleComponent} from './console.component';
                 <a href="https://github.com/engity-com/demo-spa" rel="noopener" target="_blank">here</a>.
             </p>
 
+            <div class="horizontal-divider">
+                <span>For developers</span>
+            </div>
+
             <div class="button-bar">
-                <button (click)='onShowConsole()' [disabled]="!currentUser && !consoleVisible">Show token JSON (for developers)</button>
+                <button (click)='onToggleDeveloperMode()'>{{developerMode ? "Simple View" : "Enable Advanced View" }}</button>
+                <button (click)='onShowConsole()' *ngIf="developerMode" [disabled]="!currentUser || consoleVisible">Show Token</button>
+                <button (click)='onRenewToken()' *ngIf="developerMode" [disabled]="!currentUser">Renew Token</button>
             </div>
         </div>
     `,
@@ -61,6 +66,8 @@ export class HomeComponent implements OnInit {
 
     messages: Message[] = [];
     currentUser: User;
+    @HostBinding('attr.data-developer-mode')
+    developerMode: boolean = false;
     consoleVisible: boolean = false;
 
     get currentUserJson(): string {
@@ -72,9 +79,9 @@ export class HomeComponent implements OnInit {
             this.currentUser = user;
 
             if (user) {
-                this.addMessage(`Logged In as: ${user.profile['nickname']} (${user.profile['email']})`);
+                this.messages.push({ content: `Logged In as: ${user.profile['nickname']} (${user.profile['email']})` });
             } else {
-                this.addMessage('Not Logged In');
+                this.messages.push({ important: false, content: 'Not Logged In' });
             }
         }).catch(err => this.addError(err));
     }
@@ -89,8 +96,10 @@ export class HomeComponent implements OnInit {
         }
     }
 
-    addMessage(msg: string) {
-        this.messages.push({ content: msg });
+    get hasAtLeastOneImportantMessage(): boolean {
+        return this.messages
+            .filter(candidate => candidate.important == null || candidate.important === true)
+            .length > 0;
     }
 
     addError(msg: string | any) {
@@ -108,7 +117,7 @@ export class HomeComponent implements OnInit {
     public onCallAPI() {
         this.clearMessages();
         this.apiService.callApi().then(result => {
-            this.addMessage('API Result: ' + JSON.stringify(result));
+            this.messages.push({ content: `API Result: ${JSON.stringify(result)}` });
         }, err => this.addError(err));
     }
 
@@ -118,7 +127,7 @@ export class HomeComponent implements OnInit {
         this.authService.renewToken()
             .then(user => {
                 this.currentUser = user;
-                this.addMessage('Silent Renew Success');
+                this.messages.push({ content: 'Silent Renew Success' });
             })
             .catch(err => this.addError(err));
     }
@@ -138,6 +147,10 @@ export class HomeComponent implements OnInit {
         });
     }
 
+    public onToggleDeveloperMode() {
+        this.developerMode = !this.developerMode;
+    }
+
     public refresh(): void {
         console.info('Refreshing...');
         this.triggerGetUser();
@@ -145,6 +158,7 @@ export class HomeComponent implements OnInit {
 }
 
 interface Message {
+    important?: boolean;
     content: string;
     isProblem?: boolean;
 }
