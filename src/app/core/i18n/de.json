@@ -1,0 +1,77 @@
+{
+    "description": "Diese Seite demonstriert die Stärke einer Single Page Application zusammen mit unserem Engity IdP.",
+
+    "signup": "Registrieren",
+    "login": "Einloggen",
+    "logout": "Ausloggen",
+    "close": "Schließen",
+
+    "status": "Status",
+    "backHome": "Zurück zur Homepage.",
+    "triggerContactVerificationAgain": "hier klicken um eine neue E-Mail zu senden.",
+
+    "contactVerified": {
+        "title": "Kontakt überprüft",
+        "onContactUnknown": "Kontakt wurde erfolgreich überprüft.",
+        "onContact": "Der Kontakt {{contact}} wurde erfolgreich überprüft.",
+        "onEmailAddress": "Die E-Mail-Adresse {{contact}} wurde erfolgreich überprüft."
+    },
+
+    "contactVerifiedFailed": {
+        "title": "Kontakt Überprüfung fehlgeschlagen",
+        "onContactUnknown": "Der Link zur Überprüfung des Kontakts ist abgelaufen. Bitte erneut versuchen.",
+        "onContact": "Der Link zur Überprüfung des Kontakts {{contact}} ist abgelaufen. Bitte erneut versuchen",
+        "onEmailAddress": "Der Link zur Überprüfung der E-Mail-Adresse {{contact}} ist abgelaufen. Bitte erneut versuchen"
+    },
+
+    "finalizeLogin": {
+        "title": "Schließe Einloggen ab",
+        "message": "Schließe Einloggen ab...",
+        "failed": "Kann Einloggen nicht abschließen. Siehe Entwicklerkonsole für weitere Informationen."
+    },
+
+    "pageNotFound": {
+        "title": "Seite nicht gefunden",
+        "message": "Diese Seite wurde nicht gefunden"
+    },
+
+    "information": {
+        "title": "Information",
+        "description": "Sie können via Registrieren einen neuen Nutzer anlegen oder unsern Demo-Benutzer, mit den folgenden Details, verwenden"
+    },
+
+    "forDevelopers": {
+        "title": "Für Entwickler",
+        "description": "Alle Informationen dieser Demo inkl. Dokumentation und Quelltext befindet sich <a href=\"https://github.com/engity-com/demo-spa\" rel=\"noopener\" target=\"_blank\">hier</a>."
+    },
+
+    "username": "Benutzername",
+    "password": "Passwort",
+
+    "view": {
+        "simple": "Einfach",
+        "enableAdvanced": "Zur erweiterten Ansicht"
+    },
+
+    "debug": {
+        "showToken": "Token",
+        "renewToken": "Renew Token"
+    },
+
+    "messages": {
+        "apiResponse": "API-Antwort: {{response}}",
+        "silentRenewSuccess": "Leise Erneuerung war erfolgreich.",
+        "loggedIn": "Eingeloggt als {{user}} ({{email}}).",
+        "notLoggedIn": "Aktuell nicht eingeloggt."
+    },
+
+    "errors": {
+        "cannotGetUser": "Kann den aktuellen Nutzer nicht ermitteln. Siehe Entwicklerkonsole für weitere Informationen.",
+        "cannotLogin": "Einloggen hat nicht funktioniert. Siehe Entwicklerkonsole für weitere Informationen.",
+        "cannotSignup": "Registrieren hat nicht funktioniert. Siehe Entwicklerkonsole für weitere Informationen.",
+        "cannotRenewToken": "Token Erneuerung hat nicht funktioniert. Siehe Entwicklerkonsole für weitere Informationen.",
+        "cannotLogout": "Ausloggen hat nicht funktioniert. Siehe Entwicklerkonsole für weitere Informationen.",
+        "notVerified": "Kontakt {{contact.value}} muss noch bestätigt werden.",
+        "emailAddressNotVerified": "E-Mail-Adresse {{contact.value}} muss noch bestätigt werden. Bitte Posteingang prüfen oder"
+    }
+}

@@ -1,180 +1,253 @@
-import {AfterViewInit, Component, ElementRef, HostBinding, OnChanges, OnInit, SimpleChanges, ViewChild} from "@angular/core";
-import {SimpleModalService} from 'ngx-simple-modal';
-import {User} from 'oidc-client-ts';
-import {AuthService} from "../services/auth.service";
-import {ApiService} from '../services/api.service';
-import {ConsoleComponent} from './console.component';
+import { Component, ElementRef, HostBinding, OnInit } from '@angular/core';
+import { Title } from '@angular/platform-browser';
+import { TranslateService } from '@ngx-translate/core';
+import { SimpleModalService } from 'ngx-simple-modal';
+import { User } from 'oidc-client-ts';
+import { firstValueFrom, Observable } from 'rxjs';
+import { Contact, ContactState } from '../model/model';
+import { ApiService } from '../services/api.service';
+import { AuthService } from '../services/auth.service';
+import { SettingsService } from '../services/settings.service';
+import { BasePageComponent } from './base-page.component';
+import { ConsoleComponent } from './console.component';
 
 @Component({
-    selector: "app-home",
     template: `
-        <header>
-            <img src='/logo.svg' alt="Logo" height="96" />
-            <h1>Engity IdP Demo</h1>
-            <p>This pages demonstrates the power of a <a href="https://en.wikipedia.org/wiki/Single-page_application" rel="noopener" target="_blank">Single Page Application</a>
-               together with our <a href="https://engity.com" target="_blank">Engity IdP.</a></p>
-
-        </header>
+        <app-header></app-header>
         <div class="forms">
-            <div class="control" *ngIf="hasAtLeastOneImportantMessage || developerMode">
-                <label for="status">Status</label>
+            <ng-container *ngIf="user">
+                <div
+                    class="control input-like"
+                    [translate]="'messages.loggedIn'"
+                    [translateParams]="{
+                        user: user?.profile?.nickname,
+                        email: user?.profile?.email
+                    }"
+                ></div>
+
+                <div
+                    class="control"
+                    *ngIf="toUnverifiedContacts(user) as contacts"
+                >
+                    <ul class="statuses input-like">
+                        <li
+                            class="has-problems"
+                            *ngFor="let contact of contacts"
+                        >
+                            <span
+                                [translate]="
+                                    contact.type == 'emailAddress'
+                                        ? 'errors.emailAddressNotVerified'
+                                        : 'errors.notVerified'
+                                "
+                                [translateParams]="{ contact: contact }"
+                            ></span
+                            >&nbsp;<a
+                                (click)="onTriggerVerifyContact(contact)"
+                                href="#"
+                                translate="triggerContactVerificationAgain"
+                                [translateParams]="{ contact: contact }"
+                            ></a>
+                        </li>
+                    </ul>
+                </div>
+            </ng-container>
+
+            <div class="control" *ngIf="problem">
+                <label for="status" translate="status"></label>
                 <ul class="statuses input-like">
-                    <li *ngIf="messages.length == 0">...</li>
-                    <li *ngFor='let message of messages' class="{{message.isProblem ? 'has-problems' : ''}}">{{message.content}}</li>
+                    <li
+                        class="has-problems"
+                        [translate]="problem.key"
+                        [translateParams]="problem.params"
+                    ></li>
                 </ul>
             </div>
 
             <div class="button-bar">
-                <button (click)='onLogin()' *ngIf="!currentUser" class="primary">Login</button>
-                <button (click)='onLogout()' *ngIf="currentUser" class="primary">Logout</button>
+                <button
+                    (click)="onSignup()"
+                    *ngIf="!user"
+                    class="primary"
+                    translate="signup"
+                ></button>
+                <button
+                    (click)="onLogin()"
+                    *ngIf="!user"
+                    translate="login"
+                ></button>
+                <button
+                    (click)="onLogout()"
+                    *ngIf="user"
+                    class="primary"
+                    translate="logout"
+                ></button>
             </div>
 
-            <ng-container *ngIf="!currentUser">
+            <ng-container *ngIf="!user">
                 <div class="horizontal-divider">
-                    <span>Information</span>
+                    <span translate="information.title"></span>
                 </div>
 
                 <p>
-                    For login you can use a demo user with the following credentials:<br>
-                    <strong>Username</strong>: <code>user1@example.com</code><br>
-                    <strong>Password</strong>: <code>greatPlaceToBe!</code>
+                    {{ 'information.description' | translate }}:<br />
+                    <strong translate="username"></strong>:
+                    <code>user1@example.com</code><br />
+                    <strong translate="password"></strong>:
+                    <code>greatPlaceToBe!</code>
                 </p>
             </ng-container>
 
             <div class="horizontal-divider">
-                <span>For developers</span>
+                <span translate="forDevelopers.title"></span>
             </div>
 
-            <p *ngIf="developerMode">
-                Please find the full source code and documentation of this demo
-                <a href="https://github.com/engity-com/demo-spa" rel="noopener" target="_blank">here</a>.
-            </p>
+            <p
+                *ngIf="developerMode"
+                [innerHTML]="'forDevelopers.description' | translate"
+            ></p>
 
             <div class="button-bar">
-                <button (click)='onToggleDeveloperMode()'>{{developerMode ? "Simple View" : "Enable Advanced View" }}</button>
-                <button (click)='onShowConsole()' *ngIf="developerMode" [disabled]="!currentUser || consoleVisible">Show Token</button>
-                <button (click)='onRenewToken()' *ngIf="developerMode" [disabled]="!currentUser">Renew Token</button>
+                <button
+                    (click)="onToggleDeveloperMode()"
+                    [translate]="
+                        developerMode ? 'view.simple' : 'view.enableAdvanced'
+                    "
+                ></button>
+                <button
+                    (click)="onShowConsole()"
+                    *ngIf="developerMode"
+                    [disabled]="!user || consoleVisible"
+                    translate="debug.showToken"
+                ></button>
+                <button
+                    (click)="onRenewToken()"
+                    *ngIf="developerMode"
+                    [disabled]="!user"
+                    translate="debug.renewToken"
+                ></button>
             </div>
         </div>
     `,
-    styles: [],
 })
-export class HomeComponent implements OnInit {
-    constructor(
-        public authService: AuthService,
-        public apiService: ApiService,
-        private simpleModalService: SimpleModalService,
-        private elementRef: ElementRef,
-    ) {
-    }
-
-    messages: Message[] = [];
-    currentUser: User;
+export class HomeComponent extends BasePageComponent implements OnInit {
+    user: User;
+    problem: Message;
     @HostBinding('attr.data-developer-mode')
     developerMode: boolean = false;
     consoleVisible: boolean = false;
 
-    get currentUserJson(): string {
-        return JSON.stringify(this.currentUser, null, 2);
-    }
+    constructor(
+        title: Title,
+        private readonly authService: AuthService,
+        private readonly apiService: ApiService,
+        private readonly settingsService: SettingsService,
+        private readonly simpleModalService: SimpleModalService,
+        private readonly elementRef: ElementRef,
+        public readonly translate: TranslateService
+    ) {
+        super(title, translate);
+        this.developerMode =
+            this.settingsService.settings['developerMode'] === true;
 
-    private triggerGetUser(): void {
-        this.authService.getUser().then(user => {
-            this.currentUser = user;
-            this.ensureHtmlElementState(user);
-            if (user) {
-                this.messages.push({ content: `Logged In as: ${user.profile['nickname']} (${user.profile['email']})` });
-            } else {
-                this.messages.push({ important: false, content: 'Not Logged In' });
+        this.subscribe(this.authService.user, (user) => {
+            this.user = user;
+            const element = this.elementRef.nativeElement;
+            const document = element.ownerDocument;
+            const html = document.getElementsByTagName('html')[0];
+            if (html) {
+                if (user) {
+                    html.classList.add('logged-in');
+                } else {
+                    html.classList.remove('logged-in');
+                }
             }
-        }).catch(err => this.addError(err));
-    }
-
-    ngOnInit(): void {
-        this.triggerGetUser();
-    }
-
-    private ensureHtmlElementState(user: User): void {
-        const html = this.elementRef.nativeElement.ownerDocument.getElementsByTagName("html")[0];
-        if (html) {
-            if (user) {
-                html.classList.add("logged-in");
-            } else {
-                html.classList.remove("logged-in");
-            }
-        }
-    }
-
-    clearMessages() {
-        while (this.messages.length) {
-            this.messages.pop();
-        }
-    }
-
-    get hasAtLeastOneImportantMessage(): boolean {
-        return this.messages
-            .filter(candidate => candidate.important == null || candidate.important === true)
-            .length > 0;
-    }
-
-    addError(msg: string | any) {
-        this.messages.push({ content: msg, isProblem: true });
-    }
-
-    public onLogin() {
-        console.info('Logging in...');
-        this.clearMessages();
-        this.authService.login().catch(err => {
-            this.addError(err);
         });
     }
 
-    public onCallAPI() {
-        this.clearMessages();
-        this.apiService.callApi().then(result => {
-            this.messages.push({ content: `API Result: ${JSON.stringify(result)}` });
-        }, err => this.addError(err));
+    public ngOnInit() {
+        super.ngOnInit();
+        this.authService.updateState();
+    }
+
+    protected get titleKey(): string {
+        return 'home';
+    }
+
+    public toUnverifiedContacts(user: User): Contact[] {
+        if (!user) {
+            return null;
+        }
+        const contacts = (user.profile?.contacts as Contact[]).filter(
+            (v) => v.state !== ContactState.verified
+        );
+        return contacts.length > 0 ? contacts : null;
+    }
+
+    private clearProblem() {
+        this.problem = null;
+    }
+
+    private addProblem(key: string, error?: any, params?: any) {
+        if (error) {
+            console.error(error);
+        }
+        this.problem = { key: key, params: params };
+    }
+
+    public onSignup() {
+        this.clearProblem();
+        this.authService.signup().catch((err) => {
+            this.addProblem('errors.cannotSignup', err);
+        });
+    }
+
+    public onLogin() {
+        this.clearProblem();
+        this.authService.login().catch((err) => {
+            this.addProblem('errors.cannotLogin', err);
+        });
     }
 
     public onRenewToken() {
-        console.info('Renewing...');
-        this.clearMessages();
-        this.authService.renewToken()
-            .then(user => {
-                this.currentUser = user;
-                this.ensureHtmlElementState(user);
-                this.messages.push({ content: 'Silent Renew Success' });
-            })
-            .catch(err => this.addError(err));
+        this.clearProblem();
+        this.authService
+            .renewToken()
+            .then(() => {})
+            .catch((err) => this.addProblem('errors.cannotRenewToken', err));
     }
 
     public onLogout() {
-        console.info('Logging out...');
-        this.clearMessages();
-        this.authService.logout().catch(err => this.addError(err));
+        this.clearProblem();
+        this.authService
+            .logout()
+            .catch((err) => this.addProblem('errors.cannotLogout', err));
     }
 
     public onShowConsole() {
         this.consoleVisible = true;
-        this.simpleModalService.addModal(ConsoleComponent, {
-            content: this.currentUserJson,
-        }).subscribe(() => {
-            this.consoleVisible = false;
-        });
+        this.simpleModalService
+            .addModal(ConsoleComponent, {
+                content: JSON.stringify(this.user, null, 2),
+            })
+            .subscribe(() => {
+                this.consoleVisible = false;
+            });
     }
 
     public onToggleDeveloperMode() {
         this.developerMode = !this.developerMode;
+        this.settingsService.setSetting('developerMode', this.developerMode);
     }
 
-    public refresh(): void {
-        console.info('Refreshing...');
-        this.triggerGetUser();
+    public onTriggerVerifyContact(contact: Contact) {
+        // noinspection JSIgnoredPromiseFromCall
+        this.apiService.triggerVerifyContact(contact);
     }
 }
 
 interface Message {
     important?: boolean;
-    content: string;
-    isProblem?: boolean;
+    key: string;
+    params?: any;
 }

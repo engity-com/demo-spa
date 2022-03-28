@@ -2,12 +2,9 @@ module.exports = {
     plugins: {
         'postcss-preset-env': {
             autoprefixer: {
-                grid: 'autoplace'
+                grid: 'autoplace',
             },
-            browsers: [
-                'IE >= 11',
-                '> 0.1%'
-            ]
-        }
-    }
+            browsers: ['IE >= 11', '> 0.1%'],
+        },
+    },
 };

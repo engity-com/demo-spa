@@ -1,0 +1,79 @@
+{
+    "title": "Engity IdP Demo",
+    "description": "This pages demonstrates the power of a Single Page Application together with our Engity IdP.",
+    "home": "Home",
+
+    "signup": "Signup",
+    "login": "Login",
+    "logout": "Logout",
+    "close": "Close",
+
+    "status": "Status",
+    "backHome": "Back to homepage.",
+    "triggerContactVerificationAgain": "click here to trigger a new email.",
+
+    "contactVerified": {
+        "title": "Contact verified",
+        "onContactUnknown": "Your contact was successful verified.",
+        "onContact": "Your contact {{contact}} was successful verified.",
+        "onEmailAddress": "Your email address {{contact}} was successful verified."
+    },
+
+    "contactVerifiedFailed": {
+        "title": "Contact verification failed",
+        "onContactUnknown": "Your contact verification link is expired. Please try again.",
+        "onContact": "Your link to verify your contact {{contact}} is expired. Please try again.",
+        "onEmailAddress": "Your link to verify your email address {{contact}} is expired. Please try again."
+    },
+
+    "finalizeLogin": {
+        "title": "Finalize login",
+        "message": "Finalize login. Please wait...",
+        "failed": "Cannot finalize login. See console for details."
+    },
+
+    "pageNotFound": {
+        "title": "Page not found",
+        "message": "Page not found"
+    },
+
+    "information": {
+        "title": "Information",
+        "description": "You can create a new user via Signup or use our demo user with the following credentials"
+    },
+
+    "forDevelopers": {
+        "title": "For developers",
+        "description": "Please find the full source code and documentation of this demo <a href=\"https://github.com/engity-com/demo-spa\" rel=\"noopener\" target=\"_blank\">here</a>."
+    },
+
+    "username": "Username",
+    "password": "Password",
+
+    "view": {
+        "simple": "Simple View",
+        "enableAdvanced": "Enable Advanced View"
+    },
+
+    "debug": {
+        "showToken": "Show Token",
+        "renewToken": "Renew Token"
+    },
+
+    "messages": {
+        "apiResponse": "API-Response: {{response}}",
+        "silentRenewSuccess": "Silent renew was successful.",
+        "loggedIn": "Logged in as {{user}} ({{email}}).",
+        "notLoggedIn": "Currently not logged in."
+    },
+
+    "errors": {
+        "cannotGetUser": "Cannot retrieve current user. See more details in console.",
+        "cannotLogin": "Cannot login. See more details in console.",
+        "cannotSignup": "Cannot signup. See more details in console.",
+        "cannotRenewToken": "Cannot renew token. See more details in console.",
+        "cannotLogout": "Cannot logout. See more details in console.",
+        "notVerified": "Contact {{contact.value}} needs to be validated.",
+        "emailAddressNotVerified": "Email address {{contact.value}} needs to be validated. Please check your inbox or"
+    }
+}

@@ -1,5 +1,7 @@
-*, :after, :before {
-  box-sizing: border-box;
+*,
+:after,
+:before {
+    box-sizing: border-box;
 }
 
 $bg: #ffffff;
@@ -13,255 +15,271 @@ $problem: #be310c;
 $problem-2: #e35b41;
 
 html {
-  font-family: sans-serif;
-  font-size: 14px;
-  background: $passive-2;
+    font-family: sans-serif;
+    font-size: 14px;
+    background: $passive-2;
 }
 
 .initially-hidden {
-  visibility: hidden;
-  display: none;
+    visibility: hidden;
+    display: none;
 
-  &.visible {
-    visibility: visible;
-    display: initial;
-  }
+    &.visible {
+        visibility: visible;
+        display: initial;
+    }
 }
 
-body, html {
-  margin: 0;
-  padding: 0;
+body,
+html {
+    margin: 0;
+    padding: 0;
 }
 
 .widget.widget-main {
-  $main-padding: 30px;
-  $main-width: 430px;
-  $mobile-threshold-width: $main-width * 1.5;
+    $main-padding: 30px;
+    $main-width: 430px;
+    $mobile-threshold-width: $main-width * 1.5;
 
-  color: $fg;
-  width: $main-width;
-  margin: auto;
-  display: block;
-
-  @media only screen and (max-width: $mobile-threshold-width) {
-    & {
-      width: 100%;
-    }
-  }
-
-  &> * {
+    color: $fg;
     width: $main-width;
-    position: absolute;
-    top: 50%;
-    -ms-transform: translateY(-50%);
-    transform: translateY(-50%);
-
-    background: $bg;
-    box-shadow: 0 0 5em $passive;
-    border: 0.1em solid $passive-2;
-    border-radius: 1rem;
+    margin: auto;
+    display: block;
 
     @media only screen and (max-width: $mobile-threshold-width) {
-      & {
-        width: 100%;
-        box-shadow: none;
-        border-radius: 0;
-        border: 0.1em 0 0.1em 0 solid $passive-2;
-      }
+        & {
+            width: 100%;
+        }
     }
 
-    header {
-      padding: $main-padding $main-padding 15px $main-padding;
-      text-align: center;
-    }
+    & > * {
+        width: $main-width;
+        position: absolute;
+        top: 50%;
+        -ms-transform: translateY(-50%);
+        transform: translateY(-50%);
 
-    div.forms {
-      padding: 0 $main-padding $main-padding $main-padding;
+        background: $bg;
+        box-shadow: 0 0 5em $passive;
+        border: 0.1em solid $passive-2;
+        border-radius: 1rem;
+
+        @media only screen and (max-width: $mobile-threshold-width) {
+            & {
+                width: 100%;
+                box-shadow: none;
+                border-radius: 0;
+                border: 0.1em 0 0.1em 0 solid $passive-2;
+            }
+        }
+
+        header {
+            padding: $main-padding $main-padding 15px $main-padding;
+            text-align: center;
+        }
+
+        div.forms,
+        div.messages {
+            padding: 0 $main-padding $main-padding $main-padding;
+        }
+
+        div.messages {
+            text-align: center;
+        }
     }
-  }
 }
 
 form {
-  border: none;
-  margin: 0;
-  padding: 0;
+    border: none;
+    margin: 0;
+    padding: 0;
 }
 
-input, textarea, .input-like {
-  color: $fg;
-  padding: 0.7em 1em;
-  border-radius: 0.2rem;
-  border: 0.05em solid $passive;
-  outline: none;
-  width: 100%;
-  resize: none;
-  margin:0;
-
-  &::placeholder {
-    color: $passive;
-  }
-  &:-ms-input-placeholder {
-    color: $passive;
-  }
-  &::-ms-input-placeholder {
-    color: $passive;
-  }
-  &:focus {
+input,
+textarea,
+.input-like {
+    color: $fg;
+    padding: 0.7em 1em;
+    border-radius: 0.2rem;
+    border: 0.05em solid $passive;
     outline: none;
-    color: $active;
-    border-color: $active;
-    box-shadow: 0 0 0.4em $active-2;
-  }
+    width: 100%;
+    resize: none;
+    margin: 0;
 
-  list-style: none;
+    &::placeholder {
+        color: $passive;
+    }
+    &:-ms-input-placeholder {
+        color: $passive;
+    }
+    &::-ms-input-placeholder {
+        color: $passive;
+    }
+    &:focus {
+        outline: none;
+        color: $active;
+        border-color: $active;
+        box-shadow: 0 0 0.4em $active-2;
+    }
+
+    & > li {
+        margin-bottom: 0.8em;
+        &:last-child {
+            margin-bottom: 0;
+        }
+    }
+    list-style: none;
 }
 
 .control {
-  margin-bottom: 1em;
+    margin-bottom: 1em;
 
-  &> label {
-    color: $fg;
-    display: block;
-  }
+    & > label {
+        color: $fg;
+        display: block;
+    }
 
-  &> input {
-    margin-top: 0.25em;
-  }
+    & > input {
+        margin-top: 0.25em;
+    }
 }
 
 form.procedure-external {
-  & > * {
-    margin-bottom: 0.8em;
-  }
+    & > * {
+        margin-bottom: 0.8em;
+    }
 
-  & > *:last-child {
-    margin-bottom: 0;
-  }
+    & > *:last-child {
+        margin-bottom: 0;
+    }
 }
 
 ul.problems {
-  margin: 0.2em 0 0 0;
-  padding: 0;
-  &>li {
-    margin: 0;
+    margin: 0.2em 0 0 0;
     padding: 0;
-    list-style: none;
+    & > li {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        color: $problem;
+    }
+}
+
+.has-problems label,
+label.has-problems,
+.has-problems input,
+input.has-problems,
+.has-problems li,
+li.has-problems {
     color: $problem;
-  }
 }
 
-.has-problems label, label.has-problems,
-.has-problems input, input.has-problems,
-.has-problems li, li.has-problems {
-  color: $problem;
+.has-problems input,
+input.has-problems {
+    outline: none;
+    border-color: $problem;
+
+    &:focus {
+        box-shadow: 0 0 0.4em $problem-2;
+    }
 }
-
-.has-problems input, input.has-problems {
-  outline: none;
-  border-color: $problem;
-
-  &:focus {
-    box-shadow: 0 0 0.4em $problem-2;
-  }
-}
-
 
 div.horizontal-divider {
-  color: $passive;
-  margin: 1em 0;
-  text-align: center;
-  display: flex;
-  flex-wrap: nowrap;
-  -webkit-box-align: center;
-  align-items: center;
-  gap: 1em;
-  font-size: 0.8em;
-  font-weight: bold;
+    color: $passive;
+    margin: 1em 0;
+    text-align: center;
+    display: flex;
+    flex-wrap: nowrap;
+    -webkit-box-align: center;
+    align-items: center;
+    gap: 1em;
+    font-size: 0.8em;
+    font-weight: bold;
 
-  &::before,
-  &::after {
-    content: "";
-    display: inline-block;
-    border-bottom: 0.05em solid $passive;
-    -webkit-box-flex: 1;
-    flex-grow: 1;
-  }
-
+    &::before,
+    &::after {
+        content: '';
+        display: inline-block;
+        border-bottom: 0.05em solid $passive;
+        -webkit-box-flex: 1;
+        flex-grow: 1;
+    }
 }
 
 div.button-bar {
-  display: flex;
-  gap: 0.5em;
+    display: flex;
+    gap: 0.5em;
 }
 
 div.button-bar > * {
-  flex: 1;
+    flex: 1;
 }
 
 button {
-  border: 0.05em solid $passive;
-  border-radius: 0.2rem;
-  background: $passive-2;
-  color: $fg;
-  padding: 0.7em 1em;
-  margin: 0;
-  cursor: pointer;
-
-  &[disabled] {
-    background: $passive-3;
-    color: $passive;
-    cursor: not-allowed;
-  }
-
-  &.hidden {
-    display: none;
-  }
-
-  &:active {
-    background: $passive-3;
-  }
-
-  &.primary {
-    border-color: transparent;
-    background: $active;
-    color: $bg;
-
-    &:active {
-      background: $active-2;
-    }
-
-    &[disabled],
-    &[disabled]:active {
-      background: $active-2;
-      color: $passive;
-    }
-  }
-
-  &.secondary {
-    border-color: $passive;
-    background: $bg;
+    border: 0.05em solid $passive;
+    border-radius: 0.2rem;
+    background: $passive-2;
     color: $fg;
-  }
+    padding: 0.7em 1em;
+    margin: 0;
+    cursor: pointer;
 
-  &:focus {
-    border-color: $active;
-    box-shadow: 0 0 0.4em $active-2;
-    outline: none;
-  }
+    &[disabled] {
+        background: $passive-3;
+        color: $passive;
+        cursor: not-allowed;
+    }
 
-  &.single {
-    width: 100%;
-    display: flex;
-    padding: 0.3em;
-    align-items: center;
+    &.hidden {
+        display: none;
+    }
 
     &:active {
-      background: $passive-3;
+        background: $passive-3;
     }
 
-    &> img {
-      width: 2em;
-      margin: 0 1em 0 0;
+    &.primary {
+        border-color: transparent;
+        background: $active;
+        color: $bg;
+
+        &:active {
+            background: $active-2;
+        }
+
+        &[disabled],
+        &[disabled]:active {
+            background: $active-2;
+            color: $passive;
+        }
     }
-  }
+
+    &.secondary {
+        border-color: $passive;
+        background: $bg;
+        color: $fg;
+    }
+
+    &:focus {
+        border-color: $active;
+        box-shadow: 0 0 0.4em $active-2;
+        outline: none;
+    }
+
+    &.single {
+        width: 100%;
+        display: flex;
+        padding: 0.3em;
+        align-items: center;
+
+        &:active {
+            background: $passive-3;
+        }
+
+        & > img {
+            width: 2em;
+            margin: 0 1em 0 0;
+        }
+    }
 }

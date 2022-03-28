@@ -1,11 +1,25 @@
-import {NgModule} from "@angular/core";
-import {RouterModule, Routes} from "@angular/router";
-import {HomeComponent} from './core/components/home.component';
-import {SigninCallbackComponent} from './core/components/signin-callback.component';
+import { NgModule } from '@angular/core';
+import { RouterModule, Routes } from '@angular/router';
+import {
+    AfterLoginComponent,
+    AfterLogoutComponent,
+    AfterVerifyContactComponent,
+    AfterVerifyContactFailedComponent,
+    HomeComponent,
+    PageNotFoundComponent,
+} from './core/components';
 
 export const routes: Routes = [
     { path: '', component: HomeComponent },
-    { path: 'signin-callback', component: SigninCallbackComponent },
+    { path: 'after-login', component: AfterLoginComponent },
+    { path: 'after-logout', component: AfterLogoutComponent },
+    { path: 'after-signup', component: AfterLoginComponent },
+    { path: 'after-verify-contact', component: AfterVerifyContactComponent },
+    {
+        path: 'after-verify-contact-failed',
+        component: AfterVerifyContactFailedComponent,
+    },
+    { path: '**', pathMatch: 'full', component: PageNotFoundComponent },
 ];
 
 @NgModule({
@@ -13,5 +27,4 @@ export const routes: Routes = [
     exports: [RouterModule],
     declarations: [],
 })
-export class AppRoutingModule {
-}
+export class AppRoutingModule {}

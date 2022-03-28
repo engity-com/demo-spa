@@ -1,0 +1,12 @@
+/.angular
+/.github
+/.idea
+/dist
+/node_modules
+/.prettierignore
+/src/static
+/src/browserslist
+/.gitignore
+/package.json
+/package-lock.json
+/LICENSE

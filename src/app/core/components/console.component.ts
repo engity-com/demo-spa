@@ -1,49 +1,62 @@
-import {Component} from '@angular/core';
-import {SimpleModalComponent} from 'ngx-simple-modal';
-
-export interface ConsoleModel {
-    content: string;
-}
+import { Component } from '@angular/core';
+import { Title } from '@angular/platform-browser';
+import { ActivatedRoute, Router } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
+import { SimpleModalComponent } from 'ngx-simple-modal';
 
 @Component({
-    selector: "app-console",
+    selector: 'app-console',
     template: `
         <div>
-            <pre class="content">{{content}}</pre>
+            <pre class="content">{{ content }}</pre>
             <div class="button-bar">
-                <button (click)='close()'>Close</button>
+                <button (click)="close()">{{ 'close' | translate }}</button>
             </div>
         </div>
     `,
-    styles: [`
-        :host > div {
-            display: flex;
-            flex-flow: column;
-        }
-        :host {
-            top: 0;
-            left: 0;
-            bottom: 0;
-            right: 0;
-            background: white;
-            position: fixed;
-            overflow: auto;
-            margin: 0;
-            padding: 2em;
-        }
-        pre {
-            white-space: pre-wrap;
-            word-wrap: break-word;
-        }
-    `],
-})
-export class ConsoleComponent extends SimpleModalComponent<ConsoleModel, boolean> implements ConsoleModel {
+    styles: [
+        `
+            :host > div {
+                display: flex;
+                flex-flow: column;
+            }
 
+            :host {
+                top: 0;
+                left: 0;
+                bottom: 0;
+                right: 0;
+                background: white;
+                position: fixed;
+                overflow: auto;
+                margin: 0;
+                padding: 2em;
+            }
+
+            pre {
+                white-space: pre-wrap;
+                word-wrap: break-word;
+            }
+        `,
+    ],
+})
+export class ConsoleComponent
+    extends SimpleModalComponent<ConsoleModel, boolean>
+    implements ConsoleModel
+{
     content: string;
+
+    constructor(protected readonly translate: TranslateService) {
+        super();
+    }
 
     confirm() {
         this.result = true;
         // noinspection JSIgnoredPromiseFromCall
         this.close();
     }
+}
+
+export interface ConsoleModel {
+    content: string;
 }

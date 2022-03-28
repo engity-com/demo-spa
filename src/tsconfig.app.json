@@ -1,12 +1,13 @@
 {
-  "extends": "../tsconfig.json",
-  "compilerOptions": {
-    "outDir": "../out-tsc/app",
-    "types": []
-  },
-  "exclude": [
-    "environments/environment.prod.ts", // angular replacement
-    "test.ts",
-    "**/*.spec.ts"
-  ]
+    "extends": "../tsconfig.json",
+    "compilerOptions": {
+        "outDir": "../out-tsc/app",
+        "types": [],
+        "resolveJsonModule": true
+    },
+    "exclude": [
+        "environments/environment.prod.ts", // angular replacement
+        "test.ts",
+        "**/*.spec.ts"
+    ]
 }
