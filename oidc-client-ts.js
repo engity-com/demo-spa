@@ -5,7 +5,6 @@ var oidc = (() => {
   var __getOwnPropNames = Object.getOwnPropertyNames;
   var __getProtoOf = Object.getPrototypeOf;
   var __hasOwnProp = Object.prototype.hasOwnProperty;
-  var __markAsModule = (target) => __defProp(target, "__esModule", { value: true });
   var __require = /* @__PURE__ */ ((x) => typeof require !== "undefined" ? require : typeof Proxy !== "undefined" ? new Proxy(x, {
     get: (a, b) => (typeof require !== "undefined" ? require : a)[b]
   }) : x)(function(x) {
@@ -14,24 +13,22 @@ var oidc = (() => {
     throw new Error('Dynamic require of "' + x + '" is not supported');
   });
   var __commonJS = (cb, mod) => function __require2() {
-    return mod || (0, cb[Object.keys(cb)[0]])((mod = { exports: {} }).exports, mod), mod.exports;
+    return mod || (0, cb[__getOwnPropNames(cb)[0]])((mod = { exports: {} }).exports, mod), mod.exports;
   };
   var __export = (target, all) => {
-    __markAsModule(target);
     for (var name in all)
       __defProp(target, name, { get: all[name], enumerable: true });
   };
-  var __reExport = (target, module, desc) => {
-    if (module && typeof module === "object" || typeof module === "function") {
-      for (let key of __getOwnPropNames(module))
-        if (!__hasOwnProp.call(target, key) && key !== "default")
-          __defProp(target, key, { get: () => module[key], enumerable: !(desc = __getOwnPropDesc(module, key)) || desc.enumerable });
+  var __copyProps = (to, from, except, desc) => {
+    if (from && typeof from === "object" || typeof from === "function") {
+      for (let key of __getOwnPropNames(from))
+        if (!__hasOwnProp.call(to, key) && key !== except)
+          __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });
     }
-    return target;
+    return to;
   };
-  var __toModule = (module) => {
-    return __reExport(__markAsModule(__defProp(module != null ? __create(__getProtoOf(module)) : {}, "default", module && module.__esModule && "default" in module ? { get: () => module.default, enumerable: true } : { value: module, enumerable: true })), module);
-  };
+  var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__getProtoOf(mod)) : {}, __copyProps(isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", { value: mod, enumerable: true }) : target, mod));
+  var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 
   // (disabled):crypto
   var require_crypto = __commonJS({
@@ -51,7 +48,7 @@ var oidc = (() => {
           root.CryptoJS = factory();
         }
       })(exports, function() {
-        var CryptoJS = CryptoJS || function(Math2, undefined2) {
+        var CryptoJS2 = CryptoJS2 || function(Math2, undefined2) {
           var crypto;
           if (typeof window !== "undefined" && window.crypto) {
             crypto = window.crypto;
@@ -326,7 +323,7 @@ var oidc = (() => {
           var C_algo = C.algo = {};
           return C;
         }(Math);
-        return CryptoJS;
+        return CryptoJS2;
       });
     }
   });
@@ -342,9 +339,9 @@ var oidc = (() => {
         } else {
           factory(root.CryptoJS);
         }
-      })(exports, function(CryptoJS) {
+      })(exports, function(CryptoJS2) {
         (function(Math2) {
-          var C = CryptoJS;
+          var C = CryptoJS2;
           var C_lib = C.lib;
           var WordArray = C_lib.WordArray;
           var Hasher = C_lib.Hasher;
@@ -447,7 +444,7 @@ var oidc = (() => {
           C.SHA256 = Hasher._createHelper(SHA256);
           C.HmacSHA256 = Hasher._createHmacHelper(SHA256);
         })(Math);
-        return CryptoJS.SHA256;
+        return CryptoJS2.SHA256;
       });
     }
   });
@@ -463,9 +460,9 @@ var oidc = (() => {
         } else {
           factory(root.CryptoJS);
         }
-      })(exports, function(CryptoJS) {
+      })(exports, function(CryptoJS2) {
         (function() {
-          var C = CryptoJS;
+          var C = CryptoJS2;
           var C_lib = C.lib;
           var WordArray = C_lib.WordArray;
           var C_enc = C.enc;
@@ -529,7 +526,7 @@ var oidc = (() => {
             return WordArray.create(words, nBytes);
           }
         })();
-        return CryptoJS.enc.Base64;
+        return CryptoJS2.enc.Base64;
       });
     }
   });
@@ -545,8 +542,8 @@ var oidc = (() => {
         } else {
           factory(root.CryptoJS);
         }
-      })(exports, function(CryptoJS) {
-        return CryptoJS.enc.Utf8;
+      })(exports, function(CryptoJS2) {
+        return CryptoJS2.enc.Utf8;
       });
     }
   });
@@ -557,8 +554,10 @@ var oidc = (() => {
     AccessTokenEvents: () => AccessTokenEvents,
     CheckSessionIFrame: () => CheckSessionIFrame,
     ErrorResponse: () => ErrorResponse,
+    ErrorTimeout: () => ErrorTimeout,
     InMemoryWebStorage: () => InMemoryWebStorage,
     Log: () => Log,
+    Logger: () => Logger,
     MetadataService: () => MetadataService,
     OidcClient: () => OidcClient,
     OidcClientSettingsStore: () => OidcClientSettingsStore,
@@ -575,92 +574,107 @@ var oidc = (() => {
   });
 
   // src/utils/CryptoUtils.ts
-  var import_sha256 = __toModule(require_sha256());
-  var import_enc_base64 = __toModule(require_enc_base64());
-  var import_enc_utf8 = __toModule(require_enc_utf8());
+  var import_core = __toESM(require_core());
+  var import_sha256 = __toESM(require_sha256());
+  var import_enc_base64 = __toESM(require_enc_base64());
+  var import_enc_utf8 = __toESM(require_enc_utf8());
 
-  // src/utils/Log.ts
+  // src/utils/Logger.ts
   var nopLogger = {
     debug: () => void 0,
     info: () => void 0,
     warn: () => void 0,
     error: () => void 0
   };
-  var NONE = 0;
-  var ERROR = 1;
-  var WARN = 2;
-  var INFO = 3;
-  var DEBUG = 4;
-  var Log = class {
-    static get NONE() {
-      return NONE;
+  var level;
+  var logger;
+  var Log = /* @__PURE__ */ ((Log2) => {
+    Log2[Log2["NONE"] = 0] = "NONE";
+    Log2[Log2["ERROR"] = 1] = "ERROR";
+    Log2[Log2["WARN"] = 2] = "WARN";
+    Log2[Log2["INFO"] = 3] = "INFO";
+    Log2[Log2["DEBUG"] = 4] = "DEBUG";
+    return Log2;
+  })(Log || {});
+  ((Log2) => {
+    function reset() {
+      level = 3 /* INFO */;
+      logger = nopLogger;
     }
-    static get ERROR() {
-      return ERROR;
-    }
-    static get WARN() {
-      return WARN;
-    }
-    static get INFO() {
-      return INFO;
-    }
-    static get DEBUG() {
-      return DEBUG;
-    }
-    static reset() {
-      this._level = INFO;
-      this._logger = nopLogger;
-    }
-    static get level() {
-      return this._level;
-    }
-    static set level(value) {
-      if (NONE > value || value > DEBUG) {
+    Log2.reset = reset;
+    function setLevel(value) {
+      if (!(0 /* NONE */ <= value && value <= 4 /* DEBUG */)) {
         throw new Error("Invalid log level");
       }
-      this._level = value;
+      level = value;
     }
-    static get logger() {
-      return this._logger;
+    Log2.setLevel = setLevel;
+    function setLogger(value) {
+      logger = value;
     }
-    static set logger(value) {
-      this._logger = value;
-    }
-  };
+    Log2.setLogger = setLogger;
+  })(Log || (Log = {}));
   var Logger = class {
-    constructor(name) {
-      this._name = name;
+    constructor(_name) {
+      this._name = _name;
     }
     debug(...args) {
-      Logger.debug(this._name, ...args);
+      if (level >= 4 /* DEBUG */) {
+        logger.debug(Logger._format(this._name, this._method), ...args);
+      }
     }
     info(...args) {
-      Logger.info(this._name, ...args);
+      if (level >= 3 /* INFO */) {
+        logger.info(Logger._format(this._name, this._method), ...args);
+      }
     }
     warn(...args) {
-      Logger.warn(this._name, ...args);
+      if (level >= 2 /* WARN */) {
+        logger.warn(Logger._format(this._name, this._method), ...args);
+      }
     }
     error(...args) {
-      Logger.error(this._name, ...args);
+      if (level >= 1 /* ERROR */) {
+        logger.error(Logger._format(this._name, this._method), ...args);
+      }
+    }
+    throw(err) {
+      this.error(err);
+      throw err;
+    }
+    create(method) {
+      const methodLogger = Object.create(this);
+      methodLogger._method = method;
+      methodLogger.debug("begin");
+      return methodLogger;
+    }
+    static createStatic(name, staticMethod) {
+      const staticLogger = new Logger(`${name}.${staticMethod}`);
+      staticLogger.debug("begin");
+      return staticLogger;
+    }
+    static _format(name, method) {
+      const prefix = `[${name}]`;
+      return method ? `${prefix} ${method}:` : prefix;
     }
     static debug(name, ...args) {
-      if (Log.level >= DEBUG) {
-        Log.logger.debug(`[${name}]`, ...args);
+      if (level >= 4 /* DEBUG */) {
+        logger.debug(Logger._format(name), ...args);
       }
     }
     static info(name, ...args) {
-      if (Log.level >= INFO) {
-        Log.logger.info(`[${name}]`, ...args);
+      if (level >= 3 /* INFO */) {
+        logger.info(Logger._format(name), ...args);
       }
     }
     static warn(name, ...args) {
-      if (Log.level >= WARN) {
-        Log.logger.warn(`[${name}]`, ...args);
+      if (level >= 2 /* WARN */) {
+        logger.warn(Logger._format(name), ...args);
       }
     }
     static error(name, ...args) {
-      if (Log.level >= ERROR) {
-        Log.logger.error(`[${name}]`, ...args);
+      if (level >= 1 /* ERROR */) {
+        logger.error(Logger._format(name), ...args);
       }
     }
   };
@@ -669,15 +683,11 @@ var oidc = (() => {
   // src/utils/CryptoUtils.ts
   var UUID_V4_TEMPLATE = "10000000-1000-4000-8000-100000000000";
   var CryptoUtils = class {
-    static _cryptoUUIDv4() {
-      return UUID_V4_TEMPLATE.replace(/[018]/g, (c) => (+c ^ window.crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> +c / 4).toString(16));
-    }
-    static _UUIDv4() {
-      return UUID_V4_TEMPLATE.replace(/[018]/g, (c) => (+c ^ Math.random() * 16 >> +c / 4).toString(16));
+    static _randomWord() {
+      return import_core.default.lib.WordArray.random(1).words[0];
     }
     static generateUUIDv4() {
-      const hasRandomValues = window.crypto && Object.prototype.hasOwnProperty.call(window.crypto, "getRandomValues");
-      const uuid = hasRandomValues ? CryptoUtils._cryptoUUIDv4() : CryptoUtils._UUIDv4();
+      const uuid = UUID_V4_TEMPLATE.replace(/[018]/g, (c) => (+c ^ CryptoUtils._randomWord() & 15 >> +c / 4).toString(16));
       return uuid.replace(/-/g, "");
     }
     static generateCodeVerifier() {
@@ -688,7 +698,7 @@ var oidc = (() => {
         const hashed = (0, import_sha256.default)(code_verifier);
         return import_enc_base64.default.stringify(hashed).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
       } catch (err) {
-        Logger.error("CryptoUtils", err instanceof Error ? err.message : err);
+        Logger.error("CryptoUtils.generateCodeChallenge", err);
         throw err;
       }
     }
@@ -700,10 +710,10 @@ var oidc = (() => {
 
   // src/utils/Event.ts
   var Event = class {
-    constructor(name) {
+    constructor(_name) {
+      this._name = _name;
+      this._logger = new Logger(`Event('${this._name}')`);
       this._callbacks = [];
-      this._name = name;
-      this._logger = new Logger(`Event(${name})`);
     }
     addHandler(cb) {
       this._callbacks.push(cb);
@@ -716,7 +726,7 @@ var oidc = (() => {
       }
     }
     raise(...ev) {
-      this._logger.debug("Raising event: " + this._name);
+      this._logger.debug("raise:", ...ev);
       for (const cb of this._callbacks) {
         void cb(...ev);
       }
@@ -781,10 +791,9 @@ var oidc = (() => {
   var JwtUtils = class {
     static decode(token) {
       try {
-        const payload = jwt_decode_esm_default(token);
-        return payload;
+        return jwt_decode_esm_default(token);
       } catch (err) {
-        Logger.error("JwtUtils", err);
+        Logger.error("JwtUtils.decode", err);
         throw err;
       }
     }
@@ -807,24 +816,15 @@ var oidc = (() => {
   };
 
   // src/utils/Timer.ts
-  var DefaultTimerDurationInSeconds = 5;
-  var g_timer = {
-    setInterval: function(cb, duration) {
-      return window.setInterval(cb, duration);
-    },
-    clearInterval: function(handle) {
-      return window.clearInterval(handle);
-    }
-  };
   var Timer = class extends Event {
     constructor() {
       super(...arguments);
-      this._timer = g_timer;
+      this._logger = new Logger(`Timer('${this._name}')`);
       this._timerHandle = null;
       this._expiration = 0;
       this._callback = () => {
         const diff = this._expiration - Timer.getEpochTime();
-        this._logger.debug("_callback: " + this._name + " timer expires in:", diff);
+        this._logger.debug("timer completes in", diff);
         if (this._expiration <= Timer.getEpochTime()) {
           this.cancel();
           super.raise();
@@ -835,31 +835,26 @@ var oidc = (() => {
       return Math.floor(Date.now() / 1e3);
     }
     init(durationInSeconds) {
-      if (durationInSeconds <= 0) {
-        durationInSeconds = 1;
-      }
-      durationInSeconds = Math.floor(durationInSeconds);
+      const logger2 = this._logger.create("init");
+      durationInSeconds = Math.max(Math.floor(durationInSeconds), 1);
       const expiration = Timer.getEpochTime() + durationInSeconds;
       if (this.expiration === expiration && this._timerHandle) {
-        this._logger.debug("init timer " + this._name + " skipping initialization since already initialized for expiration:", this.expiration);
+        logger2.debug("skipping since already initialized for expiration at", this.expiration);
         return;
       }
       this.cancel();
-      this._logger.debug("init timer " + this._name + " for duration:", durationInSeconds);
+      logger2.debug("using duration", durationInSeconds);
       this._expiration = expiration;
-      let timerDurationInSeconds = DefaultTimerDurationInSeconds;
-      if (durationInSeconds < timerDurationInSeconds) {
-        timerDurationInSeconds = durationInSeconds;
-      }
-      this._timerHandle = this._timer.setInterval(this._callback, timerDurationInSeconds * 1e3);
+      const timerDurationInSeconds = Math.min(durationInSeconds, 5);
+      this._timerHandle = setInterval(this._callback, timerDurationInSeconds * 1e3);
     }
     get expiration() {
       return this._expiration;
     }
     cancel() {
+      this._logger.create("cancel");
       if (this._timerHandle) {
-        this._logger.debug("cancel: ", this._name);
-        this._timer.clearInterval(this._timerHandle);
+        clearInterval(this._timerHandle);
         this._timerHandle = null;
       }
     }
@@ -874,31 +869,59 @@ var oidc = (() => {
     }
   };
 
+  // src/errors/ErrorResponse.ts
+  var ErrorResponse = class extends Error {
+    constructor(args, form) {
+      super(args.error_description || args.error || "");
+      this.form = form;
+      this.name = "ErrorResponse";
+      var _a, _b, _c;
+      if (!args.error) {
+        Logger.error("ErrorResponse", "No error passed");
+        throw new Error("No error passed");
+      }
+      this.error = args.error;
+      this.error_description = (_a = args.error_description) != null ? _a : null;
+      this.error_uri = (_b = args.error_uri) != null ? _b : null;
+      this.state = args.userState;
+      this.session_state = (_c = args.session_state) != null ? _c : null;
+    }
+  };
+
+  // src/errors/ErrorTimeout.ts
+  var ErrorTimeout = class extends Error {
+    constructor(message) {
+      super(message);
+      this.name = "ErrorTimeout";
+    }
+  };
+
   // src/AccessTokenEvents.ts
   var AccessTokenEvents = class {
-    constructor({ expiringNotificationTimeInSeconds }) {
+    constructor(args) {
       this._logger = new Logger("AccessTokenEvents");
-      this._expiringNotificationTimeInSeconds = expiringNotificationTimeInSeconds;
       this._expiringTimer = new Timer("Access token expiring");
       this._expiredTimer = new Timer("Access token expired");
+      this._expiringNotificationTimeInSeconds = args.expiringNotificationTimeInSeconds;
     }
     load(container) {
+      const logger2 = this._logger.create("load");
       if (container.access_token && container.expires_in !== void 0) {
         const duration = container.expires_in;
-        this._logger.debug("load: access token present, remaining duration:", duration);
+        logger2.debug("access token present, remaining duration:", duration);
         if (duration > 0) {
           let expiring = duration - this._expiringNotificationTimeInSeconds;
           if (expiring <= 0) {
             expiring = 1;
           }
-          this._logger.debug("load: registering expiring timer in:", expiring);
+          logger2.debug("registering expiring timer, raising in", expiring, "seconds");
           this._expiringTimer.init(expiring);
         } else {
-          this._logger.debug("load: canceling existing expiring timer because we're past expiration.");
+          logger2.debug("canceling existing expiring timer because we're past expiration.");
           this._expiringTimer.cancel();
         }
         const expired = duration + 1;
-        this._logger.debug("load: registering expired timer in:", expired);
+        logger2.debug("registering expired timer, raising in", expired, "seconds");
         this._expiredTimer.init(expired);
       } else {
         this._expiringTimer.cancel();
@@ -911,13 +934,13 @@ var oidc = (() => {
       this._expiredTimer.cancel();
     }
     addAccessTokenExpiring(cb) {
-      this._expiringTimer.addHandler(cb);
+      return this._expiringTimer.addHandler(cb);
     }
     removeAccessTokenExpiring(cb) {
       this._expiringTimer.removeHandler(cb);
     }
     addAccessTokenExpired(cb) {
-      this._expiredTimer.addHandler(cb);
+      return this._expiredTimer.addHandler(cb);
     }
     removeAccessTokenExpired(cb) {
       this._expiredTimer.removeHandler(cb);
@@ -931,6 +954,7 @@ var oidc = (() => {
       this._client_id = _client_id;
       this._intervalInSeconds = _intervalInSeconds;
       this._stopOnError = _stopOnError;
+      this._logger = new Logger("CheckSessionIFrame");
       this._timer = null;
       this._session_state = null;
       this._message = (e2) => {
@@ -949,7 +973,6 @@ var oidc = (() => {
           }
         }
       };
-      this._logger = new Logger("CheckSessionIFrame");
       const idx = url.indexOf("/", url.indexOf("//") + 2);
       this._frame_origin = url.substr(0, idx);
       this._frame = window.document.createElement("iframe");
@@ -974,7 +997,7 @@ var oidc = (() => {
       if (this._session_state === session_state) {
         return;
       }
-      this._logger.debug("start");
+      this._logger.create("start");
       this.stop();
       this._session_state = session_state;
       const send = () => {
@@ -984,32 +1007,15 @@ var oidc = (() => {
         this._frame.contentWindow.postMessage(this._client_id + " " + this._session_state, this._frame_origin);
       };
       send();
-      this._timer = window.setInterval(send, this._intervalInSeconds * 1e3);
+      this._timer = setInterval(send, this._intervalInSeconds * 1e3);
     }
     stop() {
+      this._logger.create("stop");
       this._session_state = null;
       if (this._timer) {
-        this._logger.debug("stop");
-        window.clearInterval(this._timer);
+        clearInterval(this._timer);
         this._timer = null;
       }
-    }
-  };
-
-  // src/ErrorResponse.ts
-  var ErrorResponse = class extends Error {
-    constructor(args) {
-      super(args.error_description || args.error);
-      if (!args.error) {
-        Logger.error("ErrorResponse", "No error passed");
-        throw new Error("No error passed");
-      }
-      this.name = "ErrorResponse";
-      this.error = args.error;
-      this.error_description = args.error_description;
-      this.error_uri = args.error_uri;
-      this.state = args.state;
-      this.session_state = args.session_state;
     }
   };
 
@@ -1020,19 +1026,19 @@ var oidc = (() => {
       this._data = {};
     }
     clear() {
-      this._logger.debug("clear");
+      this._logger.create("clear");
       this._data = {};
     }
     getItem(key) {
-      this._logger.debug("getItem", key);
+      this._logger.create(`getItem('${key}')`);
       return this._data[key];
     }
     setItem(key, value) {
-      this._logger.debug("setItem", key);
+      this._logger.create(`setItem('${key}')`);
       this._data[key] = value;
     }
     removeItem(key) {
-      this._logger.debug("removeItem", key);
+      this._logger.create(`removeItem('${key}')`);
       delete this._data[key];
     }
     get length() {
@@ -1047,33 +1053,58 @@ var oidc = (() => {
   var JsonService = class {
     constructor(additionalContentTypes = [], _jwtHandler = null) {
       this._jwtHandler = _jwtHandler;
-      this._contentTypes = [];
       this._logger = new Logger("JsonService");
+      this._contentTypes = [];
       this._contentTypes.push(...additionalContentTypes, "application/json");
       if (_jwtHandler) {
         this._contentTypes.push("application/jwt");
       }
     }
-    async getJson(url, token) {
+    async fetchWithTimeout(input, init = {}) {
+      const { timeoutInSeconds, ...initFetch } = init;
+      if (!timeoutInSeconds) {
+        return await fetch(input, initFetch);
+      }
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), timeoutInSeconds * 1e3);
+      try {
+        const response = await fetch(input, {
+          ...init,
+          signal: controller.signal
+        });
+        return response;
+      } catch (err) {
+        if (err instanceof DOMException && err.name === "AbortError") {
+          throw new ErrorTimeout("Network timed out");
+        }
+        throw err;
+      } finally {
+        clearTimeout(timeoutId);
+      }
+    }
+    async getJson(url, {
+      token
+    } = {}) {
+      const logger2 = this._logger.create("getJson");
       const headers = {
         "Accept": this._contentTypes.join(", ")
       };
       if (token) {
-        this._logger.debug("getJson: token passed, setting Authorization header");
+        logger2.debug("token passed, setting Authorization header");
         headers["Authorization"] = "Bearer " + token;
       }
       let response;
       try {
-        this._logger.debug("getJson, url:", url);
-        response = await fetch(url, { method: "GET", headers });
+        logger2.debug("url:", url);
+        response = await this.fetchWithTimeout(url, { method: "GET", headers });
       } catch (err) {
-        this._logger.error("getJson: network error");
-        throw new Error("Network Error");
+        logger2.error("Network Error");
+        throw err;
       }
-      this._logger.debug("getJson: HTTP response received, status", response.status);
+      logger2.debug("HTTP response received, status", response.status);
       const contentType = response.headers.get("Content-Type");
       if (contentType && !this._contentTypes.find((item) => contentType.startsWith(item))) {
-        throw new Error(`Invalid response Content-Type: ${contentType != null ? contentType : "undefined"}, from URL: ${url}`);
+        logger2.throw(new Error(`Invalid response Content-Type: ${contentType != null ? contentType : "undefined"}, from URL: ${url}`));
       }
       if (response.ok && this._jwtHandler && (contentType == null ? void 0 : contentType.startsWith("application/jwt"))) {
         return await this._jwtHandler(await response.text());
@@ -1082,13 +1113,13 @@ var oidc = (() => {
       try {
         json = await response.json();
       } catch (err) {
-        this._logger.error("getJson: Error parsing JSON response", err);
+        logger2.error("Error parsing JSON response", err);
         if (response.ok)
           throw err;
         throw new Error(`${response.statusText} (${response.status})`);
       }
       if (!response.ok) {
-        this._logger.error("getJson: Error from server:", json);
+        logger2.error("Error from server:", json);
         if (json.error) {
           throw new ErrorResponse(json);
         }
@@ -1096,7 +1127,12 @@ var oidc = (() => {
       }
       return json;
     }
-    async postForm(url, body, basicAuth) {
+    async postForm(url, {
+      body,
+      basicAuth,
+      timeoutInSeconds
+    }) {
+      const logger2 = this._logger.create("postForm");
       const headers = {
         "Accept": this._contentTypes.join(", "),
         "Content-Type": "application/x-www-form-urlencoded"
@@ -1106,31 +1142,33 @@ var oidc = (() => {
       }
       let response;
       try {
-        this._logger.debug("postForm, url:", url);
-        response = await fetch(url, { method: "POST", headers, body });
+        logger2.debug("url:", url);
+        response = await this.fetchWithTimeout(url, { method: "POST", headers, body, timeoutInSeconds });
       } catch (err) {
-        this._logger.error("postForm: network error");
-        throw new Error("Network Error");
+        logger2.error("Network error");
+        throw err;
       }
-      this._logger.debug("postForm: HTTP response received, status", response.status);
+      logger2.debug("HTTP response received, status", response.status);
       const contentType = response.headers.get("Content-Type");
       if (contentType && !this._contentTypes.find((item) => contentType.startsWith(item))) {
         throw new Error(`Invalid response Content-Type: ${contentType != null ? contentType : "undefined"}, from URL: ${url}`);
       }
       const responseText = await response.text();
       let json = {};
-      try {
-        json = JSON.parse(responseText);
-      } catch (err) {
-        this._logger.error("postForm: Error parsing JSON response", err);
-        if (response.ok)
-          throw err;
-        throw new Error(`${response.statusText} (${response.status})`);
+      if (responseText) {
+        try {
+          json = JSON.parse(responseText);
+        } catch (err) {
+          logger2.error("Error parsing JSON response", err);
+          if (response.ok)
+            throw err;
+          throw new Error(`${response.statusText} (${response.status})`);
+        }
       }
       if (!response.ok) {
-        this._logger.error("postForm: Error from server:", json);
+        logger2.error("Error from server:", json);
         if (json.error) {
-          throw new ErrorResponse(json);
+          throw new ErrorResponse(json, body);
         }
         throw new Error(`${response.statusText} (${response.status}): ${JSON.stringify(json)}`);
       }
@@ -1139,30 +1177,20 @@ var oidc = (() => {
   };
 
   // src/MetadataService.ts
-  var OidcMetadataUrlPath = ".well-known/openid-configuration";
   var MetadataService = class {
-    constructor(settings) {
-      this._settings = settings;
+    constructor(_settings) {
+      this._settings = _settings;
       this._logger = new Logger("MetadataService");
       this._jsonService = new JsonService(["application/jwk-set+json"]);
-      this._metadataUrl = null;
-      if (this._settings.metadataUrl) {
-        this._metadataUrl = this._settings.metadataUrl;
-      } else if (this._settings.authority) {
-        this._metadataUrl = this._settings.authority;
-        if (this._metadataUrl[this._metadataUrl.length - 1] !== "/") {
-          this._metadataUrl += "/";
-        }
-        this._metadataUrl += OidcMetadataUrlPath;
-      }
       this._signingKeys = null;
+      this._metadata = null;
+      this._metadataUrl = this._settings.metadataUrl;
       if (this._settings.signingKeys) {
-        this._logger.debug("ctor: Using signingKeys from settings");
+        this._logger.debug("using signingKeys from settings");
         this._signingKeys = this._settings.signingKeys;
       }
-      this._metadata = null;
       if (this._settings.metadata) {
-        this._logger.debug("ctor: Using metadata from settings");
+        this._logger.debug("using metadata from settings");
         this._metadata = this._settings.metadata;
       }
     }
@@ -1170,19 +1198,19 @@ var oidc = (() => {
       this._signingKeys = null;
     }
     async getMetadata() {
+      const logger2 = this._logger.create("getMetadata");
       if (this._metadata) {
-        this._logger.debug("getMetadata: Returning metadata from cache");
+        logger2.debug("using cached values");
         return this._metadata;
       }
       if (!this._metadataUrl) {
-        this._logger.error("getMetadata: No authority or metadataUrl configured on settings");
-        throw new Error("No authority or metadataUrl configured on settings");
+        logger2.throw(new Error("No authority or metadataUrl configured on settings"));
+        throw null;
       }
-      this._logger.debug("getMetadata: getting metadata from", this._metadataUrl);
+      logger2.debug("getting metadata from", this._metadataUrl);
       const metadata = await this._jsonService.getJson(this._metadataUrl);
-      this._logger.debug("getMetadata: json received");
-      const seed = this._settings.metadataSeed || {};
-      this._metadata = Object.assign({}, seed, metadata);
+      logger2.debug("merging remote JSON with seed metadata");
+      this._metadata = Object.assign({}, this._settings.metadataSeed, metadata);
       return this._metadata;
     }
     getIssuer() {
@@ -1210,31 +1238,31 @@ var oidc = (() => {
       return this._getMetadataProperty("jwks_uri", optional);
     }
     async _getMetadataProperty(name, optional = false) {
-      this._logger.debug("getMetadataProperty for: " + name);
+      const logger2 = this._logger.create(`_getMetadataProperty('${name}')`);
       const metadata = await this.getMetadata();
-      this._logger.debug("getMetadataProperty: metadata received");
+      logger2.debug("resolved");
       if (metadata[name] === void 0) {
         if (optional === true) {
-          this._logger.warn("getMetadataProperty: Metadata does not contain optional property " + name);
+          logger2.warn("Metadata does not contain optional property");
           return void 0;
         }
-        this._logger.error("getMetadataProperty: Metadata does not contain property " + name);
-        throw new Error("Metadata does not contain property " + name);
+        logger2.throw(new Error("Metadata does not contain property " + name));
       }
       return metadata[name];
     }
     async getSigningKeys() {
+      const logger2 = this._logger.create("getSigningKeys");
       if (this._signingKeys) {
-        this._logger.debug("getSigningKeys: Returning signingKeys from cache");
+        logger2.debug("returning signingKeys from cache");
         return this._signingKeys;
       }
       const jwks_uri = await this.getKeysEndpoint(false);
-      this._logger.debug("getSigningKeys: jwks_uri received", jwks_uri);
+      logger2.debug("got jwks_uri", jwks_uri);
       const keySet = await this._jsonService.getJson(jwks_uri);
-      this._logger.debug("getSigningKeys: key set received", keySet);
+      logger2.debug("got key set", keySet);
       if (!Array.isArray(keySet.keys)) {
-        this._logger.error("getSigningKeys: Missing keys on keyset");
-        throw new Error("Missing keys on keyset");
+        logger2.throw(new Error("Missing keys on keyset"));
+        throw null;
       }
       this._signingKeys = keySet.keys;
       return this._signingKeys;
@@ -1249,26 +1277,26 @@ var oidc = (() => {
       this._prefix = prefix;
     }
     set(key, value) {
-      this._logger.debug("set", key);
+      this._logger.create(`set('${key}')`);
       key = this._prefix + key;
       this._store.setItem(key, value);
       return Promise.resolve();
     }
     get(key) {
-      this._logger.debug("get", key);
+      this._logger.create(`get('${key}')`);
       key = this._prefix + key;
       const item = this._store.getItem(key);
       return Promise.resolve(item);
     }
     remove(key) {
-      this._logger.debug("remove", key);
+      this._logger.create(`remove('${key}')`);
       key = this._prefix + key;
       const item = this._store.getItem(key);
       this._store.removeItem(key);
       return Promise.resolve(item);
     }
     getAllKeys() {
-      this._logger.debug("getAllKeys");
+      this._logger.create("getAllKeys");
       const keys = [];
       for (let index = 0; index < this._store.length; index++) {
         const key = this._store.key(index);
@@ -1314,12 +1342,22 @@ var oidc = (() => {
       clockSkewInSeconds = DefaultClockSkewInSeconds,
       userInfoJwtIssuer = "OP",
       mergeClaims = false,
-      stateStore = new WebStorageStateStore(),
+      stateStore,
       extraQueryParams = {},
       extraTokenParams = {}
     }) {
       this.authority = authority;
-      this.metadataUrl = metadataUrl;
+      if (metadataUrl) {
+        this.metadataUrl = metadataUrl;
+      } else {
+        this.metadataUrl = authority;
+        if (authority) {
+          if (!this.metadataUrl.endsWith("/")) {
+            this.metadataUrl += "/";
+          }
+          this.metadataUrl += ".well-known/openid-configuration";
+        }
+      }
       this.metadata = metadata;
       this.metadataSeed = metadataSeed;
       this.signingKeys = signingKeys;
@@ -1343,7 +1381,12 @@ var oidc = (() => {
       this.clockSkewInSeconds = clockSkewInSeconds;
       this.userInfoJwtIssuer = userInfoJwtIssuer;
       this.mergeClaims = !!mergeClaims;
-      this.stateStore = stateStore;
+      if (stateStore) {
+        this.stateStore = stateStore;
+      } else {
+        const store = typeof window !== "undefined" ? window.localStorage : new InMemoryWebStorage();
+        this.stateStore = new WebStorageStateStore({ store });
+      }
       this.extraQueryParams = extraQueryParams;
       this.extraTokenParams = extraTokenParams;
     }
@@ -1351,41 +1394,42 @@ var oidc = (() => {
 
   // src/UserInfoService.ts
   var UserInfoService = class {
-    constructor(metadataService) {
+    constructor(_metadataService) {
+      this._metadataService = _metadataService;
+      this._logger = new Logger("UserInfoService");
       this._getClaimsFromJwt = async (responseText) => {
+        const logger2 = this._logger.create("_getClaimsFromJwt");
         try {
           const payload = JwtUtils.decode(responseText);
-          this._logger.debug("_getClaimsFromJwt: JWT decoding successful");
+          logger2.debug("JWT decoding successful");
           return payload;
         } catch (err) {
-          this._logger.error("_getClaimsFromJwt: Error parsing JWT response", err instanceof Error ? err.message : err);
+          logger2.error("Error parsing JWT response");
           throw err;
         }
       };
-      this._logger = new Logger("UserInfoService");
       this._jsonService = new JsonService(void 0, this._getClaimsFromJwt);
-      this._metadataService = metadataService;
     }
     async getClaims(token) {
+      const logger2 = this._logger.create("getClaims");
       if (!token) {
-        this._logger.error("getClaims: No token passed");
-        throw new Error("A token is required");
+        this._logger.throw(new Error("No token passed"));
       }
       const url = await this._metadataService.getUserInfoEndpoint();
-      this._logger.debug("getClaims: received userinfo url", url);
-      const claims = await this._jsonService.getJson(url, token);
-      this._logger.debug("getClaims: claims received", claims);
+      logger2.debug("got userinfo url", url);
+      const claims = await this._jsonService.getJson(url, { token });
+      logger2.debug("got claims", claims);
       return claims;
     }
   };
 
   // src/TokenClient.ts
   var TokenClient = class {
-    constructor(settings, metadataService) {
-      this._settings = settings;
+    constructor(_settings, _metadataService) {
+      this._settings = _settings;
+      this._metadataService = _metadataService;
       this._logger = new Logger("TokenClient");
       this._jsonService = new JsonService();
-      this._metadataService = metadataService;
     }
     async exchangeCode({
       grant_type = "authorization_code",
@@ -1394,21 +1438,18 @@ var oidc = (() => {
       client_secret = this._settings.client_secret,
       ...args
     }) {
+      const logger2 = this._logger.create("exchangeCode");
       if (!client_id) {
-        this._logger.error("exchangeCode: No client_id passed");
-        throw new Error("A client_id is required");
+        logger2.throw(new Error("A client_id is required"));
       }
       if (!redirect_uri) {
-        this._logger.error("exchangeCode: No redirect_uri passed");
-        throw new Error("A redirect_uri is required");
+        logger2.throw(new Error("A redirect_uri is required"));
       }
       if (!args.code) {
-        this._logger.error("exchangeCode: No code passed");
-        throw new Error("A code is required");
+        logger2.throw(new Error("A code is required"));
       }
       if (!args.code_verifier) {
-        this._logger.error("exchangeCode: No code_verifier passed");
-        throw new Error("A code_verifier is required");
+        logger2.throw(new Error("A code_verifier is required"));
       }
       const params = new URLSearchParams({ grant_type, redirect_uri });
       for (const [key, value] of Object.entries(args)) {
@@ -1420,37 +1461,37 @@ var oidc = (() => {
       switch (this._settings.client_authentication) {
         case "client_secret_basic":
           if (!client_secret) {
-            this._logger.error("exchangeCode: No client_secret passed");
-            throw new Error("A client_secret is required");
+            logger2.throw(new Error("A client_secret is required"));
+            throw null;
           }
           basicAuth = CryptoUtils.generateBasicAuth(client_id, client_secret);
           break;
         case "client_secret_post":
           params.append("client_id", client_id);
           if (client_secret) {
-            params.append("client_secret", client_id);
+            params.append("client_secret", client_secret);
           }
           break;
       }
       const url = await this._metadataService.getTokenEndpoint(false);
-      this._logger.debug("exchangeCode: Received token endpoint");
-      const response = await this._jsonService.postForm(url, params, basicAuth);
-      this._logger.debug("exchangeCode: response received");
+      logger2.debug("got token endpoint");
+      const response = await this._jsonService.postForm(url, { body: params, basicAuth });
+      logger2.debug("got response");
       return response;
     }
     async exchangeRefreshToken({
       grant_type = "refresh_token",
       client_id = this._settings.client_id,
       client_secret = this._settings.client_secret,
+      timeoutInSeconds,
       ...args
     }) {
+      const logger2 = this._logger.create("exchangeRefreshToken");
       if (!client_id) {
-        this._logger.error("exchangeRefreshToken: No client_id passed");
-        throw new Error("A client_id is required");
+        logger2.throw(new Error("A client_id is required"));
       }
       if (!args.refresh_token) {
-        this._logger.error("exchangeRefreshToken: No refresh_token passed");
-        throw new Error("A refresh_token is required");
+        logger2.throw(new Error("A refresh_token is required"));
       }
       const params = new URLSearchParams({ grant_type });
       for (const [key, value] of Object.entries(args)) {
@@ -1462,37 +1503,32 @@ var oidc = (() => {
       switch (this._settings.client_authentication) {
         case "client_secret_basic":
           if (!client_secret) {
-            this._logger.error("exchangeCode: No client_secret passed");
-            throw new Error("A client_secret is required");
+            logger2.throw(new Error("A client_secret is required"));
+            throw null;
           }
           basicAuth = CryptoUtils.generateBasicAuth(client_id, client_secret);
           break;
         case "client_secret_post":
           params.append("client_id", client_id);
           if (client_secret) {
-            params.append("client_secret", client_id);
+            params.append("client_secret", client_secret);
           }
           break;
       }
       const url = await this._metadataService.getTokenEndpoint(false);
-      this._logger.debug("exchangeRefreshToken: Received token endpoint");
-      const response = await this._jsonService.postForm(url, params, basicAuth);
-      this._logger.debug("exchangeRefreshToken: response received");
+      logger2.debug("got token endpoint");
+      const response = await this._jsonService.postForm(url, { body: params, basicAuth, timeoutInSeconds });
+      logger2.debug("got response");
       return response;
     }
-    async revoke({
-      optional = false,
-      ...args
-    }) {
+    async revoke(args) {
+      var _a;
+      const logger2 = this._logger.create("revoke");
       if (!args.token) {
-        this._logger.error("revoke: No token passed");
-        throw new Error("A token is required");
+        logger2.throw(new Error("A token is required"));
       }
-      const url = await this._metadataService.getRevocationEndpoint(optional);
-      if (!url) {
-        return;
-      }
-      this._logger.debug("revoke: Received revocation endpoint, revoking " + args.token_type_hint);
+      const url = await this._metadataService.getRevocationEndpoint(false);
+      logger2.debug(`got revocation endpoint, revoking ${(_a = args.token_type_hint) != null ? _a : "default token type"}`);
       const params = new URLSearchParams();
       for (const [key, value] of Object.entries(args)) {
         if (value != null) {
@@ -1503,127 +1539,135 @@ var oidc = (() => {
       if (this._settings.client_secret) {
         params.set("client_secret", this._settings.client_secret);
       }
-      await this._jsonService.postForm(url, params);
-      this._logger.debug("revoke: response received");
+      await this._jsonService.postForm(url, { body: params });
+      logger2.debug("got response");
     }
   };
 
   // src/ResponseValidator.ts
-  var ProtocolClaims = ["at_hash", "iat", "nbf", "exp", "aud", "iss", "c_hash"];
+  var ProtocolClaims = [
+    "iss",
+    "aud",
+    "exp",
+    "nbf",
+    "iat",
+    "jti",
+    "auth_time",
+    "nonce",
+    "acr",
+    "amr",
+    "azp",
+    "at_hash"
+  ];
   var ResponseValidator = class {
-    constructor(settings, metadataService) {
-      this._settings = settings;
+    constructor(_settings, _metadataService) {
+      this._settings = _settings;
+      this._metadataService = _metadataService;
       this._logger = new Logger("ResponseValidator");
-      this._metadataService = metadataService;
-      this._userInfoService = new UserInfoService(metadataService);
-      this._tokenClient = new TokenClient(this._settings, metadataService);
+      this._userInfoService = new UserInfoService(this._metadataService);
+      this._tokenClient = new TokenClient(this._settings, this._metadataService);
     }
-    async validateSigninResponse(state, response) {
-      this._logger.debug("validateSigninResponse");
-      response = this._processSigninParams(state, response);
-      this._logger.debug("validateSigninResponse: state processed");
-      response = await this._validateTokens(state, response);
-      this._logger.debug("validateSigninResponse: tokens validated");
-      response = await this._processClaims(state, response);
-      this._logger.debug("validateSigninResponse: claims processed");
-      return response;
-    }
-    validateSignoutResponse(state, response) {
-      if (state.id !== response.state_id) {
-        this._logger.error("validateSignoutResponse: State does not match");
-        throw new Error("State does not match");
+    async validateSigninResponse(response, state) {
+      const logger2 = this._logger.create("validateSigninResponse");
+      this._processSigninState(response, state);
+      logger2.debug("state processed");
+      await this._processCode(response, state);
+      logger2.debug("code processed");
+      if (response.isOpenId) {
+        this._validateIdTokenAttributes(response);
       }
-      this._logger.debug("validateSignoutResponse: state validated");
-      response.state = state.data;
+      logger2.debug("tokens validated");
+      await this._processClaims(response, state == null ? void 0 : state.skipUserInfo);
+      logger2.debug("claims processed");
+    }
+    async validateRefreshResponse(response, state) {
+      var _a;
+      const logger2 = this._logger.create("validateRefreshResponse");
+      response.userState = state.data;
+      (_a = response.scope) != null ? _a : response.scope = state.scope;
+      if (response.isOpenId && !!response.id_token) {
+        this._validateIdTokenAttributes(response, state.id_token);
+      }
+      logger2.debug("tokens validated");
+      await this._processClaims(response);
+      logger2.debug("claims processed");
+    }
+    validateSignoutResponse(response, state) {
+      const logger2 = this._logger.create("validateSignoutResponse");
+      if (state.id !== response.state) {
+        logger2.throw(new Error("State does not match"));
+      }
+      logger2.debug("state validated");
+      response.userState = state.data;
       if (response.error) {
-        this._logger.warn("validateSignoutResponse: Response was error", response.error);
+        logger2.warn("Response was error", response.error);
         throw new ErrorResponse(response);
       }
-      return response;
     }
-    _processSigninParams(state, response) {
-      if (state.id !== response.state_id) {
-        this._logger.error("_processSigninParams: State does not match");
-        throw new Error("State does not match");
+    _processSigninState(response, state) {
+      var _a;
+      const logger2 = this._logger.create("_processSigninState");
+      if (state.id !== response.state) {
+        logger2.throw(new Error("State does not match"));
       }
       if (!state.client_id) {
-        this._logger.error("_processSigninParams: No client_id on state");
-        throw new Error("No client_id on state");
+        logger2.throw(new Error("No client_id on state"));
       }
       if (!state.authority) {
-        this._logger.error("_processSigninParams: No authority on state");
-        throw new Error("No authority on state");
+        logger2.throw(new Error("No authority on state"));
       }
       if (this._settings.authority !== state.authority) {
-        this._logger.error("_processSigninParams: authority mismatch on settings vs. signin state");
-        throw new Error("authority mismatch on settings vs. signin state");
+        logger2.throw(new Error("authority mismatch on settings vs. signin state"));
       }
       if (this._settings.client_id && this._settings.client_id !== state.client_id) {
-        this._logger.error("_processSigninParams: client_id mismatch on settings vs. signin state");
-        throw new Error("client_id mismatch on settings vs. signin state");
+        logger2.throw(new Error("client_id mismatch on settings vs. signin state"));
       }
-      this._logger.debug("_processSigninParams: state validated");
-      response.state = state.data;
+      logger2.debug("state validated");
+      response.userState = state.data;
+      (_a = response.scope) != null ? _a : response.scope = state.scope;
       if (response.error) {
-        this._logger.warn("_processSigninParams: Response was error", response.error);
+        logger2.warn("Response was error", response.error);
         throw new ErrorResponse(response);
       }
       if (state.code_verifier && !response.code) {
-        this._logger.error("_processSigninParams: Expecting code in response");
-        throw new Error("No code in response");
+        logger2.throw(new Error("Expected code in response"));
       }
       if (!state.code_verifier && response.code) {
-        this._logger.error("_processSigninParams: Not expecting code in response");
-        throw new Error("Unexpected code in response");
+        logger2.throw(new Error("Unexpected code in response"));
       }
-      if (!response.scope) {
-        response.scope = state.scope;
-      }
-      return response;
     }
-    async _processClaims(state, response) {
-      if (response.isOpenIdConnect) {
-        this._logger.debug("_processClaims: response is OIDC, processing claims");
-        response.profile = this._filterProtocolClaims(response.profile);
-        if (state.skipUserInfo !== true && this._settings.loadUserInfo && response.access_token) {
-          this._logger.debug("_processClaims: loading user info");
-          const claims = await this._userInfoService.getClaims(response.access_token);
-          this._logger.debug("_processClaims: user info claims received from user info endpoint");
-          if (claims.sub !== response.profile.sub) {
-            this._logger.error("_processClaims: sub from user info endpoint does not match sub in id_token");
-            throw new Error("sub from user info endpoint does not match sub in id_token");
-          }
-          response.profile = this._mergeClaims(response.profile, claims);
-          this._logger.debug("_processClaims: user info claims received, updated profile:", response.profile);
-          return response;
-        } else {
-          this._logger.debug("_processClaims: not loading user info");
-        }
-      } else {
-        this._logger.debug("_processClaims: response is not OIDC, not processing claims");
+    async _processClaims(response, skipUserInfo = false) {
+      const logger2 = this._logger.create("_processClaims");
+      response.profile = this._filterProtocolClaims(response.profile);
+      if (skipUserInfo || !this._settings.loadUserInfo || !response.access_token) {
+        logger2.debug("not loading user info");
+        return;
       }
-      return response;
+      logger2.debug("loading user info");
+      const claims = await this._userInfoService.getClaims(response.access_token);
+      logger2.debug("user info claims received from user info endpoint");
+      if (response.isOpenId && claims.sub !== response.profile.sub) {
+        logger2.throw(new Error("subject from UserInfo response does not match subject in ID Token"));
+      }
+      response.profile = this._mergeClaims(response.profile, this._filterProtocolClaims(claims));
+      logger2.debug("user info claims received, updated profile:", response.profile);
     }
     _mergeClaims(claims1, claims2) {
-      const result = Object.assign({}, claims1);
-      for (const name in claims2) {
-        let values = claims2[name];
-        if (!Array.isArray(values)) {
-          values = [values];
-        }
-        for (let i = 0; i < values.length; i++) {
-          const value = values[i];
-          if (!result[name]) {
-            result[name] = value;
-          } else if (Array.isArray(result[name])) {
-            if (result[name].indexOf(value) < 0) {
-              result[name].push(value);
+      const result = { ...claims1 };
+      for (const [claim, values] of Object.entries(claims2)) {
+        for (const value of Array.isArray(values) ? values : [values]) {
+          const previousValue = result[claim];
+          if (!previousValue) {
+            result[claim] = value;
+          } else if (Array.isArray(previousValue)) {
+            if (!previousValue.includes(value)) {
+              previousValue.push(value);
             }
-          } else if (result[name] !== value) {
+          } else if (result[claim] !== value) {
             if (typeof value === "object" && this._settings.mergeClaims) {
-              result[name] = this._mergeClaims(result[name], value);
+              result[claim] = this._mergeClaims(previousValue, value);
             } else {
-              result[name] = [result[name], value];
+              result[claim] = [previousValue, value];
             }
           }
         }
@@ -1631,57 +1675,55 @@ var oidc = (() => {
       return result;
     }
     _filterProtocolClaims(claims) {
-      this._logger.debug("_filterProtocolClaims, incoming claims:", claims);
-      const result = Object.assign({}, claims);
+      const result = { ...claims };
       if (this._settings.filterProtocolClaims) {
-        ProtocolClaims.forEach((type) => {
+        for (const type of ProtocolClaims) {
           delete result[type];
-        });
-        this._logger.debug("_filterProtocolClaims: protocol claims filtered:", result);
-      } else {
-        this._logger.debug("_filterProtocolClaims: protocol claims not filtered");
+        }
       }
       return result;
     }
-    async _validateTokens(state, response) {
+    async _processCode(response, state) {
+      const logger2 = this._logger.create("_processCode");
       if (response.code) {
-        this._logger.debug("_validateTokens: Validating code");
-        return this._processCode(state, response);
+        logger2.debug("Validating code");
+        const tokenResponse = await this._tokenClient.exchangeCode({
+          client_id: state.client_id,
+          client_secret: state.client_secret,
+          code: response.code,
+          redirect_uri: state.redirect_uri,
+          code_verifier: state.code_verifier,
+          ...state.extraTokenParams
+        });
+        Object.assign(response, tokenResponse);
+      } else {
+        logger2.debug("No code to process");
       }
-      this._logger.debug("_validateTokens: No code to process");
-      return response;
     }
-    async _processCode(state, response) {
-      const request = {
-        client_id: state.client_id,
-        client_secret: state.client_secret,
-        code: response.code,
-        redirect_uri: state.redirect_uri,
-        code_verifier: state.code_verifier || ""
-      };
-      if (state.extraTokenParams && typeof state.extraTokenParams === "object") {
-        Object.assign(request, state.extraTokenParams);
+    _validateIdTokenAttributes(response, currentToken) {
+      var _a;
+      const logger2 = this._logger.create("_validateIdTokenAttributes");
+      logger2.debug("decoding ID Token JWT");
+      const profile = JwtUtils.decode((_a = response.id_token) != null ? _a : "");
+      if (!profile.sub) {
+        logger2.throw(new Error("ID Token is missing a subject claim"));
       }
-      const { expires_in, ...tokenResponse } = await this._tokenClient.exchangeCode(request);
-      Object.assign(response, tokenResponse);
-      if (expires_in)
-        response.expires_in = Number(expires_in);
-      if (response.id_token) {
-        this._logger.debug("_processCode: token response successful, processing id_token");
-        return this._validateIdTokenAttributes(response, response.id_token);
+      if (currentToken) {
+        const current = JwtUtils.decode(currentToken);
+        if (current.sub !== profile.sub) {
+          logger2.throw(new Error("sub in id_token does not match current sub"));
+        }
+        if (current.auth_time && current.auth_time !== profile.auth_time) {
+          logger2.throw(new Error("auth_time in id_token does not match original auth_time"));
+        }
+        if (current.azp && current.azp !== profile.azp) {
+          logger2.throw(new Error("azp in id_token does not match original azp"));
+        }
+        if (!current.azp && profile.azp) {
+          logger2.throw(new Error("azp not in id_token, but present in original id_token"));
+        }
       }
-      this._logger.debug("_processCode: token response successful, returning response");
-      return response;
-    }
-    _validateIdTokenAttributes(response, id_token) {
-      this._logger.debug("_validateIdTokenAttributes: Decoding JWT attributes");
-      const payload = JwtUtils.decode(id_token);
-      if (!payload.sub) {
-        this._logger.error("_validateIdTokenAttributes: No sub present in id_token");
-        throw new Error("No sub present in id_token");
-      }
-      response.profile = payload;
-      return response;
+      response.profile = profile;
     }
   };
 
@@ -1698,7 +1740,7 @@ var oidc = (() => {
       this.request_type = args.request_type;
     }
     toStorageString() {
-      Logger.debug("State", "toStorageString");
+      new Logger("State").create("toStorageString");
       return JSON.stringify({
         id: this.id,
         data: this.data,
@@ -1707,13 +1749,14 @@ var oidc = (() => {
       });
     }
     static fromStorageString(storageString) {
-      Logger.debug("State", "fromStorageString");
+      Logger.createStatic("State", "fromStorageString");
       return new State(JSON.parse(storageString));
     }
     static async clearStaleState(storage, age) {
+      const logger2 = Logger.createStatic("State", "clearStaleState");
       const cutoff = Timer.getEpochTime() - age;
       const keys = await storage.getAllKeys();
-      Logger.debug("State", "clearStaleState: got keys", keys);
+      logger2.debug("got keys", keys);
       for (let i = 0; i < keys.length; i++) {
         const key = keys[i];
         const item = await storage.get(key);
@@ -1721,20 +1764,20 @@ var oidc = (() => {
         if (item) {
           try {
             const state = State.fromStorageString(item);
-            Logger.debug("State", "clearStaleState: got item from key: ", key, state.created);
+            logger2.debug("got item from key:", key, state.created);
             if (state.created <= cutoff) {
               remove = true;
             }
           } catch (err) {
-            Logger.error("State", "clearStaleState: Error parsing state for key", key, err instanceof Error ? err.message : err);
+            logger2.error("Error parsing state for key:", key, err);
             remove = true;
           }
         } else {
-          Logger.debug("State", "clearStaleState: no item in storage for key: ", key);
+          logger2.debug("no item in storage for key:", key);
           remove = true;
         }
         if (remove) {
-          Logger.debug("State", "clearStaleState: removed item for key: ", key);
+          logger2.debug("removed item for key:", key);
           void storage.remove(key);
         }
       }
@@ -1763,7 +1806,7 @@ var oidc = (() => {
       this.skipUserInfo = args.skipUserInfo;
     }
     toStorageString() {
-      Logger.debug("SigninState", "toStorageString");
+      new Logger("SigninState").create("toStorageString");
       return JSON.stringify({
         id: this.id,
         data: this.data,
@@ -1781,7 +1824,7 @@ var oidc = (() => {
       });
     }
     static fromStorageString(storageString) {
-      Logger.debug("SigninState", "fromStorageString");
+      Logger.createStatic("SigninState", "fromStorageString");
       const data = JSON.parse(storageString);
       return new SigninState(data);
     }
@@ -1866,49 +1909,32 @@ var oidc = (() => {
   var OidcScope = "openid";
   var SigninResponse = class {
     constructor(params) {
+      this.access_token = "";
+      this.token_type = "";
       this.profile = {};
-      var _a, _b, _c;
-      const values = new Map(params);
-      this.error = values.get("error");
-      this.error_description = values.get("error_description");
-      this.error_uri = values.get("error_uri");
-      this.code = (_a = values.get("code")) != null ? _a : "";
-      this.access_token = (_b = values.get("access_token")) != null ? _b : "";
-      this.token_type = (_c = values.get("token_type")) != null ? _c : "";
-      this.state_id = values.get("state");
-      this.id_token = values.get("id_token");
-      this.session_state = values.get("session_state");
-      this.refresh_token = values.get("refresh_token");
-      this.scope = values.get("scope");
-      const expiresIn = values.get("expires_in");
-      this.expires_in = expiresIn ? parseInt(expiresIn) : void 0;
+      this.state = params.get("state");
+      this.session_state = params.get("session_state");
+      this.error = params.get("error");
+      this.error_description = params.get("error_description");
+      this.error_uri = params.get("error_uri");
+      this.code = params.get("code");
     }
     get expires_in() {
-      if (this.expires_at) {
-        const now = Timer.getEpochTime();
-        return this.expires_at - now;
+      if (this.expires_at === void 0) {
+        return void 0;
       }
-      return void 0;
+      return this.expires_at - Timer.getEpochTime();
     }
     set expires_in(value) {
-      if (value && value > 0) {
-        const expires_in = Math.floor(value);
-        const now = Timer.getEpochTime();
-        this.expires_at = now + expires_in;
+      if (typeof value === "string")
+        value = Number(value);
+      if (value !== void 0 && value >= 0) {
+        this.expires_at = Math.floor(value) + Timer.getEpochTime();
       }
     }
-    get expired() {
-      const expires_in = this.expires_in;
-      if (expires_in !== void 0) {
-        return expires_in <= 0;
-      }
-      return void 0;
-    }
-    get scopes() {
-      return (this.scope || "").split(" ");
-    }
-    get isOpenIdConnect() {
-      return this.scopes.indexOf(OidcScope) >= 0 || !!this.id_token;
+    get isOpenId() {
+      var _a;
+      return ((_a = this.scope) == null ? void 0 : _a.split(" ").includes(OidcScope)) || !!this.id_token;
     }
   };
 
@@ -1950,61 +1976,49 @@ var oidc = (() => {
   // src/SignoutResponse.ts
   var SignoutResponse = class {
     constructor(params) {
-      const values = new Map(params);
-      this.error = values.get("error");
-      this.error_description = values.get("error_description");
-      this.error_uri = values.get("error_uri");
-      this.state_id = values.get("state");
+      this.state = params.get("state");
+      this.error = params.get("error");
+      this.error_description = params.get("error_description");
+      this.error_uri = params.get("error_uri");
     }
   };
 
   // src/OidcClient.ts
   var OidcClient = class {
     constructor(settings) {
-      this.settings = new OidcClientSettingsStore(settings);
       this._logger = new Logger("OidcClient");
+      this.settings = new OidcClientSettingsStore(settings);
       this.metadataService = new MetadataService(this.settings);
       this._validator = new ResponseValidator(this.settings, this.metadataService);
+      this._tokenClient = new TokenClient(this.settings, this.metadataService);
     }
     async createSigninRequest({
-      response_type,
-      scope,
-      redirect_uri,
       state,
-      prompt,
-      display,
-      max_age,
-      ui_locales,
-      id_token_hint,
-      login_hint,
-      acr_values,
-      resource,
       request,
       request_uri,
-      response_mode,
-      extraQueryParams,
-      extraTokenParams,
       request_type,
-      skipUserInfo
+      id_token_hint,
+      login_hint,
+      skipUserInfo,
+      response_type = this.settings.response_type,
+      scope = this.settings.scope,
+      redirect_uri = this.settings.redirect_uri,
+      prompt = this.settings.prompt,
+      display = this.settings.display,
+      max_age = this.settings.max_age,
+      ui_locales = this.settings.ui_locales,
+      acr_values = this.settings.acr_values,
+      resource = this.settings.resource,
+      response_mode = this.settings.response_mode,
+      extraQueryParams = this.settings.extraQueryParams,
+      extraTokenParams = this.settings.extraTokenParams
     }) {
-      this._logger.debug("createSigninRequest");
-      response_type = response_type || this.settings.response_type;
-      scope = scope || this.settings.scope;
-      redirect_uri = redirect_uri || this.settings.redirect_uri;
-      prompt = prompt || this.settings.prompt;
-      display = display || this.settings.display;
-      max_age = max_age || this.settings.max_age;
-      ui_locales = ui_locales || this.settings.ui_locales;
-      acr_values = acr_values || this.settings.acr_values;
-      resource = resource || this.settings.resource;
-      response_mode = response_mode || this.settings.response_mode;
-      extraQueryParams = extraQueryParams || this.settings.extraQueryParams;
-      extraTokenParams = extraTokenParams || this.settings.extraTokenParams;
+      const logger2 = this._logger.create("createSigninRequest");
       if (response_type !== "code") {
         throw new Error("Only the Authorization Code flow (with PKCE) is supported");
       }
       const url = await this.metadataService.getAuthorizationEndpoint();
-      this._logger.debug("createSigninRequest: Received authorization endpoint", url);
+      logger2.debug("Received authorization endpoint", url);
       const signinRequest = new SigninRequest({
         url,
         authority: this.settings.authority,
@@ -2035,45 +2049,57 @@ var oidc = (() => {
       return signinRequest;
     }
     async readSigninResponseState(url, removeState = false) {
-      this._logger.debug("readSigninResponseState");
+      const logger2 = this._logger.create("readSigninResponseState");
       const response = new SigninResponse(UrlUtils.readParams(url, this.settings.response_mode));
-      const stateKey = response.state_id;
-      if (!stateKey) {
-        this._logger.error("readSigninResponseState: No state in response");
-        throw new Error("No state in response");
+      if (!response.state) {
+        logger2.throw(new Error("No state in response"));
+        throw null;
       }
-      const stateStore = this.settings.stateStore;
-      const stateApi = removeState ? stateStore.remove.bind(stateStore) : stateStore.get.bind(stateStore);
-      const storedStateString = await stateApi(stateKey);
+      const storedStateString = await this.settings.stateStore[removeState ? "remove" : "get"](response.state);
       if (!storedStateString) {
-        this._logger.error("readSigninResponseState: No matching state found in storage");
-        throw new Error("No matching state found in storage");
+        logger2.throw(new Error("No matching state found in storage"));
+        throw null;
       }
       const state = SigninState.fromStorageString(storedStateString);
       return { state, response };
     }
     async processSigninResponse(url) {
-      this._logger.debug("processSigninResponse");
+      const logger2 = this._logger.create("processSigninResponse");
       const { state, response } = await this.readSigninResponseState(url, true);
-      this._logger.debug("processSigninResponse: Received state from storage; validating response");
-      return await this._validator.validateSigninResponse(state, response);
+      logger2.debug("received state from storage; validating response");
+      await this._validator.validateSigninResponse(response, state);
+      return response;
+    }
+    async useRefreshToken({
+      state,
+      timeoutInSeconds
+    }) {
+      const logger2 = this._logger.create("useRefreshToken");
+      const result = await this._tokenClient.exchangeRefreshToken({
+        refresh_token: state.refresh_token,
+        scope: state.scope,
+        timeoutInSeconds
+      });
+      const response = new SigninResponse(new URLSearchParams());
+      Object.assign(response, result);
+      logger2.debug("validating response", response);
+      await this._validator.validateRefreshResponse(response, state);
+      return response;
     }
     async createSignoutRequest({
       state,
       id_token_hint,
-      post_logout_redirect_uri,
-      extraQueryParams,
-      request_type
+      request_type,
+      post_logout_redirect_uri = this.settings.post_logout_redirect_uri,
+      extraQueryParams = this.settings.extraQueryParams
     } = {}) {
-      this._logger.debug("createSignoutRequest");
-      post_logout_redirect_uri = post_logout_redirect_uri || this.settings.post_logout_redirect_uri;
-      extraQueryParams = extraQueryParams || this.settings.extraQueryParams;
+      const logger2 = this._logger.create("createSignoutRequest");
       const url = await this.metadataService.getEndSessionEndpoint();
       if (!url) {
-        this._logger.error("createSignoutRequest: No end session endpoint url returned");
-        throw new Error("no end session endpoint");
+        logger2.throw(new Error("No end session endpoint"));
+        throw null;
       }
-      this._logger.debug("createSignoutRequest: Received end session endpoint", url);
+      logger2.debug("Received end session endpoint", url);
       const request = new SignoutRequest({
         url,
         id_token_hint,
@@ -2084,65 +2110,73 @@ var oidc = (() => {
       });
       const signoutState = request.state;
       if (signoutState) {
-        this._logger.debug("createSignoutRequest: Signout request has state to persist");
+        logger2.debug("Signout request has state to persist");
         await this.settings.stateStore.set(signoutState.id, signoutState.toStorageString());
       }
       return request;
     }
     async readSignoutResponseState(url, removeState = false) {
-      this._logger.debug("readSignoutResponseState");
+      const logger2 = this._logger.create("readSignoutResponseState");
       const response = new SignoutResponse(UrlUtils.readParams(url, this.settings.response_mode));
-      const stateKey = response.state_id;
-      if (!stateKey) {
-        this._logger.debug("readSignoutResponseState: No state in response");
+      if (!response.state) {
+        logger2.debug("No state in response");
         if (response.error) {
-          this._logger.warn("readSignoutResponseState: Response was error:", response.error);
+          logger2.warn("Response was error:", response.error);
           throw new ErrorResponse(response);
         }
         return { state: void 0, response };
       }
-      const stateStore = this.settings.stateStore;
-      const stateApi = removeState ? stateStore.remove.bind(stateStore) : stateStore.get.bind(stateStore);
-      const storedStateString = await stateApi(stateKey);
+      const storedStateString = await this.settings.stateStore[removeState ? "remove" : "get"](response.state);
       if (!storedStateString) {
-        this._logger.error("readSignoutResponseState: No matching state found in storage");
-        throw new Error("No matching state found in storage");
+        logger2.throw(new Error("No matching state found in storage"));
+        throw null;
       }
       const state = State.fromStorageString(storedStateString);
       return { state, response };
     }
     async processSignoutResponse(url) {
-      this._logger.debug("processSignoutResponse");
+      const logger2 = this._logger.create("processSignoutResponse");
       const { state, response } = await this.readSignoutResponseState(url, true);
       if (state) {
-        this._logger.debug("processSignoutResponse: Received state from storage; validating response");
-        return this._validator.validateSignoutResponse(state, response);
+        logger2.debug("Received state from storage; validating response");
+        this._validator.validateSignoutResponse(response, state);
+      } else {
+        logger2.debug("No state from storage; skipping response validation");
       }
-      this._logger.debug("processSignoutResponse: No state from storage; skipping validating response");
       return response;
     }
     clearStaleState() {
-      this._logger.debug("clearStaleState");
+      this._logger.create("clearStaleState");
       return State.clearStaleState(this.settings.stateStore, this.settings.staleStateAgeInSeconds);
+    }
+    async revokeToken(token, type) {
+      this._logger.create("revokeToken");
+      return await this._tokenClient.revoke({
+        token,
+        token_type_hint: type
+      });
     }
   };
 
   // src/SessionMonitor.ts
   var SessionMonitor = class {
-    constructor(userManager) {
+    constructor(_userManager) {
+      this._userManager = _userManager;
+      this._logger = new Logger("SessionMonitor");
       this._start = async (user) => {
         const session_state = user.session_state;
         if (!session_state) {
           return;
         }
+        const logger2 = this._logger.create("_start");
         if (user.profile) {
           this._sub = user.profile.sub;
           this._sid = user.profile.sid;
-          this._logger.debug("_start: session_state:", session_state, ", sub:", this._sub);
+          logger2.debug("session_state", session_state, ", sub", this._sub);
         } else {
           this._sub = void 0;
           this._sid = void 0;
-          this._logger.debug("_start: session_state:", session_state, ", anonymous user");
+          logger2.debug("session_state", session_state, ", anonymous user");
         }
         if (this._checkSessionIFrame) {
           this._checkSessionIFrame.start(session_state);
@@ -2151,7 +2185,7 @@ var oidc = (() => {
         try {
           const url = await this._userManager.metadataService.getCheckSessionIframe();
           if (url) {
-            this._logger.debug("_start: Initializing check session iframe");
+            logger2.debug("initializing check session iframe");
             const client_id = this._userManager.settings.client_id;
             const intervalInSeconds = this._userManager.settings.checkSessionIntervalInSeconds;
             const stopOnError = this._userManager.settings.stopCheckSessionOnError;
@@ -2160,22 +2194,22 @@ var oidc = (() => {
             this._checkSessionIFrame = checkSessionIFrame;
             checkSessionIFrame.start(session_state);
           } else {
-            this._logger.warn("_start: No check session iframe found in the metadata");
+            logger2.warn("no check session iframe found in the metadata");
           }
         } catch (err) {
-          this._logger.error("_start: Error from getCheckSessionIframe:", err instanceof Error ? err.message : err);
+          logger2.error("Error from getCheckSessionIframe:", err instanceof Error ? err.message : err);
         }
       };
       this._stop = () => {
+        const logger2 = this._logger.create("_stop");
         this._sub = void 0;
         this._sid = void 0;
         if (this._checkSessionIFrame) {
-          this._logger.debug("_stop");
           this._checkSessionIFrame.stop();
         }
         if (this._userManager.settings.monitorAnonymousSession) {
-          const timerHandle = this._timer.setInterval(async () => {
-            this._timer.clearInterval(timerHandle);
+          const timerHandle = setInterval(async () => {
+            clearInterval(timerHandle);
             try {
               const session = await this._userManager.querySessionStatus();
               if (session) {
@@ -2189,12 +2223,13 @@ var oidc = (() => {
                 void this._start(tmpUser);
               }
             } catch (err) {
-              this._logger.error("_stop: error from querySessionStatus:", err instanceof Error ? err.message : err);
+              logger2.error("error from querySessionStatus", err instanceof Error ? err.message : err);
             }
           }, 1e3);
         }
       };
       this._callback = async () => {
+        const logger2 = this._logger.create("_callback");
         try {
           const session = await this._userManager.querySessionStatus();
           let raiseEvent = true;
@@ -2203,47 +2238,44 @@ var oidc = (() => {
               raiseEvent = false;
               this._checkSessionIFrame.start(session.session_state);
               if (session.sid === this._sid) {
-                this._logger.debug("_callback: Same sub still logged in at OP, restarting check session iframe; session_state:", session.session_state);
+                logger2.debug("same sub still logged in at OP, restarting check session iframe; session_state", session.session_state);
               } else {
-                this._logger.debug("_callback: Same sub still logged in at OP, session state has changed, restarting check session iframe; session_state:", session.session_state);
+                logger2.debug("same sub still logged in at OP, session state has changed, restarting check session iframe; session_state", session.session_state);
                 this._userManager.events._raiseUserSessionChanged();
               }
             } else {
-              this._logger.debug("_callback: Different subject signed into OP:", session.sub);
+              logger2.debug("different subject signed into OP", session.sub);
             }
           } else {
-            this._logger.debug("_callback: Subject no longer signed into OP");
+            logger2.debug("subject no longer signed into OP");
           }
           if (raiseEvent) {
             if (this._sub) {
-              this._logger.debug("_callback: SessionMonitor._callback; raising signed out event");
               this._userManager.events._raiseUserSignedOut();
             } else {
-              this._logger.debug("_callback: SessionMonitor._callback; raising signed in event");
               this._userManager.events._raiseUserSignedIn();
             }
+          } else {
+            logger2.debug("no change in session detected, no event to raise");
           }
         } catch (err) {
           if (this._sub) {
-            this._logger.debug("_callback: Error calling queryCurrentSigninSession; raising signed out event", err instanceof Error ? err.message : err);
+            logger2.debug("Error calling queryCurrentSigninSession; raising signed out event", err);
             this._userManager.events._raiseUserSignedOut();
           }
         }
       };
-      this._logger = new Logger("SessionMonitor");
-      if (!userManager) {
-        this._logger.error("ctor: No user manager passed to SessionMonitor");
-        throw new Error("userManager");
+      if (!_userManager) {
+        this._logger.throw(new Error("No user manager passed"));
       }
-      this._userManager = userManager;
-      this._timer = g_timer;
       this._userManager.events.addUserLoaded(this._start);
       this._userManager.events.addUserUnloaded(this._stop);
-      Promise.resolve(this._init()).catch((err) => {
-        this._logger.error("ctor: error:", err.message);
+      this._init().catch((err) => {
+        this._logger.error(err);
       });
     }
     async _init() {
+      this._logger.create("_init");
       const user = await this._userManager.getUser();
       if (user) {
         void this._start(user);
@@ -2266,42 +2298,41 @@ var oidc = (() => {
   // src/User.ts
   var User = class {
     constructor(args) {
+      var _a;
       this.id_token = args.id_token;
-      this.session_state = args.session_state;
+      this.session_state = (_a = args.session_state) != null ? _a : null;
       this.access_token = args.access_token;
       this.refresh_token = args.refresh_token;
       this.token_type = args.token_type;
       this.scope = args.scope;
       this.profile = args.profile;
       this.expires_at = args.expires_at;
-      this.state = args.state;
+      this.state = args.userState;
     }
     get expires_in() {
-      if (this.expires_at) {
-        const now = Timer.getEpochTime();
-        return this.expires_at - now;
+      if (this.expires_at === void 0) {
+        return void 0;
       }
-      return void 0;
+      return this.expires_at - Timer.getEpochTime();
     }
     set expires_in(value) {
-      if (value && value > 0) {
-        const expires_in = Math.floor(value);
-        const now = Timer.getEpochTime();
-        this.expires_at = now + expires_in;
+      if (value !== void 0) {
+        this.expires_at = Math.floor(value) + Timer.getEpochTime();
       }
     }
     get expired() {
       const expires_in = this.expires_in;
-      if (expires_in !== void 0) {
-        return expires_in <= 0;
+      if (expires_in === void 0) {
+        return void 0;
       }
-      return void 0;
+      return expires_in <= 0;
     }
     get scopes() {
-      return (this.scope || "").split(" ");
+      var _a, _b;
+      return (_b = (_a = this.scope) == null ? void 0 : _a.split(" ")) != null ? _b : [];
     }
     toStorageString() {
-      Logger.debug("User", "toStorageString");
+      new Logger("User").create("toStorageString");
       return JSON.stringify({
         id_token: this.id_token,
         session_state: this.session_state,
@@ -2314,7 +2345,7 @@ var oidc = (() => {
       });
     }
     static fromStorageString(storageString) {
-      Logger.debug("User", "fromStorageString");
+      Logger.createStatic("User", "fromStorageString");
       return new User(JSON.parse(storageString));
     }
   };
@@ -2328,21 +2359,22 @@ var oidc = (() => {
       this._window = null;
     }
     async navigate(params) {
+      const logger2 = this._logger.create("navigate");
       if (!this._window) {
         throw new Error("Attempted to navigate on a disposed window");
       }
-      this._logger.debug("navigate: Setting URL in window");
+      logger2.debug("setting URL in window");
       this._window.location.replace(params.url);
       const { url, keepOpen } = await new Promise((resolve, reject) => {
         const listener = (e2) => {
-          var _a;
-          if (e2.origin !== window.location.origin || ((_a = e2.data) == null ? void 0 : _a.source) !== messageSource) {
+          const data = e2.data;
+          if (e2.origin !== window.location.origin || (data == null ? void 0 : data.source) !== messageSource) {
             return;
           }
           try {
-            const state = UrlUtils.readParams(e2.data.url, params.response_mode).get("state");
+            const state = UrlUtils.readParams(data.url, params.response_mode).get("state");
             if (!state) {
-              this._logger.warn("navigate: no state found in response url");
+              logger2.warn("no state found in response url");
             }
             if (e2.source !== this._window && state !== params.state) {
               return;
@@ -2351,7 +2383,7 @@ var oidc = (() => {
             this._dispose();
             reject(new Error("Invalid response from window"));
           }
-          resolve(e2.data);
+          resolve(data);
         };
         window.addEventListener("message", listener, false);
         this._disposeHandlers.add(() => window.removeEventListener("message", listener, false));
@@ -2360,7 +2392,7 @@ var oidc = (() => {
           reject(reason);
         }));
       });
-      this._logger.debug("navigate: Got response from window");
+      logger2.debug("got response from window");
       this._dispose();
       if (!keepOpen) {
         this.close();
@@ -2368,7 +2400,7 @@ var oidc = (() => {
       return { url };
     }
     _dispose() {
-      this._logger.debug("_dispose");
+      this._logger.create("_dispose");
       for (const dispose of this._disposeHandlers) {
         dispose();
       }
@@ -2383,38 +2415,108 @@ var oidc = (() => {
     }
   };
 
+  // src/UserManagerSettings.ts
+  var DefaultPopupWindowFeatures = {
+    location: false,
+    toolbar: false,
+    height: 640
+  };
+  var DefaultPopupTarget = "_blank";
+  var DefaultAccessTokenExpiringNotificationTimeInSeconds = 60;
+  var DefaultCheckSessionIntervalInSeconds = 2;
+  var DefaultSilentRequestTimeoutInSeconds = 10;
+  var UserManagerSettingsStore = class extends OidcClientSettingsStore {
+    constructor(args) {
+      const {
+        popup_redirect_uri = args.redirect_uri,
+        popup_post_logout_redirect_uri = args.post_logout_redirect_uri,
+        popupWindowFeatures = DefaultPopupWindowFeatures,
+        popupWindowTarget = DefaultPopupTarget,
+        redirectMethod = "assign",
+        silent_redirect_uri = args.redirect_uri,
+        silentRequestTimeoutInSeconds = DefaultSilentRequestTimeoutInSeconds,
+        automaticSilentRenew = true,
+        validateSubOnSilentRenew = true,
+        includeIdTokenInSilentRenew = false,
+        monitorSession = false,
+        monitorAnonymousSession = false,
+        checkSessionIntervalInSeconds = DefaultCheckSessionIntervalInSeconds,
+        query_status_response_type = "code",
+        stopCheckSessionOnError = true,
+        revokeTokenTypes = ["access_token", "refresh_token"],
+        revokeTokensOnSignout = false,
+        accessTokenExpiringNotificationTimeInSeconds = DefaultAccessTokenExpiringNotificationTimeInSeconds,
+        userStore
+      } = args;
+      super(args);
+      this.popup_redirect_uri = popup_redirect_uri;
+      this.popup_post_logout_redirect_uri = popup_post_logout_redirect_uri;
+      this.popupWindowFeatures = popupWindowFeatures;
+      this.popupWindowTarget = popupWindowTarget;
+      this.redirectMethod = redirectMethod;
+      this.silent_redirect_uri = silent_redirect_uri;
+      this.silentRequestTimeoutInSeconds = silentRequestTimeoutInSeconds;
+      this.automaticSilentRenew = automaticSilentRenew;
+      this.validateSubOnSilentRenew = validateSubOnSilentRenew;
+      this.includeIdTokenInSilentRenew = includeIdTokenInSilentRenew;
+      this.monitorSession = monitorSession;
+      this.monitorAnonymousSession = monitorAnonymousSession;
+      this.checkSessionIntervalInSeconds = checkSessionIntervalInSeconds;
+      this.stopCheckSessionOnError = stopCheckSessionOnError;
+      this.query_status_response_type = query_status_response_type;
+      this.revokeTokenTypes = revokeTokenTypes;
+      this.revokeTokensOnSignout = revokeTokensOnSignout;
+      this.accessTokenExpiringNotificationTimeInSeconds = accessTokenExpiringNotificationTimeInSeconds;
+      if (userStore) {
+        this.userStore = userStore;
+      } else {
+        const store = typeof window !== "undefined" ? window.sessionStorage : new InMemoryWebStorage();
+        this.userStore = new WebStorageStateStore({ store });
+      }
+    }
+  };
+
   // src/navigators/IFrameWindow.ts
-  var defaultTimeoutInSeconds = 10;
   var IFrameWindow = class extends AbstractChildWindow {
     constructor({
-      silentRequestTimeoutInSeconds = defaultTimeoutInSeconds
+      silentRequestTimeoutInSeconds = DefaultSilentRequestTimeoutInSeconds
     }) {
       super();
       this._logger = new Logger("IFrameWindow");
       this._timeoutInSeconds = silentRequestTimeoutInSeconds;
-      this._frame = window.document.createElement("iframe");
+      this._frame = IFrameWindow.createHiddenIframe();
       this._window = this._frame.contentWindow;
-      this._frame.style.visibility = "hidden";
-      this._frame.style.position = "fixed";
-      this._frame.style.left = "-1000px";
-      this._frame.style.top = "0";
-      this._frame.width = "0";
-      this._frame.height = "0";
-      window.document.body.appendChild(this._frame);
-      this._window = this._frame.contentWindow;
+    }
+    static createHiddenIframe() {
+      const iframe = window.document.createElement("iframe");
+      iframe.style.visibility = "hidden";
+      iframe.style.position = "fixed";
+      iframe.style.left = "-1000px";
+      iframe.style.top = "0";
+      iframe.width = "0";
+      iframe.height = "0";
+      iframe.setAttribute("sandbox", "allow-scripts allow-same-origin allow-forms");
+      window.document.body.appendChild(iframe);
+      return iframe;
     }
     async navigate(params) {
       this._logger.debug("navigate: Using timeout of:", this._timeoutInSeconds);
-      const timer = setTimeout(() => this._abort.raise(new Error("IFrame timed out without a response")), this._timeoutInSeconds * 1e3);
+      const timer = setTimeout(() => this._abort.raise(new ErrorTimeout("IFrame timed out without a response")), this._timeoutInSeconds * 1e3);
       this._disposeHandlers.add(() => clearTimeout(timer));
       return await super.navigate(params);
     }
     close() {
+      var _a;
       if (this._frame) {
         if (this._frame.parentNode) {
-          this._frame.parentNode.removeChild(this._frame);
+          this._frame.addEventListener("load", (ev) => {
+            var _a2;
+            const frame = ev.target;
+            (_a2 = frame.parentNode) == null ? void 0 : _a2.removeChild(frame);
+            this._abort.raise(new Error("IFrame removed from DOM"));
+          }, true);
+          (_a = this._frame.contentWindow) == null ? void 0 : _a.location.replace("about:blank");
         }
-        this._abort.raise(new Error("IFrame removed from DOM"));
         this._frame = null;
       }
       this._window = null;
@@ -2436,27 +2538,21 @@ var oidc = (() => {
       return new IFrameWindow({ silentRequestTimeoutInSeconds });
     }
     async callback(url) {
-      this._logger.debug("callback");
+      this._logger.create("callback");
       IFrameWindow.notifyParent(url);
     }
   };
 
   // src/navigators/PopupWindow.ts
   var checkForPopupClosedInterval = 500;
-  var defaultPopupWindowFeatures = {
-    location: false,
-    toolbar: false,
-    height: 640
-  };
-  var defaultPopupTarget = "_blank";
   var PopupWindow = class extends AbstractChildWindow {
     constructor({
-      popupWindowTarget = defaultPopupTarget,
+      popupWindowTarget = DefaultPopupTarget,
       popupWindowFeatures = {}
     }) {
       super();
       this._logger = new Logger("PopupWindow");
-      const centeredPopup = PopupUtils.center({ ...defaultPopupWindowFeatures, ...popupWindowFeatures });
+      const centeredPopup = PopupUtils.center({ ...DefaultPopupWindowFeatures, ...popupWindowFeatures });
       this._window = window.open(void 0, popupWindowTarget, PopupUtils.serialize(centeredPopup));
     }
     async navigate(params) {
@@ -2467,15 +2563,15 @@ var oidc = (() => {
           this._abort.raise(new Error("Popup closed by user"));
         }
       }, checkForPopupClosedInterval);
-      this._disposeHandlers.add(this._abort.addHandler(() => clearInterval(popupClosedInterval)));
+      this._disposeHandlers.add(() => clearInterval(popupClosedInterval));
       return await super.navigate(params);
     }
     close() {
       if (this._window) {
         if (!this._window.closed) {
           this._window.close();
+          this._abort.raise(new Error("Popup closed"));
         }
-        this._abort.raise(new Error("Popup closed"));
       }
       this._window = null;
     }
@@ -2500,7 +2596,7 @@ var oidc = (() => {
       return new PopupWindow({ popupWindowFeatures, popupWindowTarget });
     }
     async callback(url, keepOpen = false) {
-      this._logger.debug("callback");
+      this._logger.create("callback");
       PopupWindow.notifyOpener(url, keepOpen);
     }
   };
@@ -2514,62 +2610,25 @@ var oidc = (() => {
     async prepare({
       redirectMethod = this._settings.redirectMethod
     }) {
+      this._logger.create("prepare");
       const redirect = window.location[redirectMethod].bind(window.location);
+      let abort;
       return {
-        navigate: (params) => redirect(params.url),
-        close: () => this._logger.warn("close: cannot close the current window")
+        navigate: async (params) => {
+          this._logger.create("navigate");
+          const promise = new Promise((resolve, reject) => {
+            abort = reject;
+            window.addEventListener("unload", () => resolve(null));
+          });
+          redirect(params.url);
+          return await promise;
+        },
+        close: () => {
+          this._logger.create("close");
+          abort == null ? void 0 : abort(new Error("Redirect aborted"));
+          window.stop();
+        }
       };
-    }
-  };
-
-  // src/UserManagerSettings.ts
-  var DefaultAccessTokenExpiringNotificationTimeInSeconds = 60;
-  var DefaultCheckSessionIntervalInSeconds = 2;
-  var UserManagerSettingsStore = class extends OidcClientSettingsStore {
-    constructor(args) {
-      const {
-        popup_redirect_uri,
-        popup_post_logout_redirect_uri,
-        popupWindowFeatures,
-        popupWindowTarget,
-        redirectMethod = "assign",
-        silent_redirect_uri,
-        silentRequestTimeoutInSeconds,
-        automaticSilentRenew = true,
-        validateSubOnSilentRenew = true,
-        includeIdTokenInSilentRenew = false,
-        monitorSession = false,
-        monitorAnonymousSession = false,
-        checkSessionIntervalInSeconds = DefaultCheckSessionIntervalInSeconds,
-        query_status_response_type,
-        stopCheckSessionOnError = true,
-        revokeAccessTokenOnSignout = false,
-        accessTokenExpiringNotificationTimeInSeconds = DefaultAccessTokenExpiringNotificationTimeInSeconds,
-        userStore = new WebStorageStateStore({ store: sessionStorage })
-      } = args;
-      super(args);
-      this.popup_redirect_uri = popup_redirect_uri;
-      this.popup_post_logout_redirect_uri = popup_post_logout_redirect_uri;
-      this.popupWindowFeatures = popupWindowFeatures;
-      this.popupWindowTarget = popupWindowTarget;
-      this.redirectMethod = redirectMethod;
-      this.silent_redirect_uri = silent_redirect_uri;
-      this.silentRequestTimeoutInSeconds = silentRequestTimeoutInSeconds;
-      this.automaticSilentRenew = automaticSilentRenew;
-      this.validateSubOnSilentRenew = validateSubOnSilentRenew;
-      this.includeIdTokenInSilentRenew = includeIdTokenInSilentRenew;
-      this.monitorSession = monitorSession;
-      this.monitorAnonymousSession = monitorAnonymousSession;
-      this.checkSessionIntervalInSeconds = checkSessionIntervalInSeconds;
-      this.stopCheckSessionOnError = stopCheckSessionOnError;
-      if (query_status_response_type) {
-        this.query_status_response_type = query_status_response_type;
-      } else {
-        this.query_status_response_type = "code";
-      }
-      this.revokeAccessTokenOnSignout = revokeAccessTokenOnSignout;
-      this.accessTokenExpiringNotificationTimeInSeconds = accessTokenExpiringNotificationTimeInSeconds;
-      this.userStore = userStore;
     }
   };
 
@@ -2586,67 +2645,61 @@ var oidc = (() => {
       this._userSessionChanged = new Event("User session changed");
     }
     load(user, raiseEvent = true) {
-      this._logger.debug("load");
       super.load(user);
       if (raiseEvent) {
         this._userLoaded.raise(user);
       }
     }
     unload() {
-      this._logger.debug("unload");
       super.unload();
       this._userUnloaded.raise();
     }
     addUserLoaded(cb) {
-      this._userLoaded.addHandler(cb);
+      return this._userLoaded.addHandler(cb);
     }
     removeUserLoaded(cb) {
-      this._userLoaded.removeHandler(cb);
+      return this._userLoaded.removeHandler(cb);
     }
     addUserUnloaded(cb) {
-      this._userUnloaded.addHandler(cb);
+      return this._userUnloaded.addHandler(cb);
     }
     removeUserUnloaded(cb) {
-      this._userUnloaded.removeHandler(cb);
+      return this._userUnloaded.removeHandler(cb);
     }
     addSilentRenewError(cb) {
-      this._silentRenewError.addHandler(cb);
+      return this._silentRenewError.addHandler(cb);
     }
     removeSilentRenewError(cb) {
-      this._silentRenewError.removeHandler(cb);
+      return this._silentRenewError.removeHandler(cb);
     }
     _raiseSilentRenewError(e2) {
-      this._logger.debug("_raiseSilentRenewError", e2.message);
       this._silentRenewError.raise(e2);
     }
     addUserSignedIn(cb) {
-      this._userSignedIn.addHandler(cb);
+      return this._userSignedIn.addHandler(cb);
     }
     removeUserSignedIn(cb) {
       this._userSignedIn.removeHandler(cb);
     }
     _raiseUserSignedIn() {
-      this._logger.debug("_raiseUserSignedIn");
       this._userSignedIn.raise();
     }
     addUserSignedOut(cb) {
-      this._userSignedOut.addHandler(cb);
+      return this._userSignedOut.addHandler(cb);
     }
     removeUserSignedOut(cb) {
       this._userSignedOut.removeHandler(cb);
     }
     _raiseUserSignedOut() {
-      this._logger.debug("_raiseUserSignedOut");
       this._userSignedOut.raise();
     }
     addUserSessionChanged(cb) {
-      this._userSessionChanged.addHandler(cb);
+      return this._userSessionChanged.addHandler(cb);
     }
     removeUserSessionChanged(cb) {
       this._userSessionChanged.removeHandler(cb);
     }
     _raiseUserSessionChanged() {
-      this._logger.debug("_raiseUserSessionChanged");
       this._userSessionChanged.raise();
     }
   };
@@ -2655,42 +2708,63 @@ var oidc = (() => {
   var SilentRenewService = class {
     constructor(_userManager) {
       this._userManager = _userManager;
-      this._isStarted = false;
-      this._tokenExpiring = () => {
-        this._userManager.signinSilent().then(() => {
-          this._logger.debug("_tokenExpiring: Silent token renewal successful");
-        }).catch((err) => {
-          const error = err instanceof Error ? err : new Error("Silent renew failed");
-          this._logger.error("_tokenExpiring: Error from signinSilent:", error.message);
-          this._userManager.events._raiseSilentRenewError(error);
-        });
-      };
       this._logger = new Logger("SilentRenewService");
+      this._isStarted = false;
+      this._retryTimer = new Timer("Retry Silent Renew");
+      this._tokenExpiring = async () => {
+        const logger2 = this._logger.create("_tokenExpiring");
+        try {
+          await this._userManager.signinSilent();
+          logger2.debug("silent token renewal successful");
+        } catch (err) {
+          if (err instanceof ErrorTimeout) {
+            logger2.warn("ErrorTimeout from signinSilent:", err, "retry in 5s");
+            this._retryTimer.init(5);
+            return;
+          }
+          logger2.error("Error from signinSilent:", err);
+          this._userManager.events._raiseSilentRenewError(err);
+        }
+      };
     }
     async start() {
+      const logger2 = this._logger.create("start");
       if (!this._isStarted) {
         this._isStarted = true;
         this._userManager.events.addAccessTokenExpiring(this._tokenExpiring);
+        this._retryTimer.addHandler(this._tokenExpiring);
         try {
           await this._userManager.getUser();
         } catch (err) {
-          this._logger.error("start: Error from getUser:", err instanceof Error ? err.message : err);
+          logger2.error("getUser error", err);
         }
       }
     }
     stop() {
       if (this._isStarted) {
+        this._retryTimer.cancel();
+        this._retryTimer.removeHandler(this._tokenExpiring);
         this._userManager.events.removeAccessTokenExpiring(this._tokenExpiring);
         this._isStarted = false;
       }
     }
   };
 
+  // src/RefreshState.ts
+  var RefreshState = class {
+    constructor(args) {
+      this.refresh_token = args.refresh_token;
+      this.id_token = args.id_token;
+      this.scope = args.scope;
+      this.data = args.state;
+    }
+  };
+
   // src/UserManager.ts
   var UserManager = class {
     constructor(settings) {
-      this.settings = new UserManagerSettingsStore(settings);
       this._logger = new Logger("UserManager");
+      this.settings = new UserManagerSettingsStore(settings);
       this._client = new OidcClient(settings);
       this._redirectNavigator = new RedirectNavigator(this.settings);
       this._popupNavigator = new PopupNavigator(this.settings);
@@ -2698,15 +2772,12 @@ var oidc = (() => {
       this._events = new UserManagerEvents(this.settings);
       this._silentRenewService = new SilentRenewService(this);
       if (this.settings.automaticSilentRenew) {
-        this._logger.debug("ctor: automaticSilentRenew is configured, setting up silent renew");
         this.startSilentRenew();
       }
       this._sessionMonitor = null;
       if (this.settings.monitorSession) {
-        this._logger.debug("ctor: monitorSession is configured, setting up session monitor");
         this._sessionMonitor = new SessionMonitor(this);
       }
-      this._tokenClient = new TokenClient(this.settings, this.metadataService);
     }
     get events() {
       return this._events;
@@ -2715,21 +2786,24 @@ var oidc = (() => {
       return this._client.metadataService;
     }
     async getUser() {
+      const logger2 = this._logger.create("getUser");
       const user = await this._loadUser();
       if (user) {
-        this._logger.info("getUser: user loaded");
+        logger2.info("user loaded");
         this._events.load(user, false);
         return user;
       }
-      this._logger.info("getUser: user not found in storage");
+      logger2.info("user not found in storage");
       return null;
     }
     async removeUser() {
+      const logger2 = this._logger.create("removeUser");
       await this.storeUser(null);
-      this._logger.info("removeUser: user removed from storage");
+      logger2.info("user removed from storage");
       this._events.unload();
     }
     async signinRedirect(args = {}) {
+      this._logger.create("signinRedirect");
       const {
         redirectMethod,
         ...requestArgs
@@ -2739,27 +2813,27 @@ var oidc = (() => {
         request_type: "si:r",
         ...requestArgs
       }, handle);
-      this._logger.info("signinRedirect: successful");
     }
     async signinRedirectCallback(url = window.location.href) {
+      const logger2 = this._logger.create("signinRedirectCallback");
       const user = await this._signinEnd(url);
       if (user.profile && user.profile.sub) {
-        this._logger.info("signinRedirectCallback: successful, signed in sub: ", user.profile.sub);
+        logger2.info("success, signed in subject", user.profile.sub);
       } else {
-        this._logger.info("signinRedirectCallback: no sub");
+        logger2.info("no subject");
       }
       return user;
     }
     async signinPopup(args = {}) {
+      const logger2 = this._logger.create("signinPopup");
       const {
         popupWindowFeatures,
         popupWindowTarget,
         ...requestArgs
       } = args;
-      const url = this.settings.popup_redirect_uri || this.settings.redirect_uri;
+      const url = this.settings.popup_redirect_uri;
       if (!url) {
-        this._logger.error("signinPopup: No popup_redirect_uri or redirect_uri configured");
-        throw new Error("No popup_redirect_uri or redirect_uri configured");
+        logger2.throw(new Error("No popup_redirect_uri configured"));
       }
       const handle = await this._popupNavigator.prepare({ popupWindowFeatures, popupWindowTarget });
       const user = await this._signin({
@@ -2770,38 +2844,38 @@ var oidc = (() => {
       }, handle);
       if (user) {
         if (user.profile && user.profile.sub) {
-          this._logger.info("signinPopup: signinPopup successful, signed in sub: ", user.profile.sub);
+          logger2.info("success, signed in subject", user.profile.sub);
         } else {
-          this._logger.info("signinPopup: no sub");
+          logger2.info("no subject");
         }
       }
       return user;
     }
     async signinPopupCallback(url = window.location.href, keepOpen = false) {
-      try {
-        await this._popupNavigator.callback(url, keepOpen);
-        this._logger.info("signinPopupCallback: successful");
-      } catch (err) {
-        this._logger.error("signinPopupCallback error", err instanceof Error ? err.message : err);
-      }
+      const logger2 = this._logger.create("signinPopupCallback");
+      await this._popupNavigator.callback(url, keepOpen);
+      logger2.info("success");
     }
     async signinSilent(args = {}) {
+      var _a;
+      const logger2 = this._logger.create("signinSilent");
       const {
         silentRequestTimeoutInSeconds,
         ...requestArgs
       } = args;
       let user = await this._loadUser();
-      if (user && user.refresh_token) {
-        return this._useRefreshToken(user);
+      if (user == null ? void 0 : user.refresh_token) {
+        logger2.debug("using refresh token");
+        const state = new RefreshState(user);
+        return await this._useRefreshToken(state);
       }
-      const url = this.settings.silent_redirect_uri || this.settings.redirect_uri;
+      const url = this.settings.silent_redirect_uri;
       if (!url) {
-        this._logger.error("signinSilent: No silent_redirect_uri configured");
-        throw new Error("No silent_redirect_uri configured");
+        logger2.throw(new Error("No silent_redirect_uri configured"));
       }
       let verifySub;
       if (user && this.settings.validateSubOnSilentRenew) {
-        this._logger.debug("signinSilent, subject prior to silent renew: ", user.profile.sub);
+        logger2.debug("subject prior to silent renew:", user.profile.sub);
         verifySub = user.profile.sub;
       }
       const handle = await this._iframeNavigator.prepare({ silentRequestTimeoutInSeconds });
@@ -2813,101 +2887,67 @@ var oidc = (() => {
         ...requestArgs
       }, handle, verifySub);
       if (user) {
-        if (user.profile && user.profile.sub) {
-          this._logger.info("signinSilent: successful, signed in sub: ", user.profile.sub);
+        if ((_a = user.profile) == null ? void 0 : _a.sub) {
+          logger2.info("success, signed in subject", user.profile.sub);
         } else {
-          this._logger.info("signinSilent: no sub");
+          logger2.info("no subject");
         }
       }
       return user;
     }
-    async _useRefreshToken(user) {
-      const result = await this._tokenClient.exchangeRefreshToken({
-        refresh_token: user.refresh_token || ""
+    async _useRefreshToken(state) {
+      const response = await this._client.useRefreshToken({
+        state,
+        timeoutInSeconds: this.settings.silentRequestTimeoutInSeconds
       });
-      if (!result) {
-        this._logger.error("_useRefreshToken: No response returned from token endpoint");
-        throw new Error("No response returned from token endpoint");
-      }
-      if (!result.access_token) {
-        this._logger.error("_useRefreshToken: No access token returned from token endpoint");
-        throw new Error("No access token returned from token endpoint");
-      }
-      if (result.id_token) {
-        await this._validateIdTokenFromTokenRefreshToken(user.profile, result.id_token);
-      }
-      this._logger.debug("_useRefreshToken: refresh token response success");
-      user.id_token = result.id_token || user.id_token;
-      user.access_token = result.access_token || user.access_token;
-      user.refresh_token = result.refresh_token || user.refresh_token;
-      user.expires_in = result.expires_in;
+      const user = new User({ ...state, ...response });
       await this.storeUser(user);
       this._events.load(user);
       return user;
     }
-    async _validateIdTokenFromTokenRefreshToken(profile, id_token) {
-      const payload = JwtUtils.decode(id_token);
-      if (!payload) {
-        this._logger.error("_validateIdTokenFromTokenRefreshToken: Failed to decode id_token");
-        throw new Error("Failed to decode id_token");
-      }
-      if (payload.sub !== profile.sub) {
-        this._logger.error("_validateIdTokenFromTokenRefreshToken: sub in id_token does not match current sub");
-        throw new Error("sub in id_token does not match current sub");
-      }
-      if (payload.auth_time && payload.auth_time !== profile.auth_time) {
-        this._logger.error("_validateIdTokenFromTokenRefreshToken: auth_time in id_token does not match original auth_time");
-        throw new Error("auth_time in id_token does not match original auth_time");
-      }
-      if (payload.azp && payload.azp !== profile.azp) {
-        this._logger.error("_validateIdTokenFromTokenRefreshToken: azp in id_token does not match original azp");
-        throw new Error("azp in id_token does not match original azp");
-      }
-      if (!payload.azp && profile.azp) {
-        this._logger.error("_validateIdTokenFromTokenRefreshToken: azp not in id_token, but present in original id_token");
-        throw new Error("azp not in id_token, but present in original id_token");
-      }
-    }
     async signinSilentCallback(url = window.location.href) {
+      const logger2 = this._logger.create("signinSilentCallback");
       await this._iframeNavigator.callback(url);
-      this._logger.info("signinSilentCallback: successful");
+      logger2.info("success");
     }
     async signinCallback(url = window.location.href) {
       const { state } = await this._client.readSigninResponseState(url);
-      if (state.request_type === "si:r") {
-        return this.signinRedirectCallback(url);
+      switch (state.request_type) {
+        case "si:r":
+          return await this.signinRedirectCallback(url);
+        case "si:p":
+          return await this.signinPopupCallback(url);
+        case "si:s":
+          return await this.signinSilentCallback(url);
+        default:
+          throw new Error("invalid response_type in state");
       }
-      if (state.request_type === "si:p") {
-        await this.signinPopupCallback(url);
-        return null;
-      }
-      if (state.request_type === "si:s") {
-        await this.signinSilentCallback(url);
-        return null;
-      }
-      throw new Error("invalid response_type in state");
     }
     async signoutCallback(url = window.location.href, keepOpen = false) {
       const { state } = await this._client.readSignoutResponseState(url);
-      if (state) {
-        if (state.request_type === "so:r") {
+      if (!state) {
+        return;
+      }
+      switch (state.request_type) {
+        case "so:r":
           await this.signoutRedirectCallback(url);
-        }
-        if (state.request_type === "so:p") {
+          break;
+        case "so:p":
           await this.signoutPopupCallback(url, keepOpen);
-        }
-        throw new Error("invalid response_type in state");
+          break;
+        default:
+          throw new Error("invalid response_type in state");
       }
     }
     async querySessionStatus(args = {}) {
+      const logger2 = this._logger.create("querySessionStatus");
       const {
         silentRequestTimeoutInSeconds,
         ...requestArgs
       } = args;
-      const url = this.settings.silent_redirect_uri || this.settings.redirect_uri;
+      const url = this.settings.silent_redirect_uri;
       if (!url) {
-        this._logger.error("querySessionStatus: No silent_redirect_uri configured");
-        throw new Error("No silent_redirect_uri configured");
+        logger2.throw(new Error("No silent_redirect_uri configured"));
       }
       const handle = await this._iframeNavigator.prepare({ silentRequestTimeoutInSeconds });
       const navResponse = await this._signinStart({
@@ -2921,24 +2961,28 @@ var oidc = (() => {
       }, handle);
       try {
         const signinResponse = await this._client.processSigninResponse(navResponse.url);
-        this._logger.debug("querySessionStatus: got signin response");
+        logger2.debug("got signin response");
         if (signinResponse.session_state && signinResponse.profile.sub) {
-          this._logger.info("querySessionStatus: querySessionStatus success for sub: ", signinResponse.profile.sub);
+          logger2.info("success for subject", signinResponse.profile.sub);
           return {
             session_state: signinResponse.session_state,
             sub: signinResponse.profile.sub,
             sid: signinResponse.profile.sid
           };
         }
-        this._logger.info("querySessionStatus: successful, user not authenticated");
+        logger2.info("success, user not authenticated");
         return null;
       } catch (err) {
-        if (this.settings.monitorAnonymousSession && err instanceof ErrorResponse && err.session_state) {
-          if (err.message == "login_required" || err.message == "consent_required" || err.message == "interaction_required" || err.message == "account_selection_required") {
-            this._logger.info("querySessionStatus: querySessionStatus success for anonymous user");
-            return {
-              session_state: err.session_state
-            };
+        if (this.settings.monitorAnonymousSession && err instanceof ErrorResponse) {
+          switch (err.error) {
+            case "login_required":
+            case "consent_required":
+            case "interaction_required":
+            case "account_selection_required":
+              logger2.info("success for anonymous user");
+              return {
+                session_state: err.session_state
+              };
           }
         }
         throw err;
@@ -2946,42 +2990,43 @@ var oidc = (() => {
     }
     async _signin(args, handle, verifySub) {
       const navResponse = await this._signinStart(args, handle);
-      return this._signinEnd(navResponse.url, verifySub);
+      return await this._signinEnd(navResponse.url, verifySub);
     }
     async _signinStart(args, handle) {
-      this._logger.debug("_signinStart: got navigator window handle");
+      const logger2 = this._logger.create("_signinStart");
       try {
         const signinRequest = await this._client.createSigninRequest(args);
-        this._logger.debug("_signinStart: got signin request");
+        logger2.debug("got signin request");
         return await handle.navigate({
           url: signinRequest.url,
           state: signinRequest.state.id,
           response_mode: signinRequest.state.response_mode
         });
       } catch (err) {
-        this._logger.debug("_signinStart: Error after preparing navigator, closing navigator window");
+        logger2.debug("error after preparing navigator, closing navigator window");
         handle.close();
         throw err;
       }
     }
     async _signinEnd(url, verifySub) {
+      const logger2 = this._logger.create("_signinEnd");
       const signinResponse = await this._client.processSigninResponse(url);
-      this._logger.debug("_signinEnd: got signin response");
+      logger2.debug("got signin response");
       const user = new User(signinResponse);
       if (verifySub) {
         if (verifySub !== user.profile.sub) {
-          this._logger.debug("_signinEnd: current user does not match user returned from signin. sub from signin: ", user.profile.sub);
-          throw new Error("login_required");
-        } else {
-          this._logger.debug("_signinEnd: current user matches user returned from signin");
+          logger2.debug("current user does not match user returned from signin. sub from signin:", user.profile.sub);
+          throw new ErrorResponse({ ...signinResponse, error: "login_required" });
         }
+        logger2.debug("current user matches user returned from signin");
       }
       await this.storeUser(user);
-      this._logger.debug("_signinEnd: user stored");
+      logger2.debug("user stored");
       this._events.load(user);
       return user;
     }
     async signoutRedirect(args = {}) {
+      const logger2 = this._logger.create("signoutRedirect");
       const {
         redirectMethod,
         ...requestArgs
@@ -2992,20 +3037,22 @@ var oidc = (() => {
         post_logout_redirect_uri: this.settings.post_logout_redirect_uri,
         ...requestArgs
       }, handle);
-      this._logger.info("signoutRedirect: successful");
+      logger2.info("success");
     }
     async signoutRedirectCallback(url = window.location.href) {
+      const logger2 = this._logger.create("signoutRedirectCallback");
       const response = await this._signoutEnd(url);
-      this._logger.info("signoutRedirectCallback: successful");
+      logger2.info("success");
       return response;
     }
     async signoutPopup(args = {}) {
+      const logger2 = this._logger.create("signoutPopup");
       const {
         popupWindowFeatures,
         popupWindowTarget,
         ...requestArgs
       } = args;
-      const url = this.settings.popup_post_logout_redirect_uri || this.settings.post_logout_redirect_uri;
+      const url = this.settings.popup_post_logout_redirect_uri;
       const handle = await this._popupNavigator.prepare({ popupWindowFeatures, popupWindowTarget });
       await this._signout({
         request_type: "so:p",
@@ -3013,89 +3060,77 @@ var oidc = (() => {
         state: url == null ? void 0 : {},
         ...requestArgs
       }, handle);
-      this._logger.info("signoutPopup: successful");
+      logger2.info("success");
     }
     async signoutPopupCallback(url = window.location.href, keepOpen = false) {
+      const logger2 = this._logger.create("signoutPopupCallback");
       await this._popupNavigator.callback(url, keepOpen);
-      this._logger.info("signoutPopupCallback: successful");
+      logger2.info("success");
     }
     async _signout(args, handle) {
       const navResponse = await this._signoutStart(args, handle);
-      return this._signoutEnd(navResponse.url);
+      return await this._signoutEnd(navResponse.url);
     }
     async _signoutStart(args = {}, handle) {
       var _a;
-      this._logger.debug("_signoutStart: got navigator window handle");
+      const logger2 = this._logger.create("_signoutStart");
       try {
         const user = await this._loadUser();
-        this._logger.debug("_signoutStart: loaded current user from storage");
-        if (this.settings.revokeAccessTokenOnSignout) {
-          await this._revokeInternal(user, true);
+        logger2.debug("loaded current user from storage");
+        if (this.settings.revokeTokensOnSignout) {
+          await this._revokeInternal(user);
         }
         const id_token = args.id_token_hint || user && user.id_token;
         if (id_token) {
-          this._logger.debug("_signoutStart: Setting id_token into signout request");
+          logger2.debug("setting id_token_hint in signout request");
           args.id_token_hint = id_token;
         }
         await this.removeUser();
-        this._logger.debug("_signoutStart: user removed, creating signout request");
+        logger2.debug("user removed, creating signout request");
         const signoutRequest = await this._client.createSignoutRequest(args);
-        this._logger.debug("_signoutStart: got signout request");
+        logger2.debug("got signout request");
         return await handle.navigate({
           url: signoutRequest.url,
           state: (_a = signoutRequest.state) == null ? void 0 : _a.id
         });
       } catch (err) {
-        this._logger.debug("_signoutStart: Error after preparing navigator, closing navigator window");
+        logger2.debug("error after preparing navigator, closing navigator window");
         handle.close();
         throw err;
       }
     }
     async _signoutEnd(url) {
+      const logger2 = this._logger.create("_signoutEnd");
       const signoutResponse = await this._client.processSignoutResponse(url);
-      this._logger.debug("_signoutEnd: got signout response");
+      logger2.debug("got signout response");
       return signoutResponse;
     }
-    async revokeAccessToken() {
+    async revokeTokens(types) {
       const user = await this._loadUser();
-      const success = await this._revokeInternal(user, false);
-      if (success && user) {
-        this._logger.debug("revokeAccessToken: removing token properties from user and re-storing");
-        user.access_token = "";
-        user.refresh_token = "";
-        user.expires_at = 0;
-        user.token_type = "";
-        await this.storeUser(user);
-        this._logger.debug("revokeAccessToken: user stored");
-        this._events.load(user);
-      }
-      this._logger.info("revokeAccessToken: access token revoked successfully");
+      await this._revokeInternal(user, types);
     }
-    async _revokeInternal(user, optional) {
-      if (!user) {
-        return false;
+    async _revokeInternal(user, types = this.settings.revokeTokenTypes) {
+      const logger2 = this._logger.create("_revokeInternal");
+      if (!user)
+        return;
+      const typesPresent = types.filter((type) => typeof user[type] === "string");
+      if (!typesPresent.length) {
+        logger2.debug("no need to revoke due to no token(s)");
+        return;
       }
-      if (!user.access_token && !user.refresh_token) {
-        this._logger.debug("revokeAccessToken: no need to revoke due to no token(s)");
-        return false;
+      for (const type of typesPresent) {
+        await this._client.revokeToken(user[type], type);
+        logger2.info(`${type} revoked successfully`);
+        if (type !== "access_token") {
+          user[type] = null;
+        }
       }
-      if (user.access_token) {
-        await this._tokenClient.revoke({
-          token: user.access_token,
-          token_type_hint: "access_token",
-          optional
-        });
-      }
-      if (user.refresh_token) {
-        await this._tokenClient.revoke({
-          token: user.refresh_token,
-          token_type_hint: "refresh_token",
-          optional
-        });
-      }
-      return true;
+      await this.storeUser(user);
+      logger2.debug("user stored");
+      this._events.load(user);
     }
     startSilentRenew() {
+      this._logger.create("startSilentRenew");
       void this._silentRenewService.start();
     }
     stopSilentRenew() {
@@ -3105,21 +3140,23 @@ var oidc = (() => {
       return `user:${this.settings.authority}:${this.settings.client_id}`;
     }
     async _loadUser() {
+      const logger2 = this._logger.create("_loadUser");
       const storageString = await this.settings.userStore.get(this._userStoreKey);
       if (storageString) {
-        this._logger.debug("_loadUser: user storageString loaded");
+        logger2.debug("user storageString loaded");
         return User.fromStorageString(storageString);
       }
-      this._logger.debug("_loadUser: no user storageString");
+      logger2.debug("no user storageString");
       return null;
     }
     async storeUser(user) {
+      const logger2 = this._logger.create("storeUser");
       if (user) {
-        this._logger.debug("storeUser: storing user");
+        logger2.debug("storing user");
         const storageString = user.toStorageString();
         await this.settings.userStore.set(this._userStoreKey, storageString);
       } else {
-        this._logger.debug("storeUser: removing user");
+        this._logger.debug("removing user");
         await this.settings.userStore.remove(this._userStoreKey);
       }
     }
@@ -3129,10 +3166,10 @@ var oidc = (() => {
   };
 
   // package.json
-  var version = "2.0.0-rc.2";
+  var version = "2.0.2";
 
   // src/Version.ts
   var Version = version;
-  return src_exports;
+  return __toCommonJS(src_exports);
 })();
 //# sourceMappingURL=oidc-client-ts.js.map

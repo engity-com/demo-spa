@@ -10,6 +10,9 @@ MIT
 @angular/router
 MIT
 
+@ngx-translate/core
+MIT
+
 crypto-js
 MIT
 # License
