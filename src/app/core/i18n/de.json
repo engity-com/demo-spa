@@ -37,12 +37,12 @@
 
     "information": {
         "title": "Information",
-        "description": "Sie können via Registrieren einen neuen Nutzer anlegen oder unsern Demo-Benutzer, mit den folgenden Details, verwenden"
+        "description": "Sie können via Registrieren einen neuen Nutzer anlegen oder unseren Demo-Nutzer mit den folgenden Details verwenden"
     },
 
     "forDevelopers": {
         "title": "Für Entwickler",
-        "description": "Alle Informationen dieser Demo inkl. Dokumentation und Quelltext befindet sich <a href=\"https://github.com/engity-com/demo-spa\" rel=\"noopener\" target=\"_blank\">hier</a>."
+        "description": "Alle Informationen zu dieser Demo inkl. Dokumentation und Quelltext befindet sich <a href=\"https://github.com/engity-com/demo-spa\" rel=\"noopener\" target=\"_blank\">hier</a>."
     },
 
     "username": "Benutzername",
