@@ -1,4 +1,10 @@
-import { Component, ElementRef, HostBinding, OnInit } from '@angular/core';
+import {
+    Component,
+    ElementRef,
+    HostBinding,
+    OnDestroy,
+    OnInit,
+} from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { TranslateService } from '@ngx-translate/core';
 import { SimpleModalService } from 'ngx-simple-modal';
@@ -130,7 +136,10 @@ import { ConsoleComponent } from './console.component';
         </div>
     `,
 })
-export class HomeComponent extends BasePageComponent implements OnInit {
+export class HomeComponent
+    extends BasePageComponent
+    implements OnInit, OnDestroy
+{
     user: User;
     problem: Message;
     @HostBinding('attr.data-developer-mode')
@@ -143,7 +152,6 @@ export class HomeComponent extends BasePageComponent implements OnInit {
         private readonly apiService: ApiService,
         private readonly settingsService: SettingsService,
         private readonly simpleModalService: SimpleModalService,
-        private readonly elementRef: ElementRef,
         public readonly translate: TranslateService
     ) {
         super(title, translate);
@@ -152,8 +160,6 @@ export class HomeComponent extends BasePageComponent implements OnInit {
 
         this.subscribe(this.authService.user, (user) => {
             this.user = user;
-            const element = this.elementRef.nativeElement;
-            const document = element.ownerDocument;
             const html = document.getElementsByTagName('html')[0];
             if (html) {
                 if (user) {
@@ -168,11 +174,36 @@ export class HomeComponent extends BasePageComponent implements OnInit {
     public ngOnInit() {
         super.ngOnInit();
         this.authService.updateState();
+        window.addEventListener('focus', this.onWindowActivation);
+    }
+
+    public ngOnDestroy() {
+        super.ngOnDestroy();
+        window.removeEventListener('focus', this.onWindowActivation);
     }
 
     protected get titleKey(): string {
         return 'home';
     }
+
+    private readonly onWindowActivation = () => {
+        if (document.hidden) {
+            // Document is not visible (because another tab is active), so nothing is required to do here...
+            return;
+        }
+        const user = this.user;
+        if (!user) {
+            // Not logged in, so nothing is required to do here...
+            return;
+        }
+        if (!this.toUnverifiedContacts(user)) {
+            // All contacts already verified, so nothing is required to do here...
+            return;
+        }
+
+        // We're triggering a token renew, to ensure that we get the validated state...
+        this.authService.renewToken();
+    };
 
     public toUnverifiedContacts(user: User): Contact[] {
         if (!user) {

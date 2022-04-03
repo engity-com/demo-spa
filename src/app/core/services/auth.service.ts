@@ -1,5 +1,6 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import {
+    ErrorResponse,
     OidcMetadata,
     User,
     UserManager,
@@ -57,12 +58,12 @@ export class AuthService implements OnDestroy {
 
     private readonly onAccessTokenExpired = () => {
         console.log(`Current token is expired. Trying renew token...`);
-        this.renewToken();
+        this.renewToken().catch(() => this.logout());
     };
 
     private readonly onAccessTokenExpiring = () => {
         console.log(`Token will expire soon. Trying renew token...`);
-        this.renewToken();
+        this.renewToken().catch(() => this.logout());
     };
     private readonly onUserLoaded = (user: User) => {
         this.subject.next(user);
@@ -98,8 +99,16 @@ export class AuthService implements OnDestroy {
         });
     }
 
-    public renewToken(): Promise<User> {
-        return this.userManager.signinSilent();
+    public renewToken(): Promise<User | void> {
+        return this.userManager.signinSilent().catch((e) => {
+            if (e instanceof ErrorResponse && e.error === 'access_denied') {
+                console.info(
+                    'Looks like that our refresh token is not longer valid. Assuming as logged out.'
+                );
+                return this.logout();
+            }
+            throw e;
+        });
     }
 
     public logout(): Promise<void> {
