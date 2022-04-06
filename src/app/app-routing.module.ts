@@ -5,6 +5,7 @@ import {
     AfterLogoutComponent,
     AfterVerifyContactComponent,
     AfterVerifyContactFailedComponent,
+    AfterPasswordResetComponent,
     HomeComponent,
     PageNotFoundComponent,
 } from './core/components';
@@ -19,6 +20,7 @@ export const routes: Routes = [
         path: 'after-verify-contact-failed',
         component: AfterVerifyContactFailedComponent,
     },
+    { path: 'after-password-reset', component: AfterPasswordResetComponent },
     { path: '**', pathMatch: 'full', component: PageNotFoundComponent },
 ];
 

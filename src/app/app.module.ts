@@ -9,8 +9,10 @@ import {
     AfterLogoutComponent,
     AfterVerifyContactComponent,
     AfterVerifyContactFailedComponent,
+    AfterPasswordResetComponent,
     AppComponent,
     ConsoleComponent,
+    FooterComponent,
     HeaderComponent,
     HomeComponent,
     MessagesComponent,
@@ -24,12 +26,14 @@ import { AppTranslateLoader } from './core/i18n';
         ConsoleComponent,
         HomeComponent,
         HeaderComponent,
+        FooterComponent,
         MessagesComponent,
         PageNotFoundComponent,
         AfterLoginComponent,
         AfterLogoutComponent,
         AfterVerifyContactComponent,
         AfterVerifyContactFailedComponent,
+        AfterPasswordResetComponent,
     ],
     imports: [
         BrowserModule,
@@ -42,6 +46,6 @@ import { AppTranslateLoader } from './core/i18n';
     ],
     entryComponents: [ConsoleComponent],
     providers: [],
-    bootstrap: [AppComponent],
+    bootstrap: [AppComponent, FooterComponent],
 })
 export class AppModule {}

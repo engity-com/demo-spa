@@ -24,6 +24,11 @@
         "onEmailAddress": "Der Link zur Überprüfung der E-Mail-Adresse {{contact}} ist abgelaufen. Bitte erneut versuchen"
     },
 
+    "passwordReset": {
+        "title": "Passwort zurücksetzen",
+        "message": "Zurücksetzen des Passworts war erfolgreich. Es ist nun möglich sich mit dem neuen Passwort anzumelden."
+    },
+
     "finalizeLogin": {
         "title": "Schließe Einloggen ab",
         "message": "Schließe Einloggen ab...",
@@ -73,5 +78,9 @@
         "cannotLogout": "Ausloggen hat nicht funktioniert. Siehe Entwicklerkonsole für weitere Informationen.",
         "notVerified": "Kontakt {{contact.value}} muss noch bestätigt werden.",
         "emailAddressNotVerified": "E-Mail-Adresse {{contact.value}} muss noch bestätigt werden. Bitte Posteingang prüfen oder"
+    },
+
+    "footer": {
+        "message": "Für mehr Informationen über die Identity & Access Management Lösung von Engity klicken Sie hier."
     }
 }

@@ -26,6 +26,11 @@
         "onEmailAddress": "Your link to verify your email address {{contact}} is expired. Please try again."
     },
 
+    "passwordReset": {
+        "title": "Password reset successful",
+        "message": "Password reset was successful. Now you can login with the new credentials."
+    },
+
     "finalizeLogin": {
         "title": "Finalize login",
         "message": "Finalize login. Please wait...",
@@ -75,5 +80,9 @@
         "cannotLogout": "Cannot logout. See more details in console.",
         "notVerified": "Contact {{contact.value}} needs to be validated.",
         "emailAddressNotVerified": "Email address {{contact.value}} needs to be validated. Please check your inbox or"
+    },
+
+    "footer": {
+        "message": "For more information about Engity's Identity & Access Management solution please click here."
     }
 }
