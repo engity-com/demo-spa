@@ -90,7 +90,7 @@ import { ConsoleComponent } from './console.component';
                 ></button>
             </div>
 
-            <ng-container *ngIf="!user">
+            <ng-container *ngIf="!user && withLoginHint">
                 <div class="horizontal-divider">
                     <span translate="information.title"></span>
                 </div>
@@ -145,6 +145,8 @@ export class HomeComponent
     @HostBinding('attr.data-developer-mode')
     developerMode: boolean = false;
     consoleVisible: boolean = false;
+
+    readonly withLoginHint = false;
 
     constructor(
         title: Title,
