@@ -1,8 +1,5 @@
 export { AfterLoginComponent } from './after-login.component';
 export { AfterLogoutComponent } from './after-logout.component';
-export { AfterVerifyContactComponent } from './after-verify-contact.component';
-export { AfterVerifyContactFailedComponent } from './after-verify-contact-failed.component';
-export { AfterPasswordResetComponent } from './after-password-reset.component';
 export { AppComponent } from './app.component';
 export { ConsoleComponent } from './console.component';
 export { FooterComponent } from './footer.component';

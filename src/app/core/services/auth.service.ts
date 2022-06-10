@@ -72,26 +72,25 @@ export class AuthService implements OnDestroy {
         this.subject.next(null);
     };
 
-    public updateState() {
-        this.getUser().then((user) => {
-            this.subject.next(user);
-        });
+    public async updateState(): Promise<void> {
+        const user = await this.getUser();
+        this.subject.next(user);
     }
 
-    public getUser(): Promise<User | null> {
-        return this.userManager.getUser();
+    public async getUser(): Promise<User | null> {
+        return await this.userManager.getUser();
     }
 
-    public login(): Promise<void> {
-        return this.userManager.signinRedirect({
+    public async login(): Promise<void> {
+        return await this.userManager.signinRedirect({
             extraQueryParams: {
                 cancel_redirect_uri: environment.clientRoot,
             },
         });
     }
 
-    public signup(): Promise<void> {
-        return this.userManager.signinRedirect({
+    public async signup(): Promise<void> {
+        return await this.userManager.signinRedirect({
             extraQueryParams: {
                 procedure: 'signup',
                 cancel_redirect_uri: environment.clientRoot,
@@ -99,8 +98,10 @@ export class AuthService implements OnDestroy {
         });
     }
 
-    public renewToken(): Promise<User | void> {
-        return this.userManager.signinSilent().catch((e) => {
+    public async renewToken(): Promise<User | void> {
+        try {
+            return await this.userManager.signinSilent();
+        } catch (e) {
             if (e instanceof ErrorResponse && e.error === 'access_denied') {
                 console.info(
                     'Looks like that our refresh token is not longer valid. Assuming as logged out.'
@@ -108,14 +109,14 @@ export class AuthService implements OnDestroy {
                 return this.logout();
             }
             throw e;
-        });
+        }
     }
 
-    public logout(): Promise<void> {
-        return this.userManager.signoutRedirect();
+    public async logout(): Promise<void> {
+        return await this.userManager.signoutRedirect();
     }
 
-    public signinCallback(): Promise<void | User> {
-        return this.userManager.signinCallback();
+    public async signinCallback(): Promise<User | void> {
+        return await this.userManager.signinCallback();
     }
 }

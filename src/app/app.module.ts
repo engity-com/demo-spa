@@ -7,9 +7,6 @@ import { AppRoutingModule } from './app-routing.module';
 import {
     AfterLoginComponent,
     AfterLogoutComponent,
-    AfterVerifyContactComponent,
-    AfterVerifyContactFailedComponent,
-    AfterPasswordResetComponent,
     AppComponent,
     ConsoleComponent,
     FooterComponent,
@@ -31,9 +28,6 @@ import { AppTranslateLoader } from './core/i18n';
         PageNotFoundComponent,
         AfterLoginComponent,
         AfterLogoutComponent,
-        AfterVerifyContactComponent,
-        AfterVerifyContactFailedComponent,
-        AfterPasswordResetComponent,
     ],
     imports: [
         BrowserModule,

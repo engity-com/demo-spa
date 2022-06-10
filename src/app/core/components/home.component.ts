@@ -1,15 +1,8 @@
-import {
-    Component,
-    ElementRef,
-    HostBinding,
-    OnDestroy,
-    OnInit,
-} from '@angular/core';
+import { Component, HostBinding, OnDestroy, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { TranslateService } from '@ngx-translate/core';
 import { SimpleModalService } from 'ngx-simple-modal';
 import { User } from 'oidc-client-ts';
-import { firstValueFrom, Observable } from 'rxjs';
 import { Contact, ContactState } from '../model/model';
 import { ApiService } from '../services/api.service';
 import { AuthService } from '../services/auth.service';
@@ -145,7 +138,6 @@ export class HomeComponent
     @HostBinding('attr.data-developer-mode')
     developerMode: boolean = false;
     consoleVisible: boolean = false;
-
     readonly withLoginHint = false;
 
     constructor(
@@ -173,26 +165,36 @@ export class HomeComponent
         });
     }
 
-    public ngOnInit() {
+    public async ngOnInit() {
         super.ngOnInit();
-        this.authService.updateState();
         window.addEventListener('focus', this.onWindowActivation);
+        window.addEventListener('storage', this.onRevalidateLoginStatus);
+        await this.authService.updateState();
     }
 
     public ngOnDestroy() {
         super.ngOnDestroy();
         window.removeEventListener('focus', this.onWindowActivation);
+        window.removeEventListener('storage', this.onRevalidateLoginStatus);
     }
 
     protected get titleKey(): string {
         return 'home';
     }
 
-    private readonly onWindowActivation = () => {
+    private readonly onWindowActivation = async () => {
         if (document.hidden) {
             // Document is not visible (because another tab is active), so nothing is required to do here...
             return;
         }
+        await this.validateContactIfNeeded();
+    };
+
+    private readonly onRevalidateLoginStatus = async () => {
+        await this.authService.updateState();
+    };
+
+    private readonly validateContactIfNeeded = async () => {
         const user = this.user;
         if (!user) {
             // Not logged in, so nothing is required to do here...
@@ -204,7 +206,7 @@ export class HomeComponent
         }
 
         // We're triggering a token renew, to ensure that we get the validated state...
-        this.authService.renewToken();
+        await this.authService.renewToken();
     };
 
     public toUnverifiedContacts(user: User): Contact[] {
