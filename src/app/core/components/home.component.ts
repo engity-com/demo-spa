@@ -110,7 +110,7 @@ import { ConsoleComponent } from './console.component';
                 <button
                     (click)="onToggleDeveloperMode()"
                     [translate]="
-                        developerMode ? 'view.simple' : 'view.enableAdvanced'
+                        developerMode ? 'view.hide' : 'view.enableAdvanced'
                     "
                 ></button>
                 <button

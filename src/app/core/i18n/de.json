@@ -8,7 +8,7 @@
 
     "status": "Status",
     "backHome": "Zurück zur Homepage.",
-    "triggerContactVerificationAgain": "hier klicken um eine neue E-Mail zu senden.",
+    "triggerContactVerificationAgain": "hier klicken, um eine neue E-Mail zu senden.",
 
     "contactVerified": {
         "title": "Kontakt überprüft",
@@ -47,14 +47,14 @@
 
     "forDevelopers": {
         "title": "Für Entwickler",
-        "description": "Alle Informationen zu dieser Demo inkl. Dokumentation und Quelltext befindet sich <a href=\"https://github.com/engity-com/demo-spa\" rel=\"noopener\" target=\"_blank\">hier</a>."
+        "description": "Alle Informationen zu dieser Demo inkl. Dokumentation und Quelltext sind <a href=\"https://github.com/engity-com/demo-spa\" rel=\"noopener\" target=\"_blank\">hier</a> verfügbar."
     },
 
     "username": "Benutzername",
     "password": "Passwort",
 
     "view": {
-        "simple": "Einfach",
+        "hide": "Ausblenden",
         "enableAdvanced": "Zur erweiterten Ansicht"
     },
 
