@@ -3,7 +3,7 @@ on:
   push:
     branches:
       - main
-  pull_request: {}
+  pull_request: { }
 
 jobs:
   build:
@@ -30,6 +30,12 @@ jobs:
           cp dist/App/index.html dist/App/404.html
           mv dist/App dist/app-green
 
+      - name: "Upload artifacts"
+        uses: actions/upload-artifact@v3
+        with:
+          name: dist
+          path: dist
+
   deploy-green:
     name: "Deploy: green"
     concurrency: ci-${{ github.ref }}
@@ -39,6 +45,12 @@ jobs:
       name: green
       url: https://demo.engity.green
     steps:
+      - name: "Download artifacts"
+        uses: actions/download-artifact@v3
+        with:
+          name: dist
+          path: dist
+
       - name: Deploy
         uses: cloudflare/wrangler-action@2.0.0
         with:
@@ -55,6 +67,12 @@ jobs:
       name: red
       url: https://demo.engity.app
     steps:
+      - name: "Download artifacts"
+        uses: actions/download-artifact@v3
+        with:
+          name: dist
+          path: dist
+
       - name: Deploy
         uses: cloudflare/wrangler-action@2.0.0
         with:
