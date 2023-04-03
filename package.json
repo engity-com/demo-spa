@@ -16,9 +16,9 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "start:red": "ng serve --red",
-    "build:red": "ng build --red",
-    "build:green": "ng build --red",
+    "start:red": "ng serve -c red",
+    "build:red": "ng build -c red",
+    "build:green": "ng build -c green",
     "lint": "ng lint"
   },
   "dependencies": {
