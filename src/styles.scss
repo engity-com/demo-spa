@@ -17,7 +17,7 @@ $problem-2: #e35b41;
 html {
     font-family: sans-serif;
     font-size: 14px;
-    background: $passive-2;
+    background-color: $passive-2;
 }
 
 .initially-hidden {
@@ -286,4 +286,20 @@ app-footer, noscript {
     a, a:hover, a:active {
         color: $bg;
     }
+}
+
+#PopupAutoComplete,
+#PopupAutoComplete > richlistbox > richlistitem[originaltype="generatedPassword"] > .two-line-wrapper > .ac-site-icon,
+#PopupAutoComplete > richlistbox > richlistitem[originaltype="loginWithOrigin"] > .two-line-wrapper > .ac-site-icon,
+#PopupAutoComplete > richlistbox > richlistitem[originaltype="login"] > .ac-site-icon,
+richlistbox.autocomplete-richlistbox > richlistitem {
+    fill:red !important;
+    color: red !important;
+    background: blue !important;
+}
+
+#PopupAutoComplete > richlistbox > richlistitem[originaltype="loginsFooter"] {
+    background-color: #222 !important;
+    color: #999 !important;
+    border: 1px solid #444 !important;
 }

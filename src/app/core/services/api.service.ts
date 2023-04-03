@@ -26,12 +26,18 @@ export class ApiService {
             throw `Remote IdP does not support trigger_verify_contact method.`;
         }
         await this.callApi((client, authorization) =>
-            client.put(url, contact, {
-                headers: new HttpHeaders({
-                    Accept: 'application/json',
-                    Authorization: authorization,
-                }),
-            })
+            client.put(
+                url,
+                {
+                    contact: contact,
+                },
+                {
+                    headers: new HttpHeaders({
+                        Accept: 'application/json',
+                        Authorization: authorization,
+                    }),
+                }
+            )
         );
     }
 
