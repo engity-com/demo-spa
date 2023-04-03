@@ -50,6 +50,7 @@ jobs:
     concurrency: ci-${{ github.ref }}
     runs-on: ubuntu-latest
     needs: build
+    if: github.ref == 'refs/heads/master'
     environment:
       name: red
       url: https://demo.engity.app
