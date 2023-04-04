@@ -15,10 +15,11 @@
   "private": false,
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
-    "start:red": "ng serve -c red",
-    "build:red": "ng build -c red",
+    "serve": "ng serve",
+    "serve:green": "ng serve -c green",
+    "serve:red": "ng serve -c red",
     "build:green": "ng build -c green",
+    "build:red": "ng build -c red",
     "lint": "ng lint"
   },
   "dependencies": {

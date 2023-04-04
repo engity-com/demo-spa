@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { AuthService } from '../services/auth.service';
 import { BasePageComponent } from './base-page.component';
@@ -18,11 +18,12 @@ export class AfterLoginComponent extends BasePageComponent implements OnInit {
 
     constructor(
         title: Title,
-        protected readonly translate: TranslateService,
+        translate: TranslateService,
         private readonly router: Router,
-        private readonly authService: AuthService
+        private readonly authService: AuthService,
+        route: ActivatedRoute
     ) {
-        super(title, translate);
+        super(title, translate, route);
     }
 
     protected get titleKey(): string {
@@ -31,7 +32,7 @@ export class AfterLoginComponent extends BasePageComponent implements OnInit {
 
     async ngOnInit() {
         try {
-            await this.authService.signinCallback();
+            await this.authService.signinCallback(this.variant);
             await this.router.navigate(['']);
         } catch (e) {
             console.log('Cannot finalize login.', e);

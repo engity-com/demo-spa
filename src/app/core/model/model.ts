@@ -13,3 +13,8 @@ export interface Contact {
     value: string;
     state?: ContactState;
 }
+
+export enum Variant {
+    default = '',
+    magicLink = 'magic-link',
+}

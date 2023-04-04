@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { Title } from '@angular/platform-browser';
+import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { BasePageComponent } from './base-page.component';
 
@@ -11,8 +12,12 @@ import { BasePageComponent } from './base-page.component';
     `,
 })
 export class PageNotFoundComponent extends BasePageComponent {
-    constructor(title: Title, protected readonly translate: TranslateService) {
-        super(title, translate);
+    constructor(
+        title: Title,
+        protected readonly translate: TranslateService,
+        route: ActivatedRoute
+    ) {
+        super(title, translate, route);
     }
 
     protected get titleKey(): string {

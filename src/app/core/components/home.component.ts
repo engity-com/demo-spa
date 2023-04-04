@@ -1,5 +1,6 @@
 import { Component, HostBinding, OnDestroy, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
+import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { SimpleModalService } from 'ngx-simple-modal';
 import { User } from 'oidc-client-ts';
@@ -146,9 +147,10 @@ export class HomeComponent
         private readonly apiService: ApiService,
         private readonly settingsService: SettingsService,
         private readonly simpleModalService: SimpleModalService,
-        public readonly translate: TranslateService
+        public readonly translate: TranslateService,
+        route: ActivatedRoute
     ) {
-        super(title, translate);
+        super(title, translate, route);
         this.developerMode =
             this.settingsService.settings['developerMode'] === true;
 
@@ -169,7 +171,7 @@ export class HomeComponent
         super.ngOnInit();
         window.addEventListener('focus', this.onWindowActivation);
         window.addEventListener('storage', this.onRevalidateLoginStatus);
-        await this.authService.updateState();
+        await this.authService.updateState(this.variant);
     }
 
     public ngOnDestroy() {
@@ -191,7 +193,7 @@ export class HomeComponent
     };
 
     private readonly onRevalidateLoginStatus = async () => {
-        await this.authService.updateState();
+        await this.authService.updateState(this.variant);
     };
 
     private readonly validateContactIfNeeded = async () => {
@@ -206,7 +208,7 @@ export class HomeComponent
         }
 
         // We're triggering a token renew, to ensure that we get the validated state...
-        await this.authService.renewToken();
+        await this.authService.renewToken(this.variant);
     };
 
     public toUnverifiedContacts(user: User): Contact[] {
@@ -232,14 +234,14 @@ export class HomeComponent
 
     public onSignup() {
         this.clearProblem();
-        this.authService.signup().catch((err) => {
+        this.authService.signup(this.variant).catch((err) => {
             this.addProblem('errors.cannotSignup', err);
         });
     }
 
     public onLogin() {
         this.clearProblem();
-        this.authService.login().catch((err) => {
+        this.authService.login(this.variant).catch((err) => {
             this.addProblem('errors.cannotLogin', err);
         });
     }
@@ -247,7 +249,7 @@ export class HomeComponent
     public onRenewToken() {
         this.clearProblem();
         this.authService
-            .renewToken()
+            .renewToken(this.variant)
             .then(() => {})
             .catch((err) => this.addProblem('errors.cannotRenewToken', err));
     }
@@ -255,7 +257,7 @@ export class HomeComponent
     public onLogout() {
         this.clearProblem();
         this.authService
-            .logout()
+            .logout(this.variant)
             .catch((err) => this.addProblem('errors.cannotLogout', err));
     }
 
@@ -277,7 +279,7 @@ export class HomeComponent
 
     public onTriggerVerifyContact(contact: Contact) {
         // noinspection JSIgnoredPromiseFromCall
-        this.apiService.triggerVerifyContact(contact);
+        this.apiService.triggerVerifyContact(this.variant, contact);
     }
 }
 
