@@ -39,6 +39,7 @@ export class AuthService implements OnDestroy {
                 response_type: 'code',
                 scope: 'openid profile email',
                 userStore: new WebStorageStateStore({
+                    prefix: `${variant ? variant + '-' : ''}oidc`,
                     store: window.localStorage,
                 }),
             });
