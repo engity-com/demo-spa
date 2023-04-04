@@ -4,11 +4,15 @@ export const environment = {
     authorities: {
         '': {
             stsAuthority: 'https://id.demo.engity.green/v1/',
-            clientId: '9b867675-0acf-4781-b971-e128b3810310',
+            clientId: '12f95feb-9e3e-11ec-93d7-f02f741c664b',
         },
         'magic-link': {
             stsAuthority: 'https://id.demo.engity.green/magic-link/v1/',
-            clientId: '9b867675-0acf-4781-b971-d128b3810310',
+            clientId: '12f95feb-9e3e-11ec-93d7-f02f741c664c',
+        },
+        username: {
+            stsAuthority: 'https://id.demo.engity.green/username/v1/',
+            clientId: '12f95feb-9e3e-11ec-93d7-f02f741c664d',
         },
     },
 };
