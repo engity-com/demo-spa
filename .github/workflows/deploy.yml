@@ -21,13 +21,11 @@ jobs:
       - name: "Build: Red"
         run: |
           npm run build:red
-          cp dist/App/index.html dist/App/404.html
           mv dist/App dist/app-red
 
       - name: "Build: Green"
         run: |
           npm run build:green
-          cp dist/App/index.html dist/App/404.html
           mv dist/App dist/app-green
 
       - name: "Upload artifacts"

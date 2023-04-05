@@ -42,7 +42,13 @@
                         ],
                         "allowedCommonJsDependencies": ["crypto-js"],
                         "styles": ["src/styles.scss"],
-                        "scripts": []
+                        "scripts": [],
+                        "outputHashing": "all",
+                        "optimization": {
+                            "fonts": {
+                                "inline": true
+                            }
+                        }
                     },
                     "configurations": {
                         "red": {

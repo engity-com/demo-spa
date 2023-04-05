@@ -18,6 +18,7 @@
     "serve": "ng serve",
     "serve:green": "ng serve -c green",
     "serve:red": "ng serve -c red",
+    "build": "ng build",
     "build:green": "ng build -c green",
     "build:red": "ng build -c red",
     "lint": "ng lint"
