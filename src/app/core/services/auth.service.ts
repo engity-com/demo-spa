@@ -1,41 +1,29 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import {
-    ErrorResponse,
-    OidcMetadata,
-    User,
-    UserManager,
-    WebStorageStateStore,
-} from 'oidc-client-ts';
+import { ErrorResponse, OidcMetadata, User, UserManager, WebStorageStateStore } from 'oidc-client-ts';
 import { Observable, Subject } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { Variant } from '../model/model';
+import { Variant, VariantService } from './variant.service';
 
 @Injectable({
     providedIn: 'root',
 })
 export class AuthService implements OnDestroy {
-    private readonly userManagers: Record<Variant, UserManagerAssignment>;
+    private readonly variantKeyToUserManager: Record<string, UserManagerAssignment>;
     private readonly subject = new Subject<User | null>();
 
-    constructor() {
-        this.userManagers = AuthService.createUserManagers(this.subject);
+    constructor(variantService: VariantService) {
+        this.variantKeyToUserManager = AuthService.createUserManagers(variantService, this.subject);
     }
 
     private static createUserManagers(
+        variantService: VariantService,
         subject: Subject<User | null>
-    ): Record<Variant, UserManagerAssignment> {
-        // @ts-ignore
-        const result: Record<Variant, UserManagerAssignment> = {};
-        for (const v in Variant) {
-            const variant = Variant[v];
-            const authority = environment.authorities[v];
-            const uriPrefix = `${environment.clientRoot}${
-                variant && variant + '/'
-            }`;
-
+    ): Record<string, UserManagerAssignment> {
+        return variantService.all.reduce((variants, variant) => {
+            const uriPrefix = `${environment.clientRoot}${variant.subPath ? variant.subPath + '/' : ''}`;
             const um = new UserManager({
-                authority: authority.stsAuthority,
-                client_id: authority.clientId,
+                authority: variant.authority.stsAuthority,
+                client_id: variant.authority.clientId,
                 redirect_uri: `${uriPrefix}after-login`,
                 silent_redirect_uri: `${uriPrefix}silent-callback.html`,
                 post_logout_redirect_uri: `${uriPrefix}`,
@@ -46,33 +34,30 @@ export class AuthService implements OnDestroy {
                     store: window.localStorage,
                 }),
             });
-
-            const uma = new UserManagerAssignment(
-                um,
-                variant,
-                subject,
-                uriPrefix
-            );
+            const uma = new UserManagerAssignment(um, variant, subject, uriPrefix);
             um.events.addAccessTokenExpired(uma.onAccessTokenExpired);
             um.events.addAccessTokenExpiring(uma.onAccessTokenExpiring);
             um.events.addUserLoaded(uma.onUserLoaded);
             um.events.addUserUnloaded(uma.onUserUnloaded);
 
-            result[variant] = uma;
-        }
-        return result;
+            return {
+                ...variants,
+                [variant.key]: uma,
+            };
+        }, {} as Record<string, UserManagerAssignment>);
     }
 
     public ngOnDestroy(): void {
-        for (const k in this.userManagers) {
-            this.userManagers[k].destroy();
+        for (const k in this.variantKeyToUserManager) {
+            this.variantKeyToUserManager[k].destroy();
         }
     }
 
     private userManager(of: Variant): UserManagerAssignment {
-        const uma = this.userManagers[of];
+        const key = of.key;
+        const uma = this.variantKeyToUserManager[key];
         if (!uma) {
-            throw new Error(`Illegal variant: "${uma}".`);
+            throw new Error(`Illegal variant: "${key}".`);
         }
         return uma;
     }
@@ -152,9 +137,7 @@ class UserManagerAssignment {
             return await this.userManager.signinSilent();
         } catch (e) {
             if (e instanceof ErrorResponse && e.error === 'access_denied') {
-                console.info(
-                    'Looks like that our refresh token is not longer valid. Assuming as logged out.'
-                );
+                console.info('Looks like that our refresh token is not longer valid. Assuming as logged out.');
                 return this.logout();
             }
             throw e;

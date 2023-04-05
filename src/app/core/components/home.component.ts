@@ -4,14 +4,11 @@ import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { SimpleModalService } from 'ngx-simple-modal';
 import { User } from 'oidc-client-ts';
-import {
-    Contact,
-    ContactState,
-    doesVariantSupportSignup,
-} from '../model/model';
+import { Contact, ContactState } from '../model/model';
 import { ApiService } from '../services/api.service';
 import { AuthService } from '../services/auth.service';
 import { SettingsService } from '../services/settings.service';
+import { VariantService } from '../services/variant.service';
 import { BasePageComponent } from './base-page.component';
 import { ConsoleComponent } from './console.component';
 
@@ -29,15 +26,9 @@ import { ConsoleComponent } from './console.component';
                     }"
                 ></div>
 
-                <div
-                    class="control"
-                    *ngIf="toUnverifiedContacts(user) as contacts"
-                >
+                <div class="control" *ngIf="toUnverifiedContacts(user) as contacts">
                     <ul class="statuses input-like">
-                        <li
-                            class="has-problems"
-                            *ngFor="let contact of contacts"
-                        >
+                        <li class="has-problems" *ngFor="let contact of contacts">
                             <span
                                 [translate]="
                                     contact.type == 'emailAddress'
@@ -60,38 +51,25 @@ import { ConsoleComponent } from './console.component';
             <div class="control" *ngIf="problem">
                 <label for="status" translate="status"></label>
                 <ul class="statuses input-like">
-                    <li
-                        class="has-problems"
-                        [translate]="problem.key"
-                        [translateParams]="problem.params"
-                    ></li>
+                    <li class="has-problems" [translate]="problem.key" [translateParams]="problem.params"></li>
                 </ul>
             </div>
 
             <div class="button-bar">
                 <button
                     (click)="onSignup()"
-                    *ngIf="!user && doesSupportSignup"
+                    *ngIf="!user && variant.doesSupportSignup"
                     class="primary"
                     translate="signup"
                 ></button>
+                <button (click)="onLogin()" *ngIf="!user && variant.doesSupportSignup" translate="login"></button>
                 <button
                     (click)="onLogin()"
-                    *ngIf="!user && doesSupportSignup"
-                    translate="login"
-                ></button>
-                <button
-                    (click)="onLogin()"
-                    *ngIf="!user && !doesSupportSignup"
+                    *ngIf="!user && !variant.doesSupportSignup"
                     class="primary"
                     translate="loginOrSignup"
                 ></button>
-                <button
-                    (click)="onLogout()"
-                    *ngIf="user"
-                    class="primary"
-                    translate="logout"
-                ></button>
+                <button (click)="onLogout()" *ngIf="user" class="primary" translate="logout"></button>
             </div>
 
             <ng-container *ngIf="!user && withLoginHint">
@@ -101,8 +79,7 @@ import { ConsoleComponent } from './console.component';
 
                 <p>
                     {{ 'information.description' | translate }}:<br />
-                    <strong translate="username"></strong>:
-                    <code>user1@example.com</code><br />
+                    <strong translate="username"></strong>: <code>user1@example.com</code><br />
                     <strong translate="password"></strong>:
                     <code>greatPlaceToBe!</code>
                 </p>
@@ -112,17 +89,12 @@ import { ConsoleComponent } from './console.component';
                 <span translate="forDevelopers.title"></span>
             </div>
 
-            <p
-                *ngIf="developerMode"
-                [innerHTML]="'forDevelopers.description' | translate"
-            ></p>
+            <p *ngIf="developerMode" [innerHTML]="'forDevelopers.description' | translate"></p>
 
             <div class="button-bar">
                 <button
                     (click)="onToggleDeveloperMode()"
-                    [translate]="
-                        developerMode ? 'view.hide' : 'view.enableAdvanced'
-                    "
+                    [translate]="developerMode ? 'view.hide' : 'view.enableAdvanced'"
                 ></button>
                 <button
                     (click)="onShowConsole()"
@@ -140,10 +112,7 @@ import { ConsoleComponent } from './console.component';
         </div>
     `,
 })
-export class HomeComponent
-    extends BasePageComponent
-    implements OnInit, OnDestroy
-{
+export class HomeComponent extends BasePageComponent implements OnInit, OnDestroy {
     user: User;
     problem: Message;
     @HostBinding('attr.data-developer-mode')
@@ -158,11 +127,11 @@ export class HomeComponent
         private readonly settingsService: SettingsService,
         private readonly simpleModalService: SimpleModalService,
         public readonly translate: TranslateService,
-        route: ActivatedRoute
+        route: ActivatedRoute,
+        variantService: VariantService
     ) {
-        super(title, translate, route);
-        this.developerMode =
-            this.settingsService.settings['developerMode'] === true;
+        super(title, translate, route, variantService);
+        this.developerMode = this.settingsService.settings['developerMode'] === true;
 
         this.subscribe(this.authService.user, (user) => {
             this.user = user;
@@ -225,9 +194,7 @@ export class HomeComponent
         if (!user) {
             return null;
         }
-        const contacts = (user.profile?.contacts as Contact[]).filter(
-            (v) => v.state !== ContactState.verified
-        );
+        const contacts = (user.profile?.contacts as Contact[]).filter((v) => v.state !== ContactState.verified);
         return contacts.length > 0 ? contacts : null;
     }
 
@@ -266,9 +233,7 @@ export class HomeComponent
 
     onLogout() {
         this.clearProblem();
-        this.authService
-            .logout(this.variant)
-            .catch((err) => this.addProblem('errors.cannotLogout', err));
+        this.authService.logout(this.variant).catch((err) => this.addProblem('errors.cannotLogout', err));
     }
 
     onShowConsole() {
@@ -290,10 +255,6 @@ export class HomeComponent
     onTriggerVerifyContact(contact: Contact) {
         // noinspection JSIgnoredPromiseFromCall
         this.apiService.triggerVerifyContact(this.variant, contact);
-    }
-
-    get doesSupportSignup() {
-        return doesVariantSupportSignup(this.variant);
     }
 }
 

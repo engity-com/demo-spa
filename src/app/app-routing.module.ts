@@ -1,18 +1,7 @@
-import { NgModule } from '@angular/core';
-import {
-    CanMatchFn,
-    Route,
-    RouterModule,
-    Routes,
-    UrlSegment,
-} from '@angular/router';
-import {
-    AfterLoginComponent,
-    AfterLogoutComponent,
-    HomeComponent,
-    PageNotFoundComponent,
-} from './core/components';
-import { Variant } from './core/model/model';
+import { inject, NgModule } from '@angular/core';
+import { CanMatchFn, Route, RouterModule, Routes, UrlSegment } from '@angular/router';
+import { AfterLoginComponent, AfterLogoutComponent, HomeComponent, PageNotFoundComponent } from './core/components';
+import { VariantService } from './core/services/variant.service';
 
 const base: Routes = [
     { path: 'after-login', component: AfterLoginComponent },
@@ -26,12 +15,9 @@ const variantMatcher: CanMatchFn = (route: Route, segments: UrlSegment[]) => {
     if (segments.length < 1) {
         return false;
     }
-    for (const v in Variant) {
-        if (Variant[v] === segments[0].path) {
-            return true;
-        }
-    }
-    return false;
+    const variantService = inject(VariantService);
+    const variant = variantService.findBySubPath(segments[0].path);
+    return !!variant;
 };
 
 export const routes: Routes = [

@@ -1,7 +1,8 @@
 {
     "description": {
         "default": "Diese Seite demonstriert die Stärke einer Single Page Application zusammen mit unserem Engity IdP.",
-        "magicLink": "Diese Seite demonstriert die Stärke einer Single Page Application mit einem passwortlosen Login in Verwendung mit unserem Engity Magic-Link."
+        "magicLink": "Diese Seite demonstriert die Stärke einer Single Page Application mit einem passwortlosen Login in Verwendung mit unserem Engity Magic-Link.",
+        "username": "Diese Seite demonstriert die Stärke einer Single Page Application mit einem Nutzername/Passwort-Login in Verwendung mit unserem Engity IdP."
     },
 
     "signup": "Registrieren",
