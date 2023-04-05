@@ -28,14 +28,17 @@ export class AuthService implements OnDestroy {
         const result: Record<Variant, UserManagerAssignment> = {};
         for (const v in Variant) {
             const variant = Variant[v];
-            const authority = environment.authorities[variant];
+            const authority = environment.authorities[v];
+            const uriPrefix = `${environment.clientRoot}${
+                variant && variant + '/'
+            }`;
 
             const um = new UserManager({
                 authority: authority.stsAuthority,
                 client_id: authority.clientId,
-                redirect_uri: `${environment.clientRoot}after-login`,
-                silent_redirect_uri: `${environment.clientRoot}silent-callback.html`,
-                post_logout_redirect_uri: `${environment.clientRoot}`,
+                redirect_uri: `${uriPrefix}after-login`,
+                silent_redirect_uri: `${uriPrefix}silent-callback.html`,
+                post_logout_redirect_uri: `${uriPrefix}`,
                 response_type: 'code',
                 scope: 'openid profile email',
                 userStore: new WebStorageStateStore({
@@ -44,7 +47,12 @@ export class AuthService implements OnDestroy {
                 }),
             });
 
-            const uma = new UserManagerAssignment(um, variant, subject);
+            const uma = new UserManagerAssignment(
+                um,
+                variant,
+                subject,
+                uriPrefix
+            );
             um.events.addAccessTokenExpired(uma.onAccessTokenExpired);
             um.events.addAccessTokenExpiring(uma.onAccessTokenExpiring);
             um.events.addUserLoaded(uma.onUserLoaded);
@@ -111,7 +119,8 @@ class UserManagerAssignment {
     constructor(
         public readonly userManager: UserManager,
         public readonly variant: Variant,
-        private readonly subject: Subject<User | null>
+        private readonly subject: Subject<User | null>,
+        private readonly uriPrefix: string
     ) {}
 
     get metadata(): Promise<Partial<OidcMetadata>> {
@@ -155,7 +164,7 @@ class UserManagerAssignment {
     async login(): Promise<void> {
         return await this.userManager.signinRedirect({
             extraQueryParams: {
-                cancel_redirect_uri: environment.clientRoot,
+                cancel_redirect_uri: this.uriPrefix,
             },
         });
     }
@@ -164,7 +173,7 @@ class UserManagerAssignment {
         return await this.userManager.signinRedirect({
             extraQueryParams: {
                 procedure: 'signup',
-                cancel_redirect_uri: environment.clientRoot,
+                cancel_redirect_uri: this.uriPrefix,
             },
         });
     }

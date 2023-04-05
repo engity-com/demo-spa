@@ -6,7 +6,7 @@ import { BasePageComponent } from './base-page.component';
 
 @Component({
     template: `
-        <app-messages [description]="false">{{
+        <app-messages [description]="false" [variant]="variant">{{
             'logout.successful.message' | translate
         }}</app-messages>
     `,
@@ -26,8 +26,9 @@ export class AfterLogoutComponent extends BasePageComponent implements OnInit {
     }
 
     async ngOnInit() {
+        super.ngOnInit();
         setTimeout(() => {
-            this.router.navigate(['']);
+            this.router.navigate(['/' + this.variant]);
         }, 5000);
     }
 }

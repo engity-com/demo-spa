@@ -19,6 +19,7 @@ const base: Routes = [
     { path: 'after-logout', component: AfterLogoutComponent },
     { path: 'after-signup', component: AfterLoginComponent },
     { path: '', component: HomeComponent },
+    { path: '**', pathMatch: 'full', component: PageNotFoundComponent },
 ];
 
 const variantMatcher: CanMatchFn = (route: Route, segments: UrlSegment[]) => {
@@ -36,7 +37,6 @@ const variantMatcher: CanMatchFn = (route: Route, segments: UrlSegment[]) => {
 export const routes: Routes = [
     { path: ':variant', children: base, canMatch: [variantMatcher] },
     { path: '', children: base },
-    { path: '**', pathMatch: 'full', component: PageNotFoundComponent },
 ];
 
 @NgModule({

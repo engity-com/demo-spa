@@ -4,7 +4,11 @@ import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { SimpleModalService } from 'ngx-simple-modal';
 import { User } from 'oidc-client-ts';
-import { Contact, ContactState } from '../model/model';
+import {
+    Contact,
+    ContactState,
+    doesVariantSupportSignup,
+} from '../model/model';
 import { ApiService } from '../services/api.service';
 import { AuthService } from '../services/auth.service';
 import { SettingsService } from '../services/settings.service';
@@ -13,7 +17,7 @@ import { ConsoleComponent } from './console.component';
 
 @Component({
     template: `
-        <app-header></app-header>
+        <app-header [variant]="variant"></app-header>
         <div class="forms">
             <ng-container *ngIf="user">
                 <div
@@ -67,14 +71,20 @@ import { ConsoleComponent } from './console.component';
             <div class="button-bar">
                 <button
                     (click)="onSignup()"
-                    *ngIf="!user"
+                    *ngIf="!user && doesSupportSignup"
                     class="primary"
                     translate="signup"
                 ></button>
                 <button
                     (click)="onLogin()"
-                    *ngIf="!user"
+                    *ngIf="!user && doesSupportSignup"
                     translate="login"
+                ></button>
+                <button
+                    (click)="onLogin()"
+                    *ngIf="!user && !doesSupportSignup"
+                    class="primary"
+                    translate="loginOrSignup"
                 ></button>
                 <button
                     (click)="onLogout()"
@@ -167,14 +177,14 @@ export class HomeComponent
         });
     }
 
-    public async ngOnInit() {
+    async ngOnInit() {
         super.ngOnInit();
         window.addEventListener('focus', this.onWindowActivation);
         window.addEventListener('storage', this.onRevalidateLoginStatus);
         await this.authService.updateState(this.variant);
     }
 
-    public ngOnDestroy() {
+    ngOnDestroy() {
         super.ngOnDestroy();
         window.removeEventListener('focus', this.onWindowActivation);
         window.removeEventListener('storage', this.onRevalidateLoginStatus);
@@ -211,7 +221,7 @@ export class HomeComponent
         await this.authService.renewToken(this.variant);
     };
 
-    public toUnverifiedContacts(user: User): Contact[] {
+    toUnverifiedContacts(user: User): Contact[] {
         if (!user) {
             return null;
         }
@@ -232,21 +242,21 @@ export class HomeComponent
         this.problem = { key: key, params: params };
     }
 
-    public onSignup() {
+    onSignup() {
         this.clearProblem();
         this.authService.signup(this.variant).catch((err) => {
             this.addProblem('errors.cannotSignup', err);
         });
     }
 
-    public onLogin() {
+    onLogin() {
         this.clearProblem();
         this.authService.login(this.variant).catch((err) => {
             this.addProblem('errors.cannotLogin', err);
         });
     }
 
-    public onRenewToken() {
+    onRenewToken() {
         this.clearProblem();
         this.authService
             .renewToken(this.variant)
@@ -254,14 +264,14 @@ export class HomeComponent
             .catch((err) => this.addProblem('errors.cannotRenewToken', err));
     }
 
-    public onLogout() {
+    onLogout() {
         this.clearProblem();
         this.authService
             .logout(this.variant)
             .catch((err) => this.addProblem('errors.cannotLogout', err));
     }
 
-    public onShowConsole() {
+    onShowConsole() {
         this.consoleVisible = true;
         this.simpleModalService
             .addModal(ConsoleComponent, {
@@ -272,14 +282,18 @@ export class HomeComponent
             });
     }
 
-    public onToggleDeveloperMode() {
+    onToggleDeveloperMode() {
         this.developerMode = !this.developerMode;
         this.settingsService.setSetting('developerMode', this.developerMode);
     }
 
-    public onTriggerVerifyContact(contact: Contact) {
+    onTriggerVerifyContact(contact: Contact) {
         // noinspection JSIgnoredPromiseFromCall
         this.apiService.triggerVerifyContact(this.variant, contact);
+    }
+
+    get doesSupportSignup() {
+        return doesVariantSupportSignup(this.variant);
     }
 }
 

@@ -3,7 +3,7 @@ import { Title } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { forkJoin, Observable, Subscription } from 'rxjs';
-import { Variant } from '../model/model';
+import { Variant, variantToKey } from '../model/model';
 
 @Component({
     template: ``,
@@ -21,13 +21,6 @@ export abstract class BasePageComponent implements OnInit, OnDestroy {
     protected abstract get titleKey(): string;
 
     ngOnInit(): void {
-        const pageTitle = this.translate.get(this.titleKey);
-        const mainTitle = this.translate.get('title');
-        const title = forkJoin([pageTitle, mainTitle]);
-        this.subscribe(title, (values) => {
-            this.title.setTitle(`${values[0]} | ${values[1]}`);
-        });
-
         const plainVariant = this.route.snapshot.paramMap.get('variant');
         this._variant = Variant.default;
         for (const v in Variant) {
@@ -36,10 +29,21 @@ export abstract class BasePageComponent implements OnInit, OnDestroy {
                 break;
             }
         }
+
+        const pageTitle = this.translate.get(this.titleKey);
+        const mainTitle = this.translate.get(`title.${this.variantKey}`);
+        const title = forkJoin([pageTitle, mainTitle]);
+        this.subscribe(title, (values) => {
+            this.title.setTitle(`${values[0]} | ${values[1]}`);
+        });
     }
 
     get variant(): Variant {
         return this._variant;
+    }
+
+    get variantKey(): string {
+        return variantToKey(this.variant);
     }
 
     protected subscribe<T>(

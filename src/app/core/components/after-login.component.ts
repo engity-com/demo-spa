@@ -6,9 +6,8 @@ import { AuthService } from '../services/auth.service';
 import { BasePageComponent } from './base-page.component';
 
 @Component({
-    selector: 'app-after-login',
     template: `
-        <app-messages [description]="false">{{
+        <app-messages [description]="false" [variant]="variant">{{
             this.messageKey | translate
         }}</app-messages>
     `,
@@ -31,14 +30,15 @@ export class AfterLoginComponent extends BasePageComponent implements OnInit {
     }
 
     async ngOnInit() {
+        super.ngOnInit();
         try {
             await this.authService.signinCallback(this.variant);
-            await this.router.navigate(['']);
+            await this.router.navigate(['/' + this.variant]);
         } catch (e) {
-            console.log('Cannot finalize login.', e);
+            console.error('Cannot finalize login.', e);
             this.messageKey = 'finalizeLogin.failed';
             setTimeout(() => {
-                this.router.navigate(['']);
+                this.router.navigate(['/' + this.variant]);
             }, 5000);
         }
     }

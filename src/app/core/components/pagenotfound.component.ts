@@ -6,7 +6,7 @@ import { BasePageComponent } from './base-page.component';
 
 @Component({
     template: `
-        <app-messages [description]="false">{{
+        <app-messages [description]="false" [variant]="variant">{{
             'pageNotFound.message' | translate
         }}</app-messages>
     `,

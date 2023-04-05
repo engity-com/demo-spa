@@ -7,7 +7,7 @@ import { Injectable } from '@angular/core';
 import { User } from 'oidc-client-ts';
 import { firstValueFrom, Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { Contact, Variant } from '../model/model';
+import { Contact, Variant, variantToKey } from '../model/model';
 import { AuthService } from './auth.service';
 
 @Injectable({
@@ -63,9 +63,10 @@ export class ApiService {
     }
 
     private apiRoot(variant: Variant) {
+        const key = variantToKey(variant);
         return (
-            environment.authorities[variant]['apiRoot'] ||
-            environment.authorities[variant].stsAuthority
+            environment.authorities[key]['apiRoot'] ||
+            environment.authorities[key].stsAuthority
         );
     }
 

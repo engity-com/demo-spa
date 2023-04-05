@@ -1,11 +1,18 @@
 {
-    "title": "Engity IdP Demo",
-    "description": "This page demonstrates the power of a Single Page Application together with our Engity IdP.",
+    "title": {
+        "default": "Engity Demo",
+        "magicLink": "Engity Magic-Link Demo"
+    },
+    "description": {
+        "default": "This page demonstrates the power of a Single Page Application together with our Engity IdP.",
+        "magicLink": "This page demonstrates the power of a Single Page Application with a password-less login using our Engity Magic-Link."
+    },
     "home": "Home",
 
     "signup": "Signup",
     "login": "Login",
     "logout": "Logout",
+    "loginOrSignup": "Login or signup",
     "close": "Close",
 
     "status": "Status",
