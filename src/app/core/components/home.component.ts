@@ -19,7 +19,11 @@ import { ConsoleComponent } from './console.component';
             <ng-container *ngIf="user">
                 <div
                     class="control input-like"
-                    [translate]="'messages.loggedIn'"
+                    [translate]="
+                        user?.profile?.nickname === user?.profile?.email
+                            ? 'messages.loggedIn'
+                            : 'messages.loggedInWithEmail'
+                    "
                     [translateParams]="{
                         user: user?.profile?.nickname,
                         email: user?.profile?.email

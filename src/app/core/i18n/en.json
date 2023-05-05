@@ -77,7 +77,8 @@
     "messages": {
         "apiResponse": "API-Response: {{response}}",
         "silentRenewSuccess": "Silent renew was successful.",
-        "loggedIn": "Logged in as {{user}} ({{email}}).",
+        "loggedIn": "Logged in as {{user}}.",
+        "loggedInWithEmail": "Logged in as {{user}} ({{email}}).",
         "notLoggedIn": "Currently not logged in."
     },
 
