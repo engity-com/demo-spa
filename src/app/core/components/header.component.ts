@@ -1,15 +1,16 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, Input } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { AuthService } from '../services/auth.service';
+import { Variant } from '../services/variant.service';
 
 @Component({
     selector: 'app-header',
     template: `
         <header>
             <img src="/logo.svg" alt="Logo" height="96" />
-            <h1>{{ 'title' | translate }}</h1>
-            <p *ngIf="description">{{ 'description' | translate }}</p>
+            <h1>{{ variant.translate('title') | async }}</h1>
+            <p *ngIf="description">
+                {{ variant.translate('description') | async }}
+            </p>
         </header>
     `,
 })
@@ -17,5 +18,8 @@ export class HeaderComponent {
     constructor(public readonly translate: TranslateService) {}
 
     @Input()
-    public description: boolean = true;
+    description: boolean = true;
+
+    @Input()
+    variant: Variant;
 }

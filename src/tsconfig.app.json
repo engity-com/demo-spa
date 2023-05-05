@@ -6,7 +6,7 @@
         "resolveJsonModule": true
     },
     "exclude": [
-        "environments/environment.prod.ts", // angular replacement
+        "environments/environment.red.ts", // angular replacement
         "test.ts",
         "**/*.spec.ts"
     ]

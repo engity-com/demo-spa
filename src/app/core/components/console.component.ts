@@ -1,6 +1,4 @@
 import { Component } from '@angular/core';
-import { Title } from '@angular/platform-browser';
-import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { SimpleModalComponent } from 'ngx-simple-modal';
 
@@ -48,12 +46,6 @@ export class ConsoleComponent
 
     constructor(protected readonly translate: TranslateService) {
         super();
-    }
-
-    confirm() {
-        this.result = true;
-        // noinspection JSIgnoredPromiseFromCall
-        this.close();
     }
 }
 

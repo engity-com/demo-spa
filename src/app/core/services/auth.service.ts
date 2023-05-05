@@ -1,122 +1,179 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import {
-    ErrorResponse,
-    OidcMetadata,
-    User,
-    UserManager,
-    WebStorageStateStore,
-} from 'oidc-client-ts';
+import { ErrorResponse, OidcMetadata, User, UserManager, WebStorageStateStore } from 'oidc-client-ts';
 import { Observable, Subject } from 'rxjs';
 import { environment } from 'src/environments/environment';
+import { Variant, VariantService } from './variant.service';
 
 @Injectable({
     providedIn: 'root',
 })
 export class AuthService implements OnDestroy {
-    private readonly userManager: UserManager;
+    private readonly variantKeyToUserManager: Record<string, UserManagerAssignment>;
     private readonly subject = new Subject<User | null>();
 
-    constructor() {
-        this.userManager = new UserManager({
-            authority: environment.stsAuthority,
-            client_id: environment.clientId,
-            redirect_uri: `${environment.clientRoot}after-login`,
-            silent_redirect_uri: `${environment.clientRoot}silent-callback.html`,
-            post_logout_redirect_uri: `${environment.clientRoot}`,
-            response_type: 'code',
-            scope: 'openid profile email',
-            userStore: new WebStorageStateStore({ store: window.localStorage }),
-        });
-        this.userManager.events.addAccessTokenExpired(
-            this.onAccessTokenExpired
-        );
-        this.userManager.events.addAccessTokenExpiring(
-            this.onAccessTokenExpiring
-        );
-        this.userManager.events.addUserLoaded(this.onUserLoaded);
-        this.userManager.events.addUserUnloaded(this.onUserUnloaded);
+    constructor(variantService: VariantService) {
+        this.variantKeyToUserManager = AuthService.createUserManagers(variantService, this.subject);
+    }
+
+    private static createUserManagers(
+        variantService: VariantService,
+        subject: Subject<User | null>
+    ): Record<string, UserManagerAssignment> {
+        return variantService.all.reduce((variants, variant) => {
+            const uriPrefix = `${environment.clientRoot}${variant.subPath ? variant.subPath + '/' : ''}`;
+            const um = new UserManager({
+                authority: variant.authority.stsAuthority,
+                client_id: variant.authority.clientId,
+                redirect_uri: `${uriPrefix}after-login`,
+                silent_redirect_uri: `${uriPrefix}silent-callback.html`,
+                post_logout_redirect_uri: `${uriPrefix}`,
+                response_type: 'code',
+                scope: 'openid profile email',
+                userStore: new WebStorageStateStore({
+                    prefix: `${variant ? variant + '-' : ''}oidc`,
+                    store: window.localStorage,
+                }),
+            });
+            const uma = new UserManagerAssignment(um, variant, subject, uriPrefix);
+            um.events.addAccessTokenExpired(uma.onAccessTokenExpired);
+            um.events.addAccessTokenExpiring(uma.onAccessTokenExpiring);
+            um.events.addUserLoaded(uma.onUserLoaded);
+            um.events.addUserUnloaded(uma.onUserUnloaded);
+
+            return {
+                ...variants,
+                [variant.key]: uma,
+            };
+        }, {} as Record<string, UserManagerAssignment>);
     }
 
     public ngOnDestroy(): void {
-        this.userManager.events.removeAccessTokenExpired(
-            this.onAccessTokenExpired
-        );
-        this.userManager.events.removeAccessTokenExpiring(
-            this.onAccessTokenExpiring
-        );
-        this.userManager.events.removeUserLoaded(this.onUserLoaded);
-        this.userManager.events.removeUserUnloaded(this.onUserUnloaded);
+        for (const k in this.variantKeyToUserManager) {
+            this.variantKeyToUserManager[k].destroy();
+        }
     }
 
-    public get metadata(): Promise<Partial<OidcMetadata>> {
-        return this.userManager.metadataService.getMetadata();
+    private userManager(of: Variant): UserManagerAssignment {
+        const key = of.key;
+        const uma = this.variantKeyToUserManager[key];
+        if (!uma) {
+            throw new Error(`Illegal variant: "${key}".`);
+        }
+        return uma;
     }
 
-    public get user(): Observable<User | null> {
+    metadata(of: Variant): Promise<Partial<OidcMetadata>> {
+        return this.userManager(of).metadata;
+    }
+
+    get user(): Observable<User | null> {
         return this.subject;
     }
 
-    private readonly onAccessTokenExpired = () => {
+    async updateState(variant: Variant): Promise<void> {
+        const user = await this.getUser(variant);
+        this.subject.next(user);
+    }
+
+    async getUser(variant: Variant): Promise<User | null> {
+        return await this.userManager(variant).getUser();
+    }
+
+    async login(variant: Variant): Promise<void> {
+        return await this.userManager(variant).login();
+    }
+
+    async signup(variant: Variant): Promise<void> {
+        return await this.userManager(variant).signup();
+    }
+
+    async renewToken(variant: Variant): Promise<User | void> {
+        return this.userManager(variant).renewToken();
+    }
+
+    async logout(variant: Variant): Promise<void> {
+        return await this.userManager(variant).logout();
+    }
+
+    async signinCallback(variant: Variant): Promise<User | void> {
+        return await this.userManager(variant).signinCallback();
+    }
+}
+
+class UserManagerAssignment {
+    constructor(
+        public readonly userManager: UserManager,
+        public readonly variant: Variant,
+        private readonly subject: Subject<User | null>,
+        private readonly uriPrefix: string
+    ) {}
+
+    get metadata(): Promise<Partial<OidcMetadata>> {
+        return this.userManager.metadataService.getMetadata();
+    }
+
+    async getUser(): Promise<User | null> {
+        return await this.userManager.getUser();
+    }
+
+    readonly onAccessTokenExpired = () => {
         console.log(`Current token is expired. Trying renew token...`);
         this.renewToken().catch(() => this.logout());
     };
 
-    private readonly onAccessTokenExpiring = () => {
+    readonly onAccessTokenExpiring = () => {
         console.log(`Token will expire soon. Trying renew token...`);
         this.renewToken().catch(() => this.logout());
     };
-    private readonly onUserLoaded = (user: User) => {
+    readonly onUserLoaded = (user: User) => {
         this.subject.next(user);
     };
-    private readonly onUserUnloaded = () => {
+    readonly onUserUnloaded = () => {
         this.subject.next(null);
     };
 
-    public async updateState(): Promise<void> {
-        const user = await this.getUser();
-        this.subject.next(user);
-    }
-
-    public async getUser(): Promise<User | null> {
-        return await this.userManager.getUser();
-    }
-
-    public async login(): Promise<void> {
-        return await this.userManager.signinRedirect({
-            extraQueryParams: {
-                cancel_redirect_uri: environment.clientRoot,
-            },
-        });
-    }
-
-    public async signup(): Promise<void> {
-        return await this.userManager.signinRedirect({
-            extraQueryParams: {
-                procedure: 'signup',
-                cancel_redirect_uri: environment.clientRoot,
-            },
-        });
-    }
-
-    public async renewToken(): Promise<User | void> {
+    async renewToken(): Promise<User | void> {
         try {
             return await this.userManager.signinSilent();
         } catch (e) {
             if (e instanceof ErrorResponse && e.error === 'access_denied') {
-                console.info(
-                    'Looks like that our refresh token is not longer valid. Assuming as logged out.'
-                );
+                console.info('Looks like that our refresh token is not longer valid. Assuming as logged out.');
                 return this.logout();
             }
             throw e;
         }
     }
 
-    public async logout(): Promise<void> {
+    async login(): Promise<void> {
+        return await this.userManager.signinRedirect({
+            extraQueryParams: {
+                cancel_redirect_uri: this.uriPrefix,
+            },
+        });
+    }
+
+    async signup(): Promise<void> {
+        return await this.userManager.signinRedirect({
+            extraQueryParams: {
+                procedure: 'signup',
+                cancel_redirect_uri: this.uriPrefix,
+            },
+        });
+    }
+
+    async logout(): Promise<void> {
         return await this.userManager.signoutRedirect();
     }
 
-    public async signinCallback(): Promise<User | void> {
+    async signinCallback(): Promise<User | void> {
         return await this.userManager.signinCallback();
+    }
+
+    destroy() {
+        const um = this.userManager;
+        um.events.removeAccessTokenExpired(this.onAccessTokenExpired);
+        um.events.removeAccessTokenExpiring(this.onAccessTokenExpiring);
+        um.events.removeUserLoaded(this.onUserLoaded);
+        um.events.removeUserUnloaded(this.onUserUnloaded);
     }
 }

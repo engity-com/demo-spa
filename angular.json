@@ -42,19 +42,48 @@
                         ],
                         "allowedCommonJsDependencies": ["crypto-js"],
                         "styles": ["src/styles.scss"],
-                        "scripts": []
+                        "scripts": [],
+                        "outputHashing": "all",
+                        "optimization": {
+                            "fonts": {
+                                "inline": true
+                            }
+                        }
                     },
                     "configurations": {
-                        "production": {
+                        "red": {
                             "fileReplacements": [
                                 {
                                     "replace": "src/environments/environment.ts",
-                                    "with": "src/environments/environment.prod.ts"
+                                    "with": "src/environments/environment.red.ts"
                                 }
                             ],
                             "optimization": true,
                             "outputHashing": "all",
                             "sourceMap": false,
+                            "namedChunks": false,
+                            "aot": true,
+                            "extractLicenses": true,
+                            "vendorChunk": false,
+                            "buildOptimizer": true,
+                            "budgets": [
+                                {
+                                    "type": "initial",
+                                    "maximumWarning": "2mb",
+                                    "maximumError": "5mb"
+                                }
+                            ]
+                        },
+                        "green": {
+                            "fileReplacements": [
+                                {
+                                    "replace": "src/environments/environment.ts",
+                                    "with": "src/environments/environment.green.ts"
+                                }
+                            ],
+                            "optimization": true,
+                            "outputHashing": "all",
+                            "sourceMap": true,
                             "namedChunks": false,
                             "aot": true,
                             "extractLicenses": true,
@@ -115,6 +144,7 @@
     },
     "defaultProject": "App",
     "cli": {
-        "defaultCollection": "@angular-eslint/schematics"
+        "defaultCollection": "@angular-eslint/schematics",
+        "analytics": false
     }
 }
