@@ -1,17 +1,17 @@
 import { Component, Input } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
-import { Variant } from '../services/variant.service';
+import { Observable } from 'rxjs';
+import { Variant, VariantService } from '../services/variant.service';
 
 @Component({
     selector: 'app-messages',
     template: `
-        <app-header [description]="description" [variant]="variant"></app-header>
+        <app-header [description]="description" [loading]="loading"></app-header>
         <div class="messages">
             <p>
                 <ng-content></ng-content>
             </p>
             <p>
-                <a [routerLink]="['/' + variant.subPath]">{{ 'backHome' | translate }}</a>
+                <a [routerLink]="['/' + (variant | async).subPath]">{{ 'backHome' | translate }}</a>
             </p>
         </div>
     `,
@@ -20,8 +20,13 @@ import { Variant } from '../services/variant.service';
 export class MessagesComponent {
     @Input()
     public description: boolean = true;
-    @Input()
-    public variant: Variant;
 
-    constructor(public readonly translate: TranslateService) {}
+    @Input()
+    public loading: boolean = false;
+
+    constructor(private readonly _variantService: VariantService) {}
+
+    get variant(): Observable<Variant> {
+        return this._variantService.active;
+    }
 }

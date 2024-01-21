@@ -1,24 +1,29 @@
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { User } from 'oidc-client-ts';
+import { TranslateService } from '@ngx-translate/core';
 import { firstValueFrom, Observable } from 'rxjs';
 import { Contact } from '../model/model';
 import { AuthService } from './auth.service';
-import { Variant } from './variant.service';
+import { Variant, VariantService } from './variant.service';
 
 @Injectable({
     providedIn: 'root',
 })
 export class ApiService {
-    constructor(private readonly httpClient: HttpClient, private readonly authService: AuthService) {}
+    constructor(
+        private readonly _httpClient: HttpClient,
+        private readonly _authService: AuthService,
+        private readonly _translateService: TranslateService,
+        private readonly _variantService: VariantService,
+    ) {}
 
-    public async triggerVerifyContact(variant: Variant, contact: Contact): Promise<void> {
-        const metadata = await this.authService.metadata(variant);
+    async triggerVerifyContact(contact: Contact): Promise<void> {
+        const metadata = await this._authService.metadata;
         const url = metadata['trigger_verify_contact'];
         if (!url) {
             throw `Remote IdP does not support trigger_verify_contact method.`;
         }
-        await this.callApi(variant, (client, authorization) =>
+        await this._callApi((client, authorization) =>
             client.put(
                 url,
                 {
@@ -28,37 +33,38 @@ export class ApiService {
                     headers: new HttpHeaders({
                         Accept: 'application/json',
                         Authorization: authorization,
+                        'Accept-Language': this._translateService.currentLang,
                     }),
-                }
-            )
+                },
+            ),
         );
     }
 
-    private async callApi(variant: Variant, rc: RequestCreator) {
-        const user = await this.authService.getUser(variant);
+    private async _callApi(rc: RequestCreator): Promise<any> {
+        const variant = await firstValueFrom(this._variantService.active);
+        const user = await firstValueFrom(this._authService.user);
         if (user && user.access_token) {
-            return await this._callApi(variant, rc, user.access_token);
+            return await this._callApiWithVariant(variant, rc, user.access_token);
         }
         if (user) {
-            const renewedUser = await this.authService.renewToken(variant);
+            const renewedUser = await this._authService.renew();
             if (renewedUser) {
-                return await this._callApi(variant, rc, renewedUser.access_token);
+                return await this._callApiWithVariant(variant, rc, renewedUser.access_token);
             }
         }
         throw new Error('user is not logged in');
     }
 
-    private async _callApi(variant: Variant, rc: RequestCreator, token: string, run: number = 0) {
+    private async _callApiWithVariant(variant: Variant, rc: RequestCreator, token: string, run: number = 0) {
         try {
-            return firstValueFrom(rc(this.httpClient, 'Bearer ' + token, variant.authority.apiRoot));
+            return firstValueFrom(rc(this._httpClient, 'Bearer ' + token, variant.authority.apiRoot));
         } catch (result) {
             if (result instanceof HttpErrorResponse && result.status === 401 && run < 5) {
                 console.warn(
-                    "Looks like we're don't have any longer access to the target API. Try to refresh the tokens..."
+                    "Looks like we're don't have any longer access to the target API. Try to refresh the tokens...",
                 );
-                return this.authService.renewToken(variant).then((user: User) => {
-                    return this._callApi(variant, rc, user.access_token, run + 1);
-                });
+                const user = await this._authService.renew();
+                return await this._callApiWithVariant(variant, rc, user.access_token, run + 1);
             }
             throw result;
         }

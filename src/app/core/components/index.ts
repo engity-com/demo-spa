@@ -1,5 +1,7 @@
 export { AfterLoginComponent } from './after-login.component';
+export { AfterSilentLoginComponent } from './after-silent-login.component';
 export { AfterLogoutComponent } from './after-logout.component';
+export { AfterSilentLogoutComponent } from './after-silent-logout.component';
 export { AppComponent } from './app.component';
 export { ConsoleComponent } from './console.component';
 export { FooterComponent } from './footer.component';
@@ -7,3 +9,4 @@ export { HeaderComponent } from './header.component';
 export { HomeComponent } from './home.component';
 export { MessagesComponent } from './messages.component';
 export { PageNotFoundComponent } from './pagenotfound.component';
+export { SpinnerComponent } from './spinner.component';
