@@ -31,6 +31,9 @@ export class AfterLogoutComponent extends BasePageComponent implements OnInit {
 
     async ngOnInit() {
         await super.ngOnInit();
+        if (!this.silent) {
+            await this._authService.initialize();
+        }
         const variant = await firstValueFrom(this.variant);
         await this._authService.logoutCallback(this.silent);
         await this._router.navigate(['/' + variant.subPath]);

@@ -21,16 +21,20 @@ import { AppTranslateLoader } from './core/i18n';
 
 class NgErrorHandler implements ErrorHandler {
     handleError(error) {
+        let foo = 'bar';
         if (
             unloaded &&
-            'rejection' in error &&
-            error.rejection &&
-            'message' in error.rejection &&
-            error.rejection.message === 'Failed to fetch'
+            ((!error?.rejection && error?.message === 'Failed to fetch') ||
+                error?.rejection?.message === 'Failed to fetch')
         ) {
             // Fetch error after unloading the window could happen is will be silently ignored.
         } else {
-            console.error(error);
+            console.error(error, {
+                unloaded: unloaded,
+                rejection: error?.rejection,
+                message: error?.rejection?.message,
+                foo: foo,
+            });
         }
     }
 }

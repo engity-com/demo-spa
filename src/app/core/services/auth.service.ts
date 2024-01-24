@@ -1,9 +1,14 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { ErrorResponse, OidcMetadata, User, UserManager, WebStorageStateStore } from 'oidc-client-ts';
+import { ErrorResponse, Log, OidcMetadata, User, UserManager, WebStorageStateStore } from 'oidc-client-ts';
 import { concat, firstValueFrom, map, Observable, of, Subject, Subscription } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Variant, VariantService } from './variant.service';
+
+if (!environment.production) {
+    Log.setLogger(console);
+    Log.setLevel(Log.DEBUG);
+}
 
 @Injectable({
     providedIn: 'root',
@@ -17,6 +22,7 @@ export class AuthService implements OnDestroy {
 
     private readonly _variantSubscription: Subscription;
 
+    private _initializeTriggered: boolean = false;
     private _initializedRaw: boolean = false;
     private readonly _initializedSubject = new Subject<boolean>();
 
@@ -30,11 +36,15 @@ export class AuthService implements OnDestroy {
         this._variantSubscription = this._variantService.active.subscribe((variant) =>
             this._switchUserManagerAssignment(variant),
         );
+    }
 
-        this.renew().then(() => {
+    public async initialize(): Promise<void> {
+        if (!this._initializeTriggered) {
+            this._initializeTriggered = true;
+            await this.renew();
             this._initializedRaw = true;
             this._initializedSubject.next(true);
-        });
+        }
     }
 
     private _createUserManagerAssignmentFor(variant: Variant): UserManagerAssignment {
@@ -45,6 +55,7 @@ export class AuthService implements OnDestroy {
             redirect_uri: `${uriPrefix}after-login`,
             silent_redirect_uri: `${uriPrefix}after-silent-login`,
             response_type: 'code',
+            silentRequestTimeoutInSeconds: 5000,
             scope: 'openid profile email contacts',
             userStore: new WebStorageStateStore({
                 prefix: `${variant ? variant.key : ''}.`,

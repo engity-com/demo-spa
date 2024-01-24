@@ -31,6 +31,10 @@ export class AfterLoginComponent extends BasePageComponent implements OnInit {
 
     async ngOnInit() {
         await super.ngOnInit();
+        if (!this.silent) {
+            await this._authService.initialize();
+        }
+
         const variant = await firstValueFrom(this.variant);
         try {
             await this._authService.loginCallback(this.silent);
