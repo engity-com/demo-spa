@@ -170,6 +170,7 @@ export class HomeComponent extends BasePageComponent implements OnInit, OnDestro
 
     async ngOnInit() {
         await super.ngOnInit();
+        await this.authService.initialize();
         window.addEventListener('focus', this._onWindowActivation);
     }
 
