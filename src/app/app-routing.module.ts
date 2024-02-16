@@ -1,11 +1,20 @@
 import { inject, NgModule } from '@angular/core';
 import { CanMatchFn, Route, RouterModule, Routes, UrlSegment } from '@angular/router';
-import { AfterLoginComponent, AfterLogoutComponent, HomeComponent, PageNotFoundComponent } from './core/components';
+import {
+    AfterLoginComponent,
+    AfterLogoutComponent,
+    AfterSilentLoginComponent,
+    AfterSilentLogoutComponent,
+    HomeComponent,
+    PageNotFoundComponent,
+} from './core/components';
 import { VariantService } from './core/services/variant.service';
 
 const base: Routes = [
     { path: 'after-login', component: AfterLoginComponent },
+    { path: 'after-silent-login', component: AfterSilentLoginComponent },
     { path: 'after-logout', component: AfterLogoutComponent },
+    { path: 'after-silent-logout', component: AfterSilentLogoutComponent },
     { path: 'after-signup', component: AfterLoginComponent },
     { path: '', component: HomeComponent },
     { path: '**', pathMatch: 'full', component: PageNotFoundComponent },

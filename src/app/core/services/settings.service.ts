@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 
-@Injectable({ providedIn: 'root' })
+@Injectable({
+    providedIn: 'root',
+})
 export class SettingsService {
     get settings(): any {
         const plain = localStorage.getItem('settings');

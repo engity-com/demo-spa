@@ -1,26 +1,28 @@
 import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
+import { firstValueFrom } from 'rxjs';
+import { AuthService } from '../services/auth.service';
 import { VariantService } from '../services/variant.service';
 import { BasePageComponent } from './base-page.component';
 
 @Component({
-    template: `
-        <app-messages [description]="false" [variant]="variant">{{
-            'logout.successful.message' | translate
-        }}</app-messages>
-    `,
+    selector: 'app-after-logout',
+    template: ` <app-messages [description]="false" [loading]="true">{{ this.messageKey | translate }}</app-messages> `,
 })
 export class AfterLogoutComponent extends BasePageComponent implements OnInit {
+    readonly messageKey: string = 'logout.successful.message';
+    silent: boolean = false;
+
     constructor(
         title: Title,
         translate: TranslateService,
-        private readonly router: Router,
-        route: ActivatedRoute,
-        variantService: VariantService
+        private readonly _router: Router,
+        private readonly _authService: AuthService,
+        variantService: VariantService,
     ) {
-        super(title, translate, route, variantService);
+        super(title, translate, variantService);
     }
 
     protected get titleKey(): string {
@@ -28,9 +30,12 @@ export class AfterLogoutComponent extends BasePageComponent implements OnInit {
     }
 
     async ngOnInit() {
-        super.ngOnInit();
-        setTimeout(() => {
-            this.router.navigate(['/' + this.variant.subPath]);
-        }, 5000);
+        await super.ngOnInit();
+        if (!this.silent) {
+            await this._authService.initialize();
+        }
+        const variant = await firstValueFrom(this.variant);
+        await this._authService.logoutCallback(this.silent);
+        await this._router.navigate(['/' + variant.subPath]);
     }
 }

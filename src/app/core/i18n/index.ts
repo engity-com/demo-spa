@@ -1,6 +1,8 @@
 import { TranslateLoader } from '@ngx-translate/core';
 import { Observable, of } from 'rxjs';
+// @ts-ignore
 import * as de from './de.json';
+// @ts-ignore
 import * as en from './en.json';
 
 const languages = {

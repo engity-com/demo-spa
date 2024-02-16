@@ -53,7 +53,7 @@ jobs:
         uses: cloudflare/wrangler-action@2.0.0
         with:
           apiToken: ${{ secrets.CF_API_TOKEN }}
-          command: pages publish --project-name=demo-engity-green dist/app-green
+          command: pages deploy --project-name=demo-engity-green dist/app-green
 
   deploy-red:
     name: "Deploy: red"
@@ -75,5 +75,5 @@ jobs:
         uses: cloudflare/wrangler-action@2.0.0
         with:
           apiToken: ${{ secrets.CF_API_TOKEN }}
-          command: pages publish --project-name=demo-engity-red dist/app-red
+          command: pages deploy --project-name=demo-engity-red dist/app-red
 

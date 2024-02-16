@@ -1,25 +1,30 @@
 import { Component, Input } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
-import { Variant } from '../services/variant.service';
+import { Observable } from 'rxjs';
+import { Variant, VariantService } from '../services/variant.service';
 
 @Component({
     selector: 'app-header',
     template: `
         <header>
-            <img src="/logo.svg" alt="Logo" height="96" />
-            <h1>{{ variant.translate('title') | async }}</h1>
+            <app-spinner *ngIf="loading" />
+            <img *ngIf="!loading" src="/logo.svg" alt="Logo" height="96" />
+            <h1>{{ (this.variant | async)?.translate('title') | async }}</h1>
             <p *ngIf="description">
-                {{ variant.translate('description') | async }}
+                {{ (this.variant | async)?.translate('description') | async }}
             </p>
         </header>
     `,
 })
 export class HeaderComponent {
-    constructor(public readonly translate: TranslateService) {}
+    constructor(private readonly _variantService: VariantService) {}
 
     @Input()
     description: boolean = true;
 
     @Input()
-    variant: Variant;
+    loading: boolean = false;
+
+    get variant(): Observable<Variant> {
+        return this._variantService.active;
+    }
 }

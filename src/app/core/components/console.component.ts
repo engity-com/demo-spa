@@ -1,6 +1,4 @@
-import { Component } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
-import { SimpleModalComponent } from 'ngx-simple-modal';
+import { Component, EventEmitter, HostBinding, Input, Output } from '@angular/core';
 
 @Component({
     selector: 'app-console',
@@ -29,6 +27,13 @@ import { SimpleModalComponent } from 'ngx-simple-modal';
                 overflow: auto;
                 margin: 0;
                 padding: 2em;
+                display: none;
+                visibility: hidden;
+            }
+
+            :host.visible {
+                display: block;
+                visibility: visible;
             }
 
             pre {
@@ -38,14 +43,19 @@ import { SimpleModalComponent } from 'ngx-simple-modal';
         `,
     ],
 })
-export class ConsoleComponent
-    extends SimpleModalComponent<ConsoleModel, boolean>
-    implements ConsoleModel
-{
+export class ConsoleComponent implements ConsoleModel {
+    @Input()
+    @HostBinding('class.visible')
+    visible: boolean;
+    @Input()
     content: string;
+    @Output()
+    onClose: EventEmitter<void> = new EventEmitter<void>();
 
-    constructor(protected readonly translate: TranslateService) {
-        super();
+    constructor() {}
+
+    close() {
+        this.onClose.emit();
     }
 }
 

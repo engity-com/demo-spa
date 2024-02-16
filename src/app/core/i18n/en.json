@@ -11,10 +11,24 @@
     },
     "home": "Home",
 
-    "signup": "Signup",
-    "login": "Login",
-    "logout": "Logout",
-    "loginOrSignup": "Login or signup",
+    "signup": {
+        "title": "Signup"
+    },
+    "login": {
+        "title": "Login",
+        "successful": {
+            "message": "Login operation successful completed."
+        }
+    },
+    "logout": {
+        "title": "Logout",
+        "successful": {
+            "message": "Logout operation successful completed."
+        }
+    },
+    "loginOrSignup": {
+        "title": "Login or signup"
+    },
     "close": "Close",
 
     "status": "Status",

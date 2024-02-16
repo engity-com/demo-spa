@@ -1,36 +1,34 @@
 import { Component, HostBinding, OnDestroy, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { SimpleModalService } from 'ngx-simple-modal';
 import { User } from 'oidc-client-ts';
+import { firstValueFrom, map, Observable } from 'rxjs';
 import { Contact, ContactState } from '../model/model';
 import { ApiService } from '../services/api.service';
 import { AuthService } from '../services/auth.service';
 import { SettingsService } from '../services/settings.service';
 import { VariantService } from '../services/variant.service';
 import { BasePageComponent } from './base-page.component';
-import { ConsoleComponent } from './console.component';
 
 @Component({
     template: `
-        <app-header [variant]="variant"></app-header>
-        <div class="forms">
-            <ng-container *ngIf="user">
+        <app-header [loading]="authService.hasExplicitActiveRequests | async"></app-header>
+        <div class="forms" *ngIf="(authService.initialized | async) && variant | async as variant">
+            <ng-container *ngIf="user | async as usr">
                 <div
                     class="control input-like"
                     [translate]="
-                        user?.profile?.nickname === user?.profile?.email
+                        !usr?.profile?.nickname || usr?.profile?.nickname === usr?.profile?.email
                             ? 'messages.loggedIn'
                             : 'messages.loggedInWithEmail'
                     "
                     [translateParams]="{
-                        user: user?.profile?.nickname,
-                        email: user?.profile?.email
+                        user: usr?.profile?.nickname || usr?.profile?.email,
+                        email: usr?.profile?.email
                     }"
                 ></div>
 
-                <div class="control" *ngIf="toUnverifiedContacts(user) as contacts">
+                <div class="control" *ngIf="unverifiedContacts | async as contacts">
                     <ul class="statuses input-like">
                         <li class="has-problems" *ngFor="let contact of contacts">
                             <span
@@ -62,83 +60,99 @@ import { ConsoleComponent } from './console.component';
             <div class="button-bar">
                 <button
                     (click)="onSignup()"
-                    *ngIf="!user && variant.doesSupportSignup"
+                    *ngIf="!(user | async) && variant.doesSupportSignup"
                     class="primary"
-                    translate="signup"
+                    translate="signup.title"
+                    [disabled]="authService.hasExplicitActiveRequests | async"
                 ></button>
-                <button (click)="onLogin()" *ngIf="!user && variant.doesSupportSignup" translate="login"></button>
                 <button
                     (click)="onLogin()"
-                    *ngIf="!user && !variant.doesSupportSignup"
-                    class="primary"
-                    translate="loginOrSignup"
+                    *ngIf="!(user | async) && variant.doesSupportSignup"
+                    translate="login.title"
+                    [disabled]="authService.hasExplicitActiveRequests | async"
                 ></button>
-                <button (click)="onLogout()" *ngIf="user" class="primary" translate="logout"></button>
+                <button
+                    (click)="onLogin()"
+                    *ngIf="!(user | async) && !variant.doesSupportSignup"
+                    class="primary"
+                    translate="loginOrSignup.title"
+                    [disabled]="authService.hasExplicitActiveRequests | async"
+                ></button>
+                <button
+                    (click)="onLogout()"
+                    *ngIf="user | async"
+                    class="primary"
+                    translate="logout.title"
+                    [disabled]="authService.hasExplicitActiveRequests | async"
+                ></button>
             </div>
 
-            <ng-container *ngIf="!user && withLoginHint">
+            <ng-container *ngIf="!(user | async) && withLoginHint">
                 <div class="horizontal-divider">
                     <span translate="information.title"></span>
                 </div>
 
                 <p>
                     {{ 'information.description' | translate }}:<br />
-                    <strong translate="username"></strong>: <code>user1@example.com</code><br />
+                    <strong translate="username"></strong>: <code>user1&#64;example.com</code><br />
                     <strong translate="password"></strong>:
                     <code>greatPlaceToBe!</code>
                 </p>
             </ng-container>
 
-            <div class="horizontal-divider">
-                <span translate="forDevelopers.title"></span>
-            </div>
+            <ng-container>
+                <div class="horizontal-divider">
+                    <span translate="forDevelopers.title"></span>
+                </div>
 
-            <p *ngIf="developerMode" [innerHTML]="'forDevelopers.description' | translate"></p>
+                <p *ngIf="developerMode" [innerHTML]="'forDevelopers.description' | translate"></p>
 
-            <div class="button-bar">
-                <button
-                    (click)="onToggleDeveloperMode()"
-                    [translate]="developerMode ? 'view.hide' : 'view.enableAdvanced'"
-                ></button>
-                <button
-                    (click)="onShowConsole()"
-                    *ngIf="developerMode"
-                    [disabled]="!user || consoleVisible"
-                    translate="debug.showToken"
-                ></button>
-                <button
-                    (click)="onRenewToken()"
-                    *ngIf="developerMode"
-                    [disabled]="!user"
-                    translate="debug.renewToken"
-                ></button>
-            </div>
+                <div class="button-bar">
+                    <button
+                        (click)="onToggleDeveloperMode()"
+                        [translate]="developerMode ? 'view.hide' : 'view.enableAdvanced'"
+                    ></button>
+                    <button
+                        (click)="onShowConsole()"
+                        *ngIf="developerMode"
+                        [disabled]="!(user | async) || consoleVisible"
+                        translate="debug.showToken"
+                    ></button>
+                    <button
+                        (click)="onRenewToken()"
+                        *ngIf="developerMode"
+                        [disabled]="!(user | async) || (authService.hasExplicitActiveRequests | async)"
+                        translate="debug.renewToken"
+                    ></button>
+                </div>
+            </ng-container>
         </div>
+        <app-console [visible]="consoleVisible" [content]="consoleContent" (onClose)="onCloseConsole()"></app-console>
     `,
 })
 export class HomeComponent extends BasePageComponent implements OnInit, OnDestroy {
-    user: User;
+    protected titleKey = 'home';
+
     problem: Message;
+
     @HostBinding('attr.data-developer-mode')
     developerMode: boolean = false;
     consoleVisible: boolean = false;
+    consoleContent: string;
     readonly withLoginHint = false;
 
     constructor(
         title: Title,
-        private readonly authService: AuthService,
-        private readonly apiService: ApiService,
-        private readonly settingsService: SettingsService,
-        private readonly simpleModalService: SimpleModalService,
-        public readonly translate: TranslateService,
-        route: ActivatedRoute,
-        variantService: VariantService
+        public readonly authService: AuthService,
+        private readonly _apiService: ApiService,
+        private readonly _settingsService: SettingsService,
+        translateService: TranslateService,
+        variantService: VariantService,
     ) {
-        super(title, translate, route, variantService);
-        this.developerMode = this.settingsService.settings['developerMode'] === true;
+        super(title, translateService, variantService);
+        this.developerMode = this._settingsService.settings['developerMode'] === true;
 
-        this.subscribe(this.authService.user, (user) => {
-            this.user = user;
+        this._subscribe(this.user, (user) => {
             const html = document.getElementsByTagName('html')[0];
             if (html) {
                 if (user) {
@@ -150,115 +164,118 @@ export class HomeComponent extends BasePageComponent implements OnInit, OnDestro
         });
     }
 
+    get user(): Observable<User | undefined> {
+        return this.authService.user;
+    }
+
     async ngOnInit() {
-        super.ngOnInit();
-        window.addEventListener('focus', this.onWindowActivation);
-        window.addEventListener('storage', this.onRevalidateLoginStatus);
-        await this.authService.updateState(this.variant);
+        await super.ngOnInit();
+        await this.authService.initialize();
+        window.addEventListener('focus', this._onWindowActivation);
     }
 
     ngOnDestroy() {
         super.ngOnDestroy();
-        window.removeEventListener('focus', this.onWindowActivation);
-        window.removeEventListener('storage', this.onRevalidateLoginStatus);
+        window.removeEventListener('focus', this._onWindowActivation);
     }
 
-    protected get titleKey(): string {
-        return 'home';
-    }
-
-    private readonly onWindowActivation = async () => {
+    private readonly _onWindowActivation = async () => {
         if (document.hidden) {
             // Document is not visible (because another tab is active), so nothing is required to do here...
             return;
         }
-        await this.validateContactIfNeeded();
+        await this._validateContactIfNeeded();
     };
 
-    private readonly onRevalidateLoginStatus = async () => {
-        await this.authService.updateState(this.variant);
-    };
-
-    private readonly validateContactIfNeeded = async () => {
-        const user = this.user;
-        if (!user) {
-            // Not logged in, so nothing is required to do here...
-            return;
-        }
-        if (!this.toUnverifiedContacts(user)) {
+    private async _validateContactIfNeeded() {
+        if (!(await firstValueFrom(this.unverifiedContacts))) {
             // All contacts already verified, so nothing is required to do here...
             return;
         }
 
         // We're triggering a token renew, to ensure that we get the validated state...
-        await this.authService.renewToken(this.variant);
-    };
-
-    toUnverifiedContacts(user: User): Contact[] {
-        if (!user) {
-            return null;
-        }
-        const contacts = (user.profile?.contacts as Contact[]).filter((v) => v.state !== ContactState.verified);
-        return contacts.length > 0 ? contacts : null;
+        await this.authService.renew();
     }
 
-    private clearProblem() {
+    get unverifiedContacts(): Observable<Contact[]> {
+        return this.user.pipe(
+            map((user) => {
+                if (!user) {
+                    return null;
+                }
+                const contacts = (user.profile?.contacts as Contact[])?.filter(
+                    (v) => v.state !== ContactState.verified,
+                );
+                return contacts && contacts.length > 0 ? contacts : null;
+            }),
+        );
+    }
+
+    private _clearProblem() {
         this.problem = null;
     }
 
-    private addProblem(key: string, error?: any, params?: any) {
+    private _addProblem(key: string, error?: any, params?: any) {
         if (error) {
             console.error(error);
         }
         this.problem = { key: key, params: params };
     }
 
-    onSignup() {
-        this.clearProblem();
-        this.authService.signup(this.variant).catch((err) => {
-            this.addProblem('errors.cannotSignup', err);
-        });
+    async onSignup() {
+        this._clearProblem();
+        try {
+            await this.authService.login('signup');
+        } catch (e) {
+            this._addProblem('errors.cannotSignup', e);
+        }
     }
 
-    onLogin() {
-        this.clearProblem();
-        this.authService.login(this.variant).catch((err) => {
-            this.addProblem('errors.cannotLogin', err);
-        });
+    async onLogin() {
+        this._clearProblem();
+        try {
+            await this.authService.login();
+        } catch (e) {
+            this._addProblem('errors.cannotLogin', e);
+        }
     }
 
-    onRenewToken() {
-        this.clearProblem();
-        this.authService
-            .renewToken(this.variant)
-            .then(() => {})
-            .catch((err) => this.addProblem('errors.cannotRenewToken', err));
+    async onRenewToken() {
+        this._clearProblem();
+        try {
+            await this.authService.renew();
+        } catch (e) {
+            this._addProblem('errors.cannotRenewToken', e);
+        }
     }
 
-    onLogout() {
-        this.clearProblem();
-        this.authService.logout(this.variant).catch((err) => this.addProblem('errors.cannotLogout', err));
+    async onLogout() {
+        this._clearProblem();
+        try {
+            await this.authService.logout(true);
+        } catch (e) {
+            this._addProblem('errors.cannotLogout', e);
+        }
     }
 
-    onShowConsole() {
+    async onShowConsole() {
+        const user = await firstValueFrom(this.user);
+        this.consoleContent = JSON.stringify(user, null, 2);
         this.consoleVisible = true;
-        this.simpleModalService
-            .addModal(ConsoleComponent, {
-                content: JSON.stringify(this.user, null, 2),
-            })
-            .subscribe(() => {
-                this.consoleVisible = false;
-            });
     }
 
-    onToggleDeveloperMode() {
+    async onCloseConsole() {
+        this.consoleVisible = false;
+        this.consoleContent = '';
+    }
+
+    async onToggleDeveloperMode() {
         this.developerMode = !this.developerMode;
-        this.settingsService.setSetting('developerMode', this.developerMode);
+        this._settingsService.setSetting('developerMode', this.developerMode);
     }
 
-    onTriggerVerifyContact(contact: Contact) {
-        // noinspection JSIgnoredPromiseFromCall
-        this.apiService.triggerVerifyContact(this.variant, contact);
+    async onTriggerVerifyContact(contact: Contact) {
+        await this._apiService.triggerVerifyContact(contact);
     }
 }
 

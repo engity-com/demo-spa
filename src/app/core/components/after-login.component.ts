@@ -1,28 +1,28 @@
 import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
+import { firstValueFrom } from 'rxjs';
 import { AuthService } from '../services/auth.service';
 import { VariantService } from '../services/variant.service';
 import { BasePageComponent } from './base-page.component';
 
 @Component({
-    template: `
-        <app-messages [description]="false" [variant]="variant">{{ this.messageKey | translate }}</app-messages>
-    `,
+    selector: 'app-after-login',
+    template: ` <app-messages [description]="false" [loading]="true">{{ this.messageKey | translate }}</app-messages> `,
 })
 export class AfterLoginComponent extends BasePageComponent implements OnInit {
     messageKey: string = 'finalizeLogin.message';
+    silent: boolean = false;
 
     constructor(
         title: Title,
         translate: TranslateService,
-        private readonly router: Router,
-        private readonly authService: AuthService,
-        route: ActivatedRoute,
-        variantService: VariantService
+        private readonly _router: Router,
+        private readonly _authService: AuthService,
+        variantService: VariantService,
     ) {
-        super(title, translate, route, variantService);
+        super(title, translate, variantService);
     }
 
     protected get titleKey(): string {
@@ -30,15 +30,20 @@ export class AfterLoginComponent extends BasePageComponent implements OnInit {
     }
 
     async ngOnInit() {
-        super.ngOnInit();
+        await super.ngOnInit();
+        if (!this.silent) {
+            await this._authService.initialize();
+        }
+
+        const variant = await firstValueFrom(this.variant);
         try {
-            await this.authService.signinCallback(this.variant);
-            await this.router.navigate(['/' + this.variant.subPath]);
+            await this._authService.loginCallback(this.silent);
+            await this._router.navigate(['/' + variant.subPath]);
         } catch (e) {
             console.error('Cannot finalize login.', e);
             this.messageKey = 'finalizeLogin.failed';
             setTimeout(() => {
-                this.router.navigate(['/' + this.variant.subPath]);
+                this._router.navigate(['/' + variant.subPath]);
             }, 5000);
         }
     }
