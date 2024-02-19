@@ -1,7 +1,7 @@
 {
     "description": {
         "default": "Diese Seite demonstriert die Stärke einer Single Page Application zusammen mit unserem Engity IdP.",
-        "magicLink": "Diese Seite demonstriert die Stärke einer Single Page Application mit einem passwortlosen Anmeldung in Verwendung mit unserem Engity Magic-Link.",
+        "magicLink": "Diese Seite demonstriert die Stärke einer Single Page Application mit einer passwortlosen Anmeldung in Verwendung mit unserem Engity Magic-Link.",
         "username": "Diese Seite demonstriert die Stärke einer Single Page Application mit einem Nutzername/Passwort-Anmeldung in Verwendung mit unserem Engity IdP."
     },
 
@@ -20,7 +20,9 @@
             "message": "Abmeldung wurde erfolgreich durchgeführt."
         }
     },
-    "loginOrSignup": "Anmelden oder registrieren",
+    "loginOrSignup": {
+        "title": "Anmelden oder registrieren"
+    },
     "close": "Schließen",
 
     "status": "Status",
