@@ -51,7 +51,7 @@
     "@angular/compiler-cli": "17.2.1",
     "@angular/language-service": "17.3.5",
     "@types/node": "20.12.6",
-    "@typescript-eslint/eslint-plugin": "7.6.0",
+    "@typescript-eslint/eslint-plugin": "7.7.0",
     "@typescript-eslint/parser": "7.6.0",
     "autoprefixer": "10.4.17",
     "eslint": "8.57.0",
