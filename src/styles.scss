@@ -44,7 +44,8 @@ main {
     flex-flow: column;
 }
 
-.widget.widget-main ng-component {
+.widget.widget-main ng-component,
+.widget.widget-main app-messages {
     $main-padding: 30px;
     $main-width: 430px;
     width: $main-width;
