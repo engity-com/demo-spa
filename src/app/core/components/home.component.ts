@@ -33,7 +33,7 @@ import { BasePageComponent } from './base-page.component';
                         <li class="has-problems" *ngFor="let contact of contacts">
                             <span
                                 [translate]="
-                                    contact.type == 'emailAddress'
+                                    contact.type === 'emailAddress'
                                         ? 'errors.emailAddressNotVerified'
                                         : 'errors.notVerified'
                                 "
@@ -60,20 +60,20 @@ import { BasePageComponent } from './base-page.component';
             <div class="button-bar">
                 <button
                     (click)="onSignup()"
-                    *ngIf="!(user | async) && variant.doesSupportSignup"
+                    *ngIf="(user | async) === undefined && variant.doesSupportSignup"
                     class="primary"
                     translate="signup.title"
                     [disabled]="authService.hasExplicitActiveRequests | async"
                 ></button>
                 <button
                     (click)="onLogin()"
-                    *ngIf="!(user | async) && variant.doesSupportSignup"
+                    *ngIf="(user | async) === undefined && variant.doesSupportSignup"
                     translate="login.title"
                     [disabled]="authService.hasExplicitActiveRequests | async"
                 ></button>
                 <button
                     (click)="onLogin()"
-                    *ngIf="!(user | async) && !variant.doesSupportSignup"
+                    *ngIf="(user | async) === undefined && !variant.doesSupportSignup"
                     class="primary"
                     translate="loginOrSignup.title"
                     [disabled]="authService.hasExplicitActiveRequests | async"
@@ -87,7 +87,7 @@ import { BasePageComponent } from './base-page.component';
                 ></button>
             </div>
 
-            <ng-container *ngIf="!(user | async) && withLoginHint">
+            <ng-container *ngIf="(user | async) === undefined && withLoginHint">
                 <div class="horizontal-divider">
                     <span translate="information.title"></span>
                 </div>
@@ -115,19 +115,23 @@ import { BasePageComponent } from './base-page.component';
                     <button
                         (click)="onShowConsole()"
                         *ngIf="developerMode"
-                        [disabled]="!(user | async) || consoleVisible"
+                        [disabled]="(user | async) === undefined || consoleVisible"
                         translate="debug.showToken"
                     ></button>
                     <button
                         (click)="onRenewToken()"
                         *ngIf="developerMode"
-                        [disabled]="!(user | async) || (authService.hasExplicitActiveRequests | async)"
+                        [disabled]="(user | async) === undefined || (authService.hasExplicitActiveRequests | async)"
                         translate="debug.renewToken"
                     ></button>
                 </div>
             </ng-container>
         </div>
-        <app-console [visible]="consoleVisible" [content]="consoleContent" (onClose)="onCloseConsole()"></app-console>
+        <app-console
+            [visible]="consoleVisible"
+            [content]="consoleContent"
+            (whenCloses)="onCloseConsole()"
+        ></app-console>
     `,
 })
 export class HomeComponent extends BasePageComponent implements OnInit, OnDestroy {

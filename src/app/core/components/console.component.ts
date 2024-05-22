@@ -50,12 +50,12 @@ export class ConsoleComponent implements ConsoleModel {
     @Input()
     content: string;
     @Output()
-    onClose: EventEmitter<void> = new EventEmitter<void>();
+    whenCloses: EventEmitter<void> = new EventEmitter<void>();
 
     constructor() {}
 
     close() {
-        this.onClose.emit();
+        this.whenCloses.emit();
     }
 }
 
