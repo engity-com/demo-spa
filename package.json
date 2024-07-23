@@ -52,7 +52,7 @@
     "@angular/language-service": "18.1.1",
     "@types/node": "20.14.11",
     "@typescript-eslint/eslint-plugin": "7.16.1",
-    "@typescript-eslint/parser": "7.16.1",
+    "@typescript-eslint/parser": "7.17.0",
     "autoprefixer": "10.4.19",
     "eslint": "8.57.0",
     "npm-check-updates": "16.14.20",
