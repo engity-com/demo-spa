@@ -49,7 +49,7 @@
     "@angular-eslint/template-parser": "18.3.0",
     "@angular/cli": "18.1.4",
     "@angular/compiler-cli": "17.3.9",
-    "@angular/language-service": "18.1.4",
+    "@angular/language-service": "18.2.0",
     "@types/node": "22.2.0",
     "@typescript-eslint/eslint-plugin": "7.17.0",
     "@typescript-eslint/parser": "7.18.0",
