@@ -1,6 +1,7 @@
+import { AsyncPipe, NgForOf, NgIf } from '@angular/common';
 import { Component, HostBinding, OnDestroy, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslateDirective, TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { User } from 'oidc-client-ts';
 import { firstValueFrom, map, Observable } from 'rxjs';
 import { Contact, ContactState } from '../model/model';
@@ -9,6 +10,8 @@ import { AuthService } from '../services/auth.service';
 import { SettingsService } from '../services/settings.service';
 import { VariantService } from '../services/variant.service';
 import { BasePageComponent } from './base-page.component';
+import { ConsoleComponent } from './console.component';
+import { HeaderComponent } from './header.component';
 
 @Component({
     template: `
@@ -24,7 +27,7 @@ import { BasePageComponent } from './base-page.component';
                     "
                     [translateParams]="{
                         user: usr?.profile?.nickname || usr?.profile?.email,
-                        email: usr?.profile?.email
+                        email: usr?.profile?.email,
                     }"
                 ></div>
 
@@ -133,6 +136,7 @@ import { BasePageComponent } from './base-page.component';
             (whenCloses)="onCloseConsole()"
         ></app-console>
     `,
+    imports: [HeaderComponent, AsyncPipe, TranslateDirective, NgIf, NgForOf, TranslatePipe, ConsoleComponent],
 })
 export class HomeComponent extends BasePageComponent implements OnInit, OnDestroy {
     protected titleKey = 'home';

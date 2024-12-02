@@ -1,4 +1,5 @@
 import { Component, EventEmitter, HostBinding, Input, Output } from '@angular/core';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-console',
@@ -42,6 +43,7 @@ import { Component, EventEmitter, HostBinding, Input, Output } from '@angular/co
             }
         `,
     ],
+    imports: [TranslatePipe],
 })
 export class ConsoleComponent implements ConsoleModel {
     @Input()

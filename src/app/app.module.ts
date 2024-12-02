@@ -40,20 +40,7 @@ class NgErrorHandler implements ErrorHandler {
 }
 
 @NgModule({
-    declarations: [
-        AppComponent,
-        ConsoleComponent,
-        HomeComponent,
-        HeaderComponent,
-        FooterComponent,
-        MessagesComponent,
-        PageNotFoundComponent,
-        SpinnerComponent,
-        AfterLoginComponent,
-        AfterSilentLoginComponent,
-        AfterLogoutComponent,
-        AfterSilentLogoutComponent,
-    ],
+    declarations: [],
     imports: [
         BrowserModule,
         HttpClientModule,
@@ -61,6 +48,18 @@ class NgErrorHandler implements ErrorHandler {
         TranslateModule.forRoot({
             loader: { provide: TranslateLoader, useClass: AppTranslateLoader },
         }),
+        AfterSilentLogoutComponent,
+        AfterLogoutComponent,
+        AfterSilentLoginComponent,
+        AfterLoginComponent,
+        SpinnerComponent,
+        PageNotFoundComponent,
+        MessagesComponent,
+        FooterComponent,
+        HeaderComponent,
+        HomeComponent,
+        ConsoleComponent,
+        AppComponent,
     ],
     providers: [{ provide: ErrorHandler, useClass: NgErrorHandler }],
     bootstrap: [AppComponent, FooterComponent],

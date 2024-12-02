@@ -1,15 +1,17 @@
 import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { firstValueFrom } from 'rxjs';
 import { AuthService } from '../services/auth.service';
 import { VariantService } from '../services/variant.service';
 import { BasePageComponent } from './base-page.component';
+import { MessagesComponent } from './messages.component';
 
 @Component({
     selector: 'app-after-login',
     template: ` <app-messages [description]="false" [loading]="true">{{ this.messageKey | translate }}</app-messages> `,
+    imports: [MessagesComponent, TranslatePipe],
 })
 export class AfterLoginComponent extends BasePageComponent implements OnInit {
     messageKey: string = 'finalizeLogin.message';
