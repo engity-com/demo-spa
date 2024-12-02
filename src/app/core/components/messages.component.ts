@@ -1,6 +1,10 @@
+import { AsyncPipe } from '@angular/common';
 import { Component, Input } from '@angular/core';
+import { RouterLink } from '@angular/router';
+import { TranslatePipe } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
 import { Variant, VariantService } from '../services/variant.service';
+import { HeaderComponent } from './header.component';
 
 @Component({
     selector: 'app-messages',
@@ -16,6 +20,7 @@ import { Variant, VariantService } from '../services/variant.service';
         </div>
     `,
     styles: [],
+    imports: [HeaderComponent, RouterLink, AsyncPipe, TranslatePipe],
 })
 export class MessagesComponent {
     @Input()
