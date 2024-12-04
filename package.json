@@ -55,7 +55,7 @@
     "@typescript-eslint/eslint-plugin": "8.17.0",
     "@typescript-eslint/parser": "8.17.0",
     "autoprefixer": "10.4.19",
-    "eslint": "9.15.0",
+    "eslint": "9.16.0",
     "npm-check-updates": "17.1.11",
     "postcss": "8.4.38",
     "postcss-cli": "11.0.0",
