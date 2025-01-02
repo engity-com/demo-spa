@@ -115,7 +115,10 @@
                 "serve": {
                     "builder": "@angular-devkit/build-angular:dev-server",
                     "options": {
-                        "buildTarget": "App:build"
+                        "buildTarget": "App:build",
+                        "ssl": true,
+                        "host": "local.engity.dev",
+                        "disableHostCheck": true
                     },
                     "configurations": {
                         "production": {
@@ -128,10 +131,7 @@
                     "defaultConfiguration": "development"
                 },
                 "extract-i18n": {
-                    "builder": "@angular-devkit/build-angular:extract-i18n",
-                    "options": {
-                        "browserTarget": "App:build"
-                    }
+                    "builder": "@angular-devkit/build-angular:extract-i18n"
                 },
                 "lint": {
                     "builder": "@angular-eslint/builder:lint",

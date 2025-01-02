@@ -10,11 +10,13 @@ if (environment.production) {
 
 platformBrowserDynamic()
     .bootstrapModule(AppModule)
-    .catch((err) => console.error('DOH!', err));
+    .catch((err) => {
+        console.error(err);
+    });
 
 window.addEventListener('unhandledrejection', (e) => {
-    console.error('DOH1!', e.reason);
+    console.error(e.reason);
 });
 window.addEventListener('error', (e) => {
-    console.error('DOH2!', e);
+    console.error(e);
 });
