@@ -56,7 +56,7 @@ export class AuthService implements OnDestroy {
             silent_redirect_uri: `${uriPrefix}after-silent-login`,
             response_type: 'code',
             silentRequestTimeoutInSeconds: 5000,
-            scope: 'openid profile email contacts',
+            scope: 'openid profile email contacts offline',
             userStore: new WebStorageStateStore({
                 prefix: `${variant ? variant.key : ''}.`,
                 store: window.localStorage,

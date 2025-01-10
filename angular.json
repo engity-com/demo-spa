@@ -118,7 +118,7 @@
                         "buildTarget": "App:build",
                         "ssl": true,
                         "host": "local.engity.dev",
-                        "disableHostCheck": true
+                        "allowedHosts": ["localhost"]
                     },
                     "configurations": {
                         "production": {
