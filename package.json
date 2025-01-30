@@ -33,7 +33,7 @@
     "@angular/forms": "19.0.1",
     "@angular/platform-browser": "19.0.1",
     "@angular/platform-browser-dynamic": "19.0.1",
-    "@angular/router": "19.0.1",
+    "@angular/router": "19.1.4",
     "@ngx-translate/core": "16.0.4",
     "core-js": "3.40.0",
     "oidc-client-ts": "3.1.0",
