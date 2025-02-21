@@ -18,15 +18,9 @@ jobs:
         run: |
           npm ci
 
-      - name: "Build: Red"
+      - name: "Build"
         run: |
-          npm run build:red
-          mv dist/App dist/app-red
-
-      - name: "Build: Green"
-        run: |
-          npm run build:green
-          mv dist/App dist/app-green
+          npm run build:production
 
       - name: "Upload artifacts"
         uses: actions/upload-artifact@v4
@@ -54,7 +48,7 @@ jobs:
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          command: pages deploy --project-name=demo-engity-green dist/app-green
+          command: pages deploy --project-name=demo-engity-green dist/green
 
   deploy-red:
     name: "Deploy: red"
@@ -76,5 +70,4 @@ jobs:
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          command: pages deploy --project-name=demo-engity-red dist/app-red
-
+          command: pages deploy --project-name=demo-engity-red dist/red

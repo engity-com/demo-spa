@@ -1,0 +1,47 @@
+{
+  "$schema": "https://biomejs.dev/schemas/1.9.4/schema.json",
+  "files": {
+    "ignore": [".idea/**/*", ".node_modules/**/*", "dist/**/*", "src/components/ui/**/*"]
+  },
+  "formatter": {
+    "lineWidth": 150,
+    "attributePosition": "multiline",
+    "useEditorconfig": true
+  },
+  "css": {
+    "parser": {
+      "cssModules": true
+    }
+  },
+  "javascript": {
+    "formatter": {
+      "quoteStyle": "single",
+      "jsxQuoteStyle": "single",
+      "semicolons": "always",
+      "quoteProperties": "asNeeded",
+      "attributePosition": "auto",
+      "trailingCommas": "all"
+    }
+  },
+  "vcs": {
+    "useIgnoreFile": true
+  },
+  "linter": {
+    "rules": {
+      "suspicious": {
+        "noExplicitAny": "off"
+      },
+      "a11y": {
+        "noSvgWithoutTitle": "off",
+        "useKeyWithClickEvents": "off",
+        "useButtonType": "off"
+      },
+      "correctness": {
+        "noUnknownMediaFeatureName": "off"
+      },
+      "style": {
+        "noNonNullAssertion": "off"
+      }
+    }
+  }
+}

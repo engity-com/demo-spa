@@ -1,0 +1,10 @@
+@layer component {
+    footer.Footer {
+        padding: 0 var(--spacing);
+        font-size: var(--font-size-2);
+        display: flex;
+        column-gap: 1.3em;
+        row-gap: 0;
+        flex-wrap: wrap;
+    }
+}
