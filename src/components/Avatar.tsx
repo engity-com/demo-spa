@@ -2,6 +2,30 @@ import './Avatar.css';
 import { Avatar as RAvatar } from 'radix-ui';
 import { type AuthContextProps, useAuth } from 'react-oidc-context';
 
+interface AvatarProps {
+    readonly src?: string | undefined;
+    readonly name: string;
+    readonly initials: string;
+}
+
+export function Avatar(props: AvatarProps) {
+    return (
+        <RAvatar.Root className='Avatar' title={props.name}>
+            <RAvatar.Image className='Image' src={props.src} alt={props.name} />
+            <RAvatar.Fallback className='Fallback' delayMs={props.src ? 600 : 0}>
+                {props.initials}
+            </RAvatar.Fallback>
+        </RAvatar.Root>
+    );
+}
+
+export function CurrentUserAvatar() {
+    const auth = useAuth();
+    const name = extractName(auth) || 'Anonymous';
+    const initials = extractInitials(auth) || 'AN';
+    return <Avatar name={name} initials={initials} />;
+}
+
 function extractName(auth: AuthContextProps): string | undefined {
     const user = auth.user;
     if (!user) {
@@ -52,17 +76,4 @@ function extractInitials(auth: AuthContextProps): string | undefined {
         return profile.email;
     }
     return undefined;
-}
-
-export function Avatar() {
-    const auth = useAuth();
-    const name = extractName(auth);
-    return (
-        <RAvatar.Root className='Avatar' title={name || 'Anonymous'}>
-            <RAvatar.Image className='Image' src='about:blank' alt={name || 'Anonymous'} />
-            <RAvatar.Fallback className='Fallback' delayMs={600}>
-                {extractInitials(auth)}
-            </RAvatar.Fallback>
-        </RAvatar.Root>
-    );
 }

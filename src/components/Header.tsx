@@ -1,13 +1,14 @@
 import './Header.css';
 // @ts-ignore
 import Logo from '@/assets/logo-without-spacing.svg';
-import { Avatar } from '@/components/Avatar';
+import { CurrentUserAvatar } from '@/components/Avatar';
 import { Link } from '@/components/Link';
 import { useSideBar } from '@/components/SideBar';
 import { ThemeToggle } from '@/components/Theme';
-import { Flex, Text } from '@radix-ui/themes';
+import { DropdownMenu, Flex, Text } from '@radix-ui/themes';
 import type React from 'react';
 import { useEffect, useState } from 'react';
+import { useAuth } from 'react-oidc-context';
 import { Breadcrumb } from './Breadcrumb';
 
 const scrollTopThreshold = 1;
@@ -17,7 +18,7 @@ interface HeaderProps extends React.DetailedHTMLProps<React.HTMLAttributes<HTMLE
 export function Header(props: HeaderProps) {
     const [scrollOver, setScrollOver] = useState<boolean>(false);
     const sideBar = useSideBar();
-    // const auth = useAuth();
+    const auth = useAuth();
 
     useEffect(() => {
         const onScroll = () => setScrollOver(document.body.scrollTop > scrollTopThreshold || document.documentElement.scrollTop > scrollTopThreshold);
@@ -26,6 +27,8 @@ export function Header(props: HeaderProps) {
 
         return () => window.removeEventListener('scroll', onScroll);
     }, []);
+
+    const doLogout = () => auth.signoutRedirect();
 
     return (
         <header data-scroll-over={scrollOver} className='Header' {...props}>
@@ -53,7 +56,17 @@ export function Header(props: HeaderProps) {
             </Flex>
             <Flex direction='row' align='center' gap='3' className='right'>
                 <ThemeToggle />
-                <Avatar />
+
+                <DropdownMenu.Root>
+                    <DropdownMenu.Trigger>
+                        <button>
+                            <CurrentUserAvatar />
+                        </button>
+                    </DropdownMenu.Trigger>
+                    <DropdownMenu.Content>
+                        <DropdownMenu.Item onClick={doLogout}>Logout</DropdownMenu.Item>
+                    </DropdownMenu.Content>
+                </DropdownMenu.Root>
             </Flex>
         </header>
     );
