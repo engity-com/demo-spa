@@ -12,7 +12,7 @@
 
 @layer component {
     header {
-        --avatar-height: 100%;
+        --avatar-height: calc(38px * var(--scaling));
         --active-background: oklch(from var(--gray-4) l c h / 0.8);
 
         border-bottom: var(--section-border-size) solid transparent;
@@ -102,9 +102,11 @@
             white-space: nowrap;
         }
 
-        & button:has(&.hamburger) {
+        & button:has(&.hamburger),
+        & button:has(.Avatar) {
             padding: 0;
         }
+
         & .hamburger {
             height: calc(32px * var(--scaling));
             aspect-ratio: 1 / 1;
