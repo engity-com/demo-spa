@@ -1,12 +1,13 @@
 /*noinspection PostCssNesting*/
 @define-mixin navigation-link {
     text-decoration: none;
-    color: var(--gray-12);
+    color: var(--color-foreground);
     border-radius: var(--radius-3);
     outline-offset: calc(var(--space-1) * -1);
 
     &:hover {
-        background: var(--gray-4);
+        background-color: var(--accent-9);
+        color: var(--accent-contrast);
     }
     &:focus-visible {
         outline: 2px solid var(--focus-8);

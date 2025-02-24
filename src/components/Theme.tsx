@@ -3,6 +3,7 @@ import { Moon, Sun } from 'lucide-react';
 import type React from 'react';
 import type { JSX } from 'react';
 import { createContext, useContext, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 const mediaSelector = '(prefers-color-scheme: dark)';
 const storageKey = 'theme-mode';
@@ -106,7 +107,15 @@ export function Theme({ children, ...props }: ThemeProps) {
 
     return (
         <ThemeProviderContext.Provider {...props} value={new StateImpl()}>
-            <RTheme accentColor='yellow' grayColor='gray' radius='small' appearance={resolved} {...props} hasBackground={false}>
+            <RTheme
+                accentColor='indigo'
+                grayColor='gray'
+                radius='small'
+                appearance={resolved}
+                hasBackground={false}
+                panelBackground='translucent'
+                {...props}
+            >
                 {children}
             </RTheme>
         </ThemeProviderContext.Provider>
@@ -123,22 +132,27 @@ export const useTheme = () => {
     return context;
 };
 
-const modeToNext = (theme: ThemeState): { icon: JSX.Element; mode: ThemeMode | undefined } => {
+const modeToNext = (theme: ThemeState): { icon: JSX.Element; mode: ThemeMode | undefined; titleKey: string } => {
     const filterDefaultMode = (mode: ThemeMode) => (theme.modeDefault !== mode ? mode : undefined);
     switch (theme.modeResolved) {
         case 'dark':
-            return { icon: <Sun />, mode: filterDefaultMode('light') };
+            return { icon: <Sun />, mode: filterDefaultMode('light'), titleKey: 'light' };
         default:
-            return { icon: <Moon />, mode: filterDefaultMode('dark') };
+            return { icon: <Moon />, mode: filterDefaultMode('dark'), titleKey: 'dark' };
     }
 };
 
 export function ThemeToggle() {
+    const { t } = useTranslation();
     const theme = useTheme();
     const next = modeToNext(theme);
     const setNext = () => {
         theme.mode = next.mode;
     };
 
-    return <button onClick={setNext}>{next.icon}</button>;
+    return (
+        <button onClick={setNext} title={t(`theme.mode.${next.titleKey}.switchTo`)}>
+            {next.icon}
+        </button>
+    );
 }

@@ -27,9 +27,11 @@
   },
   "dependencies": {
     "@radix-ui/themes": "3.2.0",
+    "i18next": "^24.2.2",
     "lucide-react": "0.475.0",
     "oidc-client-ts": "^3.1.0",
     "react": "19.0.0",
+    "react-i18next": "^15.4.1",
     "react-oidc-context": "^3.2.0",
     "react-router": "7.2.0"
   },

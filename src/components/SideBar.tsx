@@ -30,7 +30,7 @@ export function SideBar(props: SideBarProps) {
         <aside ref={ref} className='SideBar' data-state={sideBar.stateResolved} {...props} tabIndex={0} onBlur={onBlur}>
             <div className='container'>
                 <div className='content'>
-                    <Link className='about' title='Engity IdP Demo' to='/'>
+                    <Link className='about' titleKey='app.regular' to='/'>
                         <Logo className='logo' />
                     </Link>
 
@@ -49,6 +49,9 @@ export function SideBar(props: SideBarProps) {
                             </NavigationMenu.Item>
                             <NavigationMenu.Item>
                                 <Link title='Billing' to='/directory' />
+                            </NavigationMenu.Item>
+                            <NavigationMenu.Item>
+                                <Link titleKey='notFound' to='/not-found' />
                             </NavigationMenu.Item>
                         </NavigationMenu.List>
                     </NavigationMenu.Root>

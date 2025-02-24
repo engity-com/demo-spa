@@ -4,6 +4,8 @@
     @import "@radix-ui/themes/components.css";
     @import "@radix-ui/themes/utilities.css";
     @import "@radix-ui/themes/tokens/base.css";
+    @import "@radix-ui/themes/tokens/colors/indigo.css";
+    @import "@radix-ui/themes/tokens/colors/gray.css";
 
     :root {
         --section-border-size: 1px;
@@ -19,7 +21,9 @@
         --engity-main: #ffc000;
         --engity-secondary: #284696;
         --color-background: #fff;
+        --color-foreground: var(--gray-12);
 
+        /*
         --color-background-app-1: oklch(from var(--engity-secondary) calc(l * 0.2) c h);
         --color-background-app-2: oklch(from var(--engity-main) l c h 0.1);
 
@@ -84,12 +88,15 @@
         --gray-surface: #ffffffcc;
         --gray-indicator: #858cab;
         --gray-track: #858cab;
+         */
     }
 
     .dark,
     .dark-theme {
         --engity-secondary: #77a4ff;
         --color-background: #111;
+
+        /*
         --color-background-app-1: oklch(from var(--engity-secondary) calc(l * 0.2) c h);
         --color-background-app-2: var(--yellow-a5);
 
@@ -154,8 +161,10 @@
         --gray-surface: rgba(0, 0, 0, 0.05);
         --gray-indicator: #676d8a;
         --gray-track: #676d8a;
+         */
     }
 
+    /*
     @supports (color: color(display-p3 1 1 1)) {
         @media (color-gamut: p3) {
             :root,
@@ -290,6 +299,7 @@
             }
         }
     }
+    */
 
     .radix-themes {
         --font-size-1: calc(10px * var(--scaling));
@@ -305,7 +315,7 @@
     }
 
     :root {
-        fill: var(--gray-12);
+        fill: var(--color-foreground);
     }
 
     html,
@@ -325,6 +335,13 @@
     .logo-without-spacing_svg__secondary {
         fill: var(--engity-secondary);
     }
+    a:hover:has(.logo) {
+        & .logo-with-text_svg__secondary,
+        & .logo-without-spacing_svg__secondary {
+            fill: var(--accent-contrast);
+        }
+    }
+
     .logo-with-text_svg__primary,
     .logo-without-spacing_svg__primary {
         fill: var(--engity-main);
@@ -332,7 +349,8 @@
 
     button,
     a,
-    [role="menuitem"] {
+    [role="menuitem"],
+    [role="menuitemradio"] {
         cursor: var(--cursor-link);
     }
 
@@ -341,6 +359,7 @@
         cursor: var(--cursor-disabled);
     }
 
+    /*
     a,
     a.rt-Text,
     button.text,
@@ -349,4 +368,5 @@
         -webkit-text-decoration-color: color-mix(in oklab, var(--engity-secondary), var(--gray-a6));
         text-decoration-color: color-mix(in oklab, var(--engity-secondary), var(--gray-a6));
     }
+     */
 }

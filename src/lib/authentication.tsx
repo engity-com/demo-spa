@@ -1,6 +1,7 @@
 import { environment as defaultEnvironment } from '@/environments/environment';
 import type { Environment, EnvironmentVariant, NamedEnvironmentVariant } from '@/environments/type';
 import type { RouteConfiguration } from '@/lib/routes';
+import { Loading } from '@/pages/Loading';
 import { UserManager, WebStorageStateStore } from 'oidc-client-ts';
 import type React from 'react';
 import { useEffect } from 'react';
@@ -53,11 +54,9 @@ function AuthenticationOutlet(props: AuthenticationOutletProps) {
     }, [auth, props, location]);
 
     if (!auth.isAuthenticated) {
-        console.log('!isAuthenticated shown');
-        return <div>Not authorized</div>;
+        return <Loading defaultTitle={true} visibilityDelay={2000} />;
     }
 
-    console.log('Outlet shown', auth);
     return <Outlet />;
 }
 
