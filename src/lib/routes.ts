@@ -2,6 +2,7 @@ import type { IndexRouteObject, NonIndexRouteObject, UIMatch } from 'react-route
 
 export interface RouteHandle {
     readonly title?: string;
+    readonly titleKey?: string;
 }
 
 interface AdditionalRouteConfiguration {

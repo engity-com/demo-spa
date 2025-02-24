@@ -28,7 +28,7 @@ export const routes: RouteConfiguration[] = authenticationRouteConfigurations([
         Component: Layout,
         children: pageRoutes,
         handle: {
-            title: 'Home',
+            titleKey: 'home',
         },
     },
 ]);

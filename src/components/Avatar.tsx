@@ -1,5 +1,6 @@
 import './Avatar.css';
-import { Avatar as RAvatar } from 'radix-ui';
+import { Avatar as RAvatar } from '@radix-ui/themes';
+import { useTranslation } from 'react-i18next';
 import { type AuthContextProps, useAuth } from 'react-oidc-context';
 
 interface AvatarProps {
@@ -9,20 +10,14 @@ interface AvatarProps {
 }
 
 export function Avatar(props: AvatarProps) {
-    return (
-        <RAvatar.Root className='Avatar' title={props.name}>
-            <RAvatar.Image className='Image' src={props.src} alt={props.name} />
-            <RAvatar.Fallback className='Fallback' delayMs={props.src ? 600 : 0}>
-                {props.initials}
-            </RAvatar.Fallback>
-        </RAvatar.Root>
-    );
+    return <RAvatar fallback={props.initials} src={props.src} className='Avatar' radius='full' />;
 }
 
 export function CurrentUserAvatar() {
+    const { t } = useTranslation();
     const auth = useAuth();
-    const name = extractName(auth) || 'Anonymous';
-    const initials = extractInitials(auth) || 'AN';
+    const name = extractName(auth) || t('anonymous');
+    const initials = extractInitials(auth) || t('anonymous.initials');
     return <Avatar name={name} initials={initials} />;
 }
 

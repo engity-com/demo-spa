@@ -6,9 +6,12 @@ import { Link } from '@/components/Link';
 import { useSideBar } from '@/components/SideBar';
 import { ThemeToggle } from '@/components/Theme';
 import { DropdownMenu, Flex, Text } from '@radix-ui/themes';
+import { Globe, LogOut, Star } from 'lucide-react';
 import type React from 'react';
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from 'react-oidc-context';
+import { isBrowsersDefaultLanguage, languages } from '../lib/i18n';
 import { Breadcrumb } from './Breadcrumb';
 
 const scrollTopThreshold = 1;
@@ -16,6 +19,8 @@ const scrollTopThreshold = 1;
 interface HeaderProps extends React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement> {}
 
 export function Header(props: HeaderProps) {
+    const menuIconSize = 12;
+    const { t, i18n } = useTranslation();
     const [scrollOver, setScrollOver] = useState<boolean>(false);
     const sideBar = useSideBar();
     const auth = useAuth();
@@ -27,8 +32,6 @@ export function Header(props: HeaderProps) {
 
         return () => window.removeEventListener('scroll', onScroll);
     }, []);
-
-    const doLogout = () => auth.signoutRedirect();
 
     return (
         <header data-scroll-over={scrollOver} className='Header' {...props}>
@@ -49,7 +52,7 @@ export function Header(props: HeaderProps) {
                 <Link to='/' className='about'>
                     <Logo className='logo' />
                     <Text size='3' weight='medium' className='title'>
-                        IdP Demo
+                        {t('app.short')}
                     </Text>
                 </Link>
                 <Breadcrumb />
@@ -64,7 +67,28 @@ export function Header(props: HeaderProps) {
                         </button>
                     </DropdownMenu.Trigger>
                     <DropdownMenu.Content>
-                        <DropdownMenu.Item onClick={doLogout}>Logout</DropdownMenu.Item>
+                        <DropdownMenu.Sub>
+                            <DropdownMenu.SubTrigger>
+                                <Globe size={menuIconSize} />
+                                {t('language')}
+                            </DropdownMenu.SubTrigger>
+                            <DropdownMenu.SubContent>
+                                <DropdownMenu.RadioGroup value={i18n.language} onValueChange={(v) => i18n.changeLanguage(v)}>
+                                    {languages
+                                        .sort((a, b) => a.title.localeCompare(b.title))
+                                        .map((l) => (
+                                            <DropdownMenu.RadioItem key={l.code} value={l.code}>
+                                                {isBrowsersDefaultLanguage(l.code) && <Star size={menuIconSize} />}
+                                                {l.title}
+                                            </DropdownMenu.RadioItem>
+                                        ))}
+                                </DropdownMenu.RadioGroup>
+                            </DropdownMenu.SubContent>
+                        </DropdownMenu.Sub>
+                        <DropdownMenu.Item onClick={() => auth.signoutRedirect()}>
+                            <LogOut size={menuIconSize} />
+                            {t('logout')}
+                        </DropdownMenu.Item>
                     </DropdownMenu.Content>
                 </DropdownMenu.Root>
             </Flex>

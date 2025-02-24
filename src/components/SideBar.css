@@ -70,6 +70,20 @@
 
                         &.active {
                             background: var(--gray-4);
+                            color: var(--color-foreground);
+
+                            &::before {
+                                border-radius: 1px;
+                                content: "";
+                                width: 2px;
+                                height: 0.8em;
+                                display: block;
+                                position: absolute;
+                                margin-top: 0.31em;
+                                margin-left: calc(var(--space-2) * -0.6);
+                                background-color: var(--accent-9);
+                                color: var(--accent-contrast);
+                            }
                         }
                     }
 

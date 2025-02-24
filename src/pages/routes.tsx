@@ -10,7 +10,7 @@ export const routes: RouteConfiguration[] = [
         index: true,
         Component: Index,
         handle: {
-            title: 'Home',
+            titleKey: 'home',
         },
     },
     {
@@ -40,7 +40,7 @@ export const routes: RouteConfiguration[] = [
         path: '*',
         Component: NotFound,
         handle: {
-            title: 'Not found',
+            titleKey: 'notFound',
         },
     },
 ];

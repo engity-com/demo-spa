@@ -1,17 +1,43 @@
 import type React from 'react';
+import { useTranslation } from 'react-i18next';
 import { NavLink as RLink, type NavLinkProps as RLinkProps, type To } from 'react-router';
 
-interface LinkProps extends RLinkProps, React.RefAttributes<HTMLAnchorElement> {
-    children?: React.ReactNode;
-    to: To;
-    title?: string;
+interface LinkProps extends Omit<RLinkProps, 'to'>, React.RefAttributes<HTMLAnchorElement> {
+    readonly children?: React.ReactNode;
+    readonly title?: string | undefined;
+    readonly titleKey?: string | undefined;
+    readonly titleFrom?: HasTitle | HasTitleKey | undefined;
 }
 
-export function Link(props: LinkProps) {
+interface ToLinkProps extends LinkProps {
+    readonly to: To;
+}
+
+interface ToKeyLinkProps extends LinkProps {
+    readonly toKey: string;
+}
+
+interface HasTitle {
+    readonly title?: string | undefined;
+}
+
+interface HasTitleKey {
+    readonly titleKey?: string | undefined;
+}
+
+export function Link(props: ToLinkProps | ToKeyLinkProps) {
+    const { t } = useTranslation();
+    const title =
+        props.title ||
+        (props.titleKey && t(props.titleKey)) ||
+        (props.titleFrom && 'title' in props.titleFrom && props.titleFrom.title) ||
+        (props.titleFrom && 'titleKey' in props.titleFrom && props.titleFrom.titleKey && t(props.titleFrom.titleKey)) ||
+        undefined;
+    const to = ('to' in props && props.to) || (('toKey' in props && props.toKey && t(props.toKey)) as To);
     return (
-        <RLink {...props}>
+        <RLink {...props} to={to}>
             {props.children}
-            {props.title}
+            {title}
         </RLink>
     );
 }

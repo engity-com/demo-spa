@@ -1,7 +1,7 @@
 import './Breadcrumb.css';
 import { Link } from '@/components/Link';
+import type { ResolvedRoute } from '@/lib/routes';
 import { type UIMatch, useMatches } from 'react-router';
-import type { ResolvedRoute } from '../lib/routes';
 
 function filterIndexDuplicates(routes: UIMatch[]): UIMatch[] {
     const result: UIMatch[] = [];
@@ -16,21 +16,19 @@ function filterIndexDuplicates(routes: UIMatch[]): UIMatch[] {
 }
 
 function resolve(routes: UIMatch[]): ResolvedRoute[] {
-    return (
-        routes
-            // @ts-ignore
-            .filter((route) => route.handle?.title) as ResolvedRoute[]
-    );
+    return routes.filter(
+        // @ts-ignore
+        (route) => route.handle && (('title' in route.handle && route.handle.title) || ('titleKey' in route.handle && route.handle.titleKey)),
+    ) as ResolvedRoute[];
 }
 
 export function Breadcrumb() {
     const routes = resolve(filterIndexDuplicates(useMatches()));
-
     return (
         <ul className='Breadcrumb'>
             {routes.map((r) => (
                 <li key={r.id}>
-                    <Link to={r.pathname}>{r.handle.title}</Link>
+                    <Link to={r.pathname} titleFrom={r.handle} />
                 </li>
             ))}
         </ul>
