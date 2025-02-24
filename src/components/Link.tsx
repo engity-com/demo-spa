@@ -34,8 +34,12 @@ export function Link(props: ToLinkProps | ToKeyLinkProps) {
         (props.titleFrom && 'titleKey' in props.titleFrom && props.titleFrom.titleKey && t(props.titleFrom.titleKey)) ||
         undefined;
     const to = ('to' in props && props.to) || (('toKey' in props && props.toKey && t(props.toKey)) as To);
+    // @ts-ignore
+    const downstreamProps: Omit<ToLinkProps | ToKeyLinkProps, 'toKey' | 'titleFrom' | 'titleKey'> = (({ toKey, titleFrom, titleKey, ...rest }) =>
+        rest)(props);
+
     return (
-        <RLink {...props} to={to}>
+        <RLink {...downstreamProps} to={to}>
             {props.children}
             {title}
         </RLink>
