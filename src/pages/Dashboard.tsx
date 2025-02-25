@@ -10,9 +10,10 @@ import { TodaysSales } from '@/components/stats/TodaysSales';
 import { TodaysUsers } from '@/components/stats/TodaysUsers';
 import { Callout } from '@radix-ui/themes';
 import { Info } from 'lucide-react';
-import { Trans } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 
 export function Dashboard() {
+    const { t, i18n } = useTranslation();
     return (
         <>
             <Callout.Root color='indigo' size='1'>
@@ -20,7 +21,7 @@ export function Dashboard() {
                     <Info />
                 </Callout.Icon>
                 <Callout.Text size='2'>
-                    <Trans i18nKey='demo.note' components={{ here: <Link toKey='app.product.url' /> }} />
+                    <Trans i18nKey='demo.note' t={t} i18n={i18n} components={{ here: <Link toKey='app.product.url' /> }} />
                 </Callout.Text>
             </Callout.Root>
             <Columns columns='4'>
