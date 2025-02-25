@@ -1,7 +1,7 @@
+import { Spinner } from '@/components/Spinner';
 import { Container, Flex, Grid, Text } from '@radix-ui/themes';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Spinner } from '../components/Spinner';
 
 interface LoadingProps {
     titleKey?: string | undefined;

@@ -1,8 +1,8 @@
 import './SideBar.css';
 // @ts-ignore
 import Logo from '@/assets/logo-without-spacing.svg';
-import { Footer } from '@/components/Footer';
 import { Link } from '@/components/Link';
+import { Footer } from '@/components/page/Footer';
 import { Separator } from '@radix-ui/themes';
 import { NavigationMenu } from 'radix-ui';
 import type React from 'react';

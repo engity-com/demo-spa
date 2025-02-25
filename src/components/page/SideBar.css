@@ -58,7 +58,7 @@
                 }
 
                 & .rt-Separator {
-                    margin: var(--space-2) 0;
+                    margin: var(--space-2) 0 var(--space-5) 0;
                     background: linear-gradient(90deg, var(--accent-a2), var(--accent-a6), var(--accent-a2));
                 }
 

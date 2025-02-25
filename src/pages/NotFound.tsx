@@ -1,5 +1,5 @@
 // @ts-ignore
-import Img from '@/assets/404.svg';
+import Img from '@/assets/dead-computer.svg';
 import { Flex, Separator, Text } from '@radix-ui/themes';
 import { useTranslation } from 'react-i18next';
 

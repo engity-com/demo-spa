@@ -1,16 +1,16 @@
+import type { RouteConfiguration } from '@/lib/routes';
 import { Bar } from '@/pages/Bar';
+import { Dashboard } from '@/pages/Dashboard';
 import { Directory } from '@/pages/Directory';
 import { Foo } from '@/pages/Foo';
-import { Index } from '@/pages/Index';
 import { NotFound } from '@/pages/NotFound';
-import type { RouteConfiguration } from '../lib/routes';
 
 export const routes: RouteConfiguration[] = [
     {
         index: true,
-        Component: Index,
+        Component: Dashboard,
         handle: {
-            titleKey: 'home',
+            titleKey: 'dashboard',
         },
     },
     {
@@ -41,6 +41,7 @@ export const routes: RouteConfiguration[] = [
         Component: NotFound,
         handle: {
             titleKey: 'notFound',
+            displayHeading: false,
         },
     },
 ];
