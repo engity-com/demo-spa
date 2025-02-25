@@ -1,9 +1,19 @@
+import type { Locale } from 'date-fns';
 import i18next, { type LanguageDetectorModule, type ResourceLanguage, type Services } from 'i18next';
 import { initReactI18next } from 'react-i18next';
 import de from './i18n.de';
 import en from './i18n.en';
 
 export const languages = [en, de];
+
+const languageToLocale: Record<string, Locale> = languages.reduce<Record<string, Locale>>((acc, l) => {
+    acc[l.code] = l.dateLocale;
+    return acc;
+}, {});
+
+export function getLocale(language: string): Locale | undefined {
+    return languageToLocale[language];
+}
 
 class Detector implements LanguageDetectorModule {
     readonly type = 'languageDetector';

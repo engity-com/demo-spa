@@ -54,6 +54,10 @@
             & > main {
                 padding: var(--content-padding);
                 overflow: auto;
+
+                & > *:first-child {
+                    margin-top: 0;
+                }
             }
         }
     }

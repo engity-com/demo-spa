@@ -3,16 +3,16 @@ import './Header.css';
 import Logo from '@/assets/logo-without-spacing.svg';
 import { CurrentUserAvatar } from '@/components/Avatar';
 import { Link } from '@/components/Link';
-import { useSideBar } from '@/components/SideBar';
-import { ThemeToggle } from '@/components/Theme';
+import { Breadcrumb } from '@/components/page/Breadcrumb';
+import { useSideBar } from '@/components/page/SideBar';
+import { ThemeToggle } from '@/components/page/Theme';
+import { isBrowsersDefaultLanguage, languages } from '@/lib/i18n';
 import { DropdownMenu, Flex, Text } from '@radix-ui/themes';
 import { Globe, LogOut, Star } from 'lucide-react';
 import type React from 'react';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from 'react-oidc-context';
-import { isBrowsersDefaultLanguage, languages } from '../lib/i18n';
-import { Breadcrumb } from './Breadcrumb';
 
 const scrollTopThreshold = 1;
 
