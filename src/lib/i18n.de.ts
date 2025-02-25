@@ -6,12 +6,20 @@ export default {
     dateLocale: de,
     title: 'Deutsch',
     translation: {
+        app: {
+            product: {
+                url: 'https://engity.com/de/iam-produkt/',
+            },
+        },
         customers: {
             new: 'Neukunden',
         },
         company: 'Unternehmen',
         contact: 'Kontakt',
         date: 'Datum',
+        demo: {
+            note: 'Diese Anwendung dient zur Demonstration der Funktionsweise des Engity IdP. Alle Werte auf dieser Seite sind Beispiele. Weitere Details zu allen Funktionen finden Sie <here>hier</here>.',
+        },
         email: 'E-Mail',
         language: 'Sprache',
         legalNotice: {
