@@ -13,6 +13,9 @@ export default {
         app: {
             short: 'IdP Demo',
             regular: 'Engity IdP Demo',
+            product: {
+                url: 'https://engity.com/iam-product/',
+            },
         },
         company: 'Company',
         contact: 'Contact',
@@ -21,6 +24,9 @@ export default {
         },
         dashboard: 'Dashboard',
         date: 'Date',
+        demo: {
+            note: 'This application is used to demonstrate how the Engity IdP works. All values on this page are examples. Further details on all functions can be found <here>here</here>.',
+        },
         email: 'Email',
         home: 'Home',
         language: 'Language',

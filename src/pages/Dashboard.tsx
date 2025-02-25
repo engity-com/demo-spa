@@ -1,4 +1,5 @@
 import { Columns } from '@/components/Columns';
+import { Link } from '@/components/Link';
 import { CompletedTasks } from '@/components/graphs/CompletedTasks';
 import { DailySales } from '@/components/graphs/DailySales';
 import { WebsiteViews } from '@/components/graphs/WebsiteViews';
@@ -7,10 +8,21 @@ import { TodaysAdViews } from '@/components/stats/TodaysAdViews';
 import { TodaysMoney } from '@/components/stats/TodaysMoney';
 import { TodaysSales } from '@/components/stats/TodaysSales';
 import { TodaysUsers } from '@/components/stats/TodaysUsers';
+import { Callout } from '@radix-ui/themes';
+import { Info } from 'lucide-react';
+import { Trans } from 'react-i18next';
 
 export function Dashboard() {
     return (
         <>
+            <Callout.Root color='indigo' size='1'>
+                <Callout.Icon>
+                    <Info />
+                </Callout.Icon>
+                <Callout.Text size='2'>
+                    <Trans i18nKey='demo.note' components={{ here: <Link toKey='app.product.url' /> }} />
+                </Callout.Text>
+            </Callout.Root>
             <Columns columns='4'>
                 <TodaysMoney />
                 <TodaysUsers />
