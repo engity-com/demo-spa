@@ -1,5 +1,5 @@
 import './Footer.css';
-import { Link } from '@/components/Link';
+import { Link } from '@/components';
 import type React from 'react';
 
 interface FooterProps extends React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement> {}

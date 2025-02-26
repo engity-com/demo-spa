@@ -1,6 +1,6 @@
 import './Breadcrumb.css';
-import { Link } from '@/components/Link';
-import { useResolvedRoutes } from '@/lib/routes';
+import { Link } from '@/components';
+import { useResolvedRoutes } from '@/lib';
 
 export function Breadcrumb() {
     const routes = useResolvedRoutes();

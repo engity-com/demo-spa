@@ -1,6 +1,6 @@
-import { useTheme } from '@/components/page/Theme';
-import type { HeadingKind } from '@/lib/headings';
-import { getLocale } from '@/lib/i18n';
+import { useTheme } from '@/components/page';
+import type { HeadingKind } from '@/lib';
+import { getLocale } from '@/lib';
 import { Card, Flex, Heading, Text } from '@radix-ui/themes';
 import { formatDistanceToNow } from 'date-fns';
 import { Clock } from 'lucide-react';

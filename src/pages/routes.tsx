@@ -1,9 +1,5 @@
-import type { RouteConfiguration } from '@/lib/routes';
-import { Bar } from '@/pages/Bar';
-import { Dashboard } from '@/pages/Dashboard';
-import { Directory } from '@/pages/Directory';
-import { Foo } from '@/pages/Foo';
-import { NotFound } from '@/pages/NotFound';
+import type { RouteConfiguration } from '@/lib';
+import { Bar, Dashboard, Directory, Foo, NotFound } from '@/pages';
 
 export const routes: RouteConfiguration[] = [
     {

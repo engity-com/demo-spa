@@ -1,4 +1,4 @@
-import type { HeadingKind } from '@/lib/headings';
+import type { HeadingKind } from '@/lib';
 import { Card, Flex, Heading, Table } from '@radix-ui/themes';
 import { useTranslation } from 'react-i18next';
 

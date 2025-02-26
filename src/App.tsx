@@ -1,12 +1,7 @@
 import './App.css';
-import { Breadcrumb } from '@/components/page/Breadcrumb';
-import { Header } from '@/components/page/Header';
-import { SideBar, SideBarProvider } from '@/components/page/SideBar';
-import { Theme } from '@/components/page/Theme';
-import { authenticationRouteConfigurations } from '@/lib/authentication';
-import { type RouteConfiguration, useResolvedRoutes } from '@/lib/routes';
-import { Problem, ProblemInRouter } from '@/pages/Problem';
-import { routes as pageRoutes } from '@/pages/routes';
+import { Breadcrumb, Header, SideBar, SideBarProvider, Theme } from '@/components/page';
+import { type RouteConfiguration, authenticationRouteConfigurations, useResolvedRoutes } from '@/lib';
+import { Problem, ProblemInRouter, routes as pageRoutes } from '@/pages';
 import { useTranslation } from 'react-i18next';
 import { Outlet, RouterProvider, createBrowserRouter } from 'react-router';
 

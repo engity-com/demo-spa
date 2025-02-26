@@ -1,5 +1,5 @@
-import { OverviewStat } from '@/components/OverviewStat';
-import type { HeadingKind } from '@/lib/headings';
+import { OverviewStat } from '@/components';
+import type { HeadingKind } from '@/lib';
 
 interface TodaysAdViewsProps {
     readonly titleAs?: HeadingKind | undefined;
