@@ -81,6 +81,10 @@ export default defineConfig({
                 distPath: {
                     root: 'dist/green',
                 },
+                sourceMap: {
+                    css: false,
+                    js: false,
+                },
             },
         },
         red: {
@@ -92,6 +96,10 @@ export default defineConfig({
             output: {
                 distPath: {
                     root: 'dist/red',
+                },
+                sourceMap: {
+                    css: false,
+                    js: false,
                 },
             },
         },
