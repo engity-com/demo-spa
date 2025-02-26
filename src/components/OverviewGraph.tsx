@@ -109,9 +109,16 @@ export function OverviewGraph(props: OverviewGraphProps) {
                     type={props.type}
                 />
                 {props.lastUpdated && (
-                    <Flex direction='row' align='center' gap='2'>
+                    <Flex
+                        direction='row'
+                        align='center'
+                        gap='2'
+                        title={Intl.DateTimeFormat(i18n.language, { dateStyle: 'medium', timeStyle: 'medium' }).format(props.lastUpdated)}
+                    >
                         <Clock size='14' />
-                        <Text size='2'>{formatDistanceToNow(props.lastUpdated, { addSuffix: true, locale: getLocale(i18n.language) })}</Text>
+                        <Text style={{ cursor: 'default' }} size='2'>
+                            {formatDistanceToNow(props.lastUpdated, { addSuffix: true, locale: getLocale(i18n.language) })}
+                        </Text>
                     </Flex>
                 )}
             </Flex>
