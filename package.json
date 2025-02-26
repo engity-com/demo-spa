@@ -40,6 +40,7 @@
   },
   "devDependencies": {
     "@biomejs/biome": "1.9.4",
+    "@csstools/postcss-cascade-layers": "^5.0.1",
     "@rsbuild/core": "1.2.4",
     "@rsbuild/plugin-basic-ssl": "1.1.1",
     "@rsbuild/plugin-react": "1.1.0",
