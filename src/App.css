@@ -26,7 +26,7 @@
             transition: left var(--sidebar-animation);
 
             &[data-state="collapsed"] {
-                left: calc(var(--sidebar-width) * -1);
+                left: calc(calc(var(--sidebar-width) + var(--section-border-size)) * -1);
 
                 & + * {
                     margin-left: 0;
