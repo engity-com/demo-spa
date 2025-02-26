@@ -1,4 +1,4 @@
-import { NotFound } from '@/pages/NotFound';
+import { NotFound } from '@/pages';
 import type React from 'react';
 import { Outlet, type OutletProps, useLocation, useResolvedPath } from 'react-router';
 

@@ -1,5 +1,5 @@
-import { OverviewGraph, type TimedValue } from '@/components/OverviewGraph';
-import { random } from '@/lib/random';
+import { OverviewGraph, type TimedValue } from '@/components';
+import { random } from '@/lib';
 
 interface WebsiteViewsProps {
     readonly amountOfDays: number;

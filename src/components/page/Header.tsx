@@ -1,12 +1,9 @@
 import './Header.css';
 // @ts-ignore
 import Logo from '@/assets/logo-without-spacing.svg';
-import { CurrentUserAvatar } from '@/components/Avatar';
-import { Link } from '@/components/Link';
-import { Breadcrumb } from '@/components/page/Breadcrumb';
-import { useSideBar } from '@/components/page/SideBar';
-import { ThemeToggle } from '@/components/page/Theme';
-import { isBrowsersDefaultLanguage, languages } from '@/lib/i18n';
+import { CurrentUserAvatar, Link } from '@/components';
+import { Breadcrumb, ThemeToggle, useSideBar } from '@/components/page';
+import { isBrowsersDefaultLanguage, languages } from '@/lib';
 import { DropdownMenu, Flex, Text } from '@radix-ui/themes';
 import { Globe, LogOut, Star } from 'lucide-react';
 import type React from 'react';

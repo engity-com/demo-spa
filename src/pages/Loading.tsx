@@ -1,4 +1,4 @@
-import { Spinner } from '@/components/Spinner';
+import { Spinner } from '@/components';
 import { Container, Flex, Grid, Text } from '@radix-ui/themes';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';

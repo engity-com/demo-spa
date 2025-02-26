@@ -1,7 +1,7 @@
-import { environment as defaultEnvironment } from '@/environments';
 import type { Environment, EnvironmentVariant, NamedEnvironmentVariant } from '@/environments';
-import type { RouteConfiguration } from '@/lib/routes';
-import { Loading } from '@/pages/Loading';
+import { environment as defaultEnvironment } from '@/environments';
+import type { RouteConfiguration } from '@/lib';
+import { Loading } from '@/pages';
 import { UserManager, WebStorageStateStore } from 'oidc-client-ts';
 import type React from 'react';
 import { useEffect } from 'react';

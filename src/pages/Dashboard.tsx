@@ -1,13 +1,7 @@
-import { Columns } from '@/components/Columns';
-import { Link } from '@/components/Link';
-import { CompletedTasks } from '@/components/graphs/CompletedTasks';
-import { DailySales } from '@/components/graphs/DailySales';
-import { WebsiteViews } from '@/components/graphs/WebsiteViews';
-import { NewCustomers } from '@/components/reports/NewCustomers';
-import { TodaysAdViews } from '@/components/stats/TodaysAdViews';
-import { TodaysMoney } from '@/components/stats/TodaysMoney';
-import { TodaysSales } from '@/components/stats/TodaysSales';
-import { TodaysUsers } from '@/components/stats/TodaysUsers';
+import { Columns, Link } from '@/components';
+import { CompletedTasks, DailySales, WebsiteViews } from '@/components/graphs';
+import { NewCustomers } from '@/components/reports';
+import { TodaysAdViews, TodaysMoney, TodaysSales, TodaysUsers } from '@/components/stats';
 import { Callout } from '@radix-ui/themes';
 import { Info } from 'lucide-react';
 import { Trans, useTranslation } from 'react-i18next';
