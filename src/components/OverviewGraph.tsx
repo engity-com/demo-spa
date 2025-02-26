@@ -56,6 +56,7 @@ export function OverviewGraph(props: OverviewGraphProps) {
                         tooltip: {
                             enabled: !!seriesTitle,
                         },
+                        colors: ['var(--accent-9)'],
                         chart: {
                             zoom: {
                                 enabled: false,
