@@ -39,7 +39,7 @@ export function Link(props: ToLinkProps | ToKeyLinkProps) {
         rest)(props);
 
     return (
-        <RLink {...downstreamProps} to={to}>
+        <RLink {...downstreamProps} to={to} data-accent-color className={`rt-Text rt-reset rt-Link rt-underline-auto ${props.className}`}>
             {props.children}
             {title}
         </RLink>
