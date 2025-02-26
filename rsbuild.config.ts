@@ -21,9 +21,6 @@ export default defineConfig({
         favicon: './src/assets/logo.svg',
     },
     source: {
-        define: {
-            ENV: JSON.stringify(require('./src/environments/environment')),
-        },
         entry: {
             index: './src/index.tsx',
         },
@@ -52,6 +49,7 @@ export default defineConfig({
             font: 'assets',
             image: 'assets',
             assets: 'assets',
+            root: 'dist/dev',
         },
         legalComments: 'inline',
         manifest: true,
@@ -59,22 +57,16 @@ export default defineConfig({
     },
     resolve: {
         alias: {
-            '@/environments/environment': './src/environments/environment.ts',
             '@': './src',
+            '@environment': './src/environments/environment.ts',
         },
     },
     environments: {
-        dev: {
-            output: {
-                distPath: {
-                    root: 'dist/dev',
-                },
-            },
-        },
+        dev: {},
         green: {
             resolve: {
                 alias: {
-                    '@/environments/environment': './src/environments/environment.green.ts',
+                    '@environment': './src/environments/environment.green.ts',
                 },
             },
             output: {
@@ -90,7 +82,7 @@ export default defineConfig({
         red: {
             resolve: {
                 alias: {
-                    '@/environments/environment': './src/environments/environment.red.ts',
+                    '@environment': './src/environments/environment.red.ts',
                 },
             },
             output: {

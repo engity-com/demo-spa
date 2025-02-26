@@ -1,5 +1,5 @@
-import { environment as defaultEnvironment } from '@/environments/environment';
-import type { Environment, EnvironmentVariant, NamedEnvironmentVariant } from '@/environments/type';
+import { environment as defaultEnvironment } from '@/environments';
+import type { Environment, EnvironmentVariant, NamedEnvironmentVariant } from '@/environments';
 import type { RouteConfiguration } from '@/lib/routes';
 import { Loading } from '@/pages/Loading';
 import { UserManager, WebStorageStateStore } from 'oidc-client-ts';

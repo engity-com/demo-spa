@@ -2,8 +2,7 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"],
-      "@/utils": ["./src/utils.ts"]
+      "@/*": ["./src/*"]
     },
     "lib": ["DOM", "ES2021"],
     "jsx": "react-jsx",
