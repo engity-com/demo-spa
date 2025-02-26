@@ -90,4 +90,23 @@
     [data-disabled] {
         cursor: var(--cursor-disabled);
     }
+
+    .navigator-height-100 {
+        height: 100vh;
+        @supports (height: 100dvh) {
+            height: 100dvh;
+        }
+    }
+    .navigator-height-75 {
+        height: 75vh;
+        @supports (height: 75dvh) {
+            height: 75dvh;
+        }
+    }
+    .navigator-height-50 {
+        height: 50vh;
+        @supports (height: 50dvh) {
+            height: 50dvh;
+        }
+    }
 }
