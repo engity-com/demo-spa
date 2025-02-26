@@ -66,7 +66,7 @@ export function Theme({ children, ...props }: ThemeProps) {
         root.classList.add(resolved);
         root.classList.remove(invertMode(resolved));
 
-        if (!provided && watchPrefers) {
+        if (!provided && watchPrefers && 'addEventListener' in watchPrefers) {
             const onChange = (e: MediaQueryListEvent) => {
                 localStorage.removeItem(storageKey);
                 const resolved = mediaSelectorMatchesToThemeMode(e.matches);
