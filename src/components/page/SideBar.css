@@ -2,14 +2,11 @@
     aside.SideBar {
         --spacing: var(--space-2);
 
-        display: grid;
-        grid-template-columns: 1fr;
-        grid-template-rows: 1fr auto;
+        display: flex;
         background-color: oklch(from var(--gray-2) l c h / 0.8);
         backdrop-filter: saturate(8) blur(5px);
         border-right: var(--section-border);
         width: calc(var(--sidebar-width) - var(--section-border-size));
-        height: calc(100% - var(--sidebar-spacing-top));
         z-index: 1;
 
         &:focus-visible,
