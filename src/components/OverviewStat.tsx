@@ -25,6 +25,7 @@ function formatNumber(v: number, language: string, unit: Unit): string {
         currencyDisplay: isCurrency ? 'symbol' : undefined,
         notation: 'compact',
         compactDisplay: 'short',
+        minimumFractionDigits: 0,
         maximumFractionDigits: 1,
     }).format(v);
 }
@@ -32,6 +33,7 @@ function formatNumber(v: number, language: string, unit: Unit): string {
 function formatDifferencePercentage(now: number, last: number, language: string): string {
     const absolute = now - last;
     return `${absolute > 0 ? '+' : ''}${Intl.NumberFormat(language, {
+        minimumFractionDigits: 0,
         maximumFractionDigits: 1,
         style: 'percent',
     }).format(absolute / last)}`;
