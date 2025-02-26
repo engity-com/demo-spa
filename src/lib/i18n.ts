@@ -50,6 +50,7 @@ class Detector implements LanguageDetectorModule {
         } else {
             this.storage.setItem(this.storageKey, lng);
         }
+        document.documentElement?.setAttribute?.('lang', lng);
     }
 
     detect(): string | readonly string[] | undefined {
