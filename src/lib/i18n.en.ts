@@ -16,7 +16,12 @@ export default {
             product: {
                 url: 'https://engity.com/iam-product/',
             },
+            company: {
+                url: 'https://engity.com',
+            },
         },
+        billing: 'Billing',
+        chat: 'Chat',
         company: 'Company',
         contact: 'Contact',
         customers: {
@@ -39,6 +44,7 @@ export default {
         },
         logout: 'Logout',
         notFound: 'Not found',
+        notifications: 'Notifications',
         privacyPolicy: {
             '.': 'Privacy policy',
             url: 'https://engity.com/data-privacy/',

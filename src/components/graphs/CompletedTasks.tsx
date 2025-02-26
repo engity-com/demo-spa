@@ -1,5 +1,5 @@
-import { OverviewGraph, type TimedValue } from '@/components';
 import { random } from '@/lib';
+import { OverviewGraph, type TimedValue } from '../index';
 
 const monthFormatOpts: Intl.DateTimeFormatOptions = {
     month: 'short',
