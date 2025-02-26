@@ -64,6 +64,9 @@ export function OverviewGraph(props: OverviewGraphProps) {
                             toolbar: {
                                 show: false,
                             },
+                            animations: {
+                                enabled: false,
+                            },
                         },
                         dataLabels: {
                             enabled: false,
