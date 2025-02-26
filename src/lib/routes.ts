@@ -1,9 +1,17 @@
+import type { HasShortTitle, HasShortTitleKey, HasTitle, HasTitleKey } from '@/lib/title';
+import type { ComponentType } from 'react';
 import { type IndexRouteObject, type NonIndexRouteObject, type UIMatch, useMatches } from 'react-router';
 
-export interface RouteHandle {
-    readonly title?: string;
-    readonly titleKey?: string;
-    readonly displayHeading?: boolean;
+export interface RouteHandle extends HasTitle, HasTitleKey, HasShortTitle, HasShortTitleKey {
+    readonly displayHeading?: boolean | undefined;
+    readonly icon?: ComponentType | undefined;
+
+    readonly sideBar?:
+        | {
+              readonly visible?: boolean | undefined;
+              readonly priority?: number | undefined;
+          }
+        | undefined;
 }
 
 interface AdditionalRouteConfiguration {

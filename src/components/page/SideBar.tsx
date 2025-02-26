@@ -3,14 +3,18 @@ import './SideBar.css';
 import Logo from '@/assets/logo-without-spacing.svg';
 import { Link } from '@/components';
 import { Footer } from '@/components/page';
+import { resolveShortTitle } from '@/lib';
+import { routes } from '@/pages';
 import { Separator } from '@radix-ui/themes';
 import { NavigationMenu } from 'radix-ui';
 import type React from 'react';
 import { createContext, useContext, useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 interface SideBarProps extends React.DetailedHTMLProps<React.HTMLAttributes<HTMLElement>, HTMLElement> {}
 
 export function SideBar(props: SideBarProps) {
+    const { t } = useTranslation();
     const sideBar = useSideBar();
     const onBlur = () => {
         if (sideBar.stateDefault === 'collapsed') {
@@ -38,21 +42,31 @@ export function SideBar(props: SideBarProps) {
 
                     <NavigationMenu.Root orientation='vertical' className='navigation'>
                         <NavigationMenu.List>
-                            <NavigationMenu.Item>
-                                <Link title='Dashboard' to='/' />
-                            </NavigationMenu.Item>
-                            <NavigationMenu.Item>
-                                <Link title='Chat' to='/directory/foo' />
-                            </NavigationMenu.Item>
-                            <NavigationMenu.Item>
-                                <Link title='Messages' to='/directory/bar' />
-                            </NavigationMenu.Item>
-                            <NavigationMenu.Item>
-                                <Link title='Billing' to='/directory' />
-                            </NavigationMenu.Item>
-                            <NavigationMenu.Item>
-                                <Link titleKey='notFound' to='/not-found' />
-                            </NavigationMenu.Item>
+                            {routes
+                                .filter((v) => v.handle?.sideBar?.visible === true)
+                                .map((v, i) => ({ ...v, position: i }))
+                                .sort((a, b) => {
+                                    if (!a.handle && !b.handle) {
+                                        return 0;
+                                    }
+                                    if (!a.handle || !b.handle) {
+                                        return a.handle ? 1 : -1;
+                                    }
+                                    const aPrio = typeof a.handle.sideBar?.priority === 'number' ? a.handle.sideBar?.priority : 0;
+                                    const bPrio = typeof b.handle.sideBar?.priority === 'number' ? b.handle.sideBar?.priority : 0;
+                                    if (aPrio !== bPrio) {
+                                        return aPrio - bPrio;
+                                    }
+                                    return a.position - b.position;
+                                })
+                                .map((v) => (
+                                    <NavigationMenu.Item key={v.position}>
+                                        <Link to={`/${v.path || ''}`}>
+                                            {v.handle.icon && <v.handle.icon size={14} />}
+                                            {resolveShortTitle(v.handle, t)}
+                                        </Link>
+                                    </NavigationMenu.Item>
+                                ))}
                         </NavigationMenu.List>
                     </NavigationMenu.Root>
                 </div>

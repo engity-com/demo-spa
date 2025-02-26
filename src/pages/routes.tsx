@@ -1,5 +1,6 @@
 import type { RouteConfiguration } from '@/lib';
-import { Bar, Dashboard, Directory, Foo, NotFound } from '@/pages';
+import { Billing, Chat, Dashboard, NotFound, Notifications } from '@/pages';
+import { Bell, Coins, Home, MessageCircleMore } from 'lucide-react';
 
 export const routes: RouteConfiguration[] = [
     {
@@ -7,30 +8,36 @@ export const routes: RouteConfiguration[] = [
         Component: Dashboard,
         handle: {
             titleKey: 'dashboard',
+            icon: Home,
+            sideBar: { visible: true },
         },
     },
     {
-        path: 'directory',
-        Component: Directory,
+        path: 'chat',
+        Component: Chat,
         handle: {
-            title: 'Directory',
+            titleKey: 'chat',
+            icon: MessageCircleMore,
+            sideBar: { visible: true },
         },
-        children: [
-            {
-                path: 'foo',
-                Component: Foo,
-                handle: {
-                    title: 'A Foo',
-                },
-            },
-            {
-                path: 'bar',
-                Component: Bar,
-                handle: {
-                    title: 'A Bar',
-                },
-            },
-        ],
+    },
+    {
+        path: 'billing',
+        Component: Billing,
+        handle: {
+            titleKey: 'billing',
+            icon: Coins,
+            sideBar: { visible: true },
+        },
+    },
+    {
+        path: 'notifications',
+        Component: Notifications,
+        handle: {
+            titleKey: 'notifications',
+            icon: Bell,
+            sideBar: { visible: true },
+        },
     },
     {
         path: '*',

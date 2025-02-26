@@ -8,7 +8,7 @@ export function Breadcrumb() {
         <ul className='Breadcrumb'>
             {routes.map((r) => (
                 <li key={r.id}>
-                    <Link to={r.pathname} titleFrom={r.handle} />
+                    <Link to={r.pathname} shortTitleFrom={r.handle} />
                 </li>
             ))}
         </ul>

@@ -1,6 +1,6 @@
 import './App.css';
 import { Breadcrumb, Header, SideBar, SideBarProvider, Theme } from '@/components/page';
-import { type RouteConfiguration, authenticationRouteConfigurations, useResolvedRoutes } from '@/lib';
+import { type RouteConfiguration, authenticationRouteConfigurations, resolveTitle, useResolvedRoutes } from '@/lib';
 import { Problem, ProblemInRouter, routes as pageRoutes } from '@/pages';
 import { useTranslation } from 'react-i18next';
 import { Outlet, RouterProvider, createBrowserRouter } from 'react-router';
@@ -18,7 +18,7 @@ function Heading() {
         return;
     }
 
-    const title = route.handle.title || (route.handle.titleKey && t(route.handle.titleKey)) || undefined;
+    const title = resolveTitle(route.handle, t) || undefined;
     if (!title) {
         return;
     }

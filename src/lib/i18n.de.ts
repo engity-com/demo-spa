@@ -10,7 +10,11 @@ export default {
             product: {
                 url: 'https://engity.com/de/iam-produkt/',
             },
+            company: {
+                url: 'https://engity.com/de/',
+            },
         },
+        billing: 'Rechnungsstellung',
         customers: {
             new: 'Neukunden',
         },
@@ -31,6 +35,7 @@ export default {
         },
         logout: 'Ausloggen',
         notFound: 'Nicht gefunden',
+        notifications: 'Benachrichtigungen',
         stats: {
             adViews: 'Ad Anzeigen',
             completedTasks: { '.': 'Abgeschlossene Aufgaben', subTitle: 'Seit letzter Kampagne' },
