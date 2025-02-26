@@ -53,7 +53,7 @@ export class Problem extends PureComponent<ProblemProps, ProblemState> {
 
         const t = i18next.t;
         return (
-            <Flex direction='column' height='74dvh' align='center' justify='center' gap='5' p='4'>
+            <Flex className='navigator-height-75' direction='column' align='center' justify='center' gap='5' p='4'>
                 <Img height='20%' />
                 <Flex direction='row' align='center' gap='4' justify='center'>
                     <Text size='7'>500</Text>

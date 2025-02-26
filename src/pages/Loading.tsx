@@ -36,7 +36,7 @@ export function Loading(props: LoadingProps) {
     const title = props.title || (props.titleKey && t(props.titleKey)) || (props.defaultTitle === true && t('loading.shortMessage')) || undefined;
     return (
         (visible || !props.visibilityDelay) && (
-            <Grid align='center' columns='auto 1fr auto' rows='auto 1fr auto' style={{ height: '100dvh' }}>
+            <Grid className='navigator-height-100' align='center' columns='auto 1fr auto' rows='auto 1fr auto'>
                 <Container size='1' style={{ gridRow: 2, gridColumn: 2 }}>
                     <Flex direction='column' align='center' justify='center' gap='6'>
                         <Spinner />
