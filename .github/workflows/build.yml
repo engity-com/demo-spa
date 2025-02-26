@@ -22,11 +22,17 @@ jobs:
         run: |
           npm run build:production
 
-      - name: "Upload artifacts"
+      - name: "Upload artifacts (green)"
         uses: actions/upload-artifact@v4
         with:
-          name: dist
-          path: dist
+          name: green
+          path: dist/green
+
+      - name: "Upload artifacts (red)"
+        uses: actions/upload-artifact@v4
+        with:
+          name: red
+          path: dist/red
 
   deploy-green:
     name: "Deploy: green"
@@ -38,17 +44,17 @@ jobs:
       name: green
       url: https://demo.engity.green
     steps:
-      - name: "Download artifacts"
+      - name: "Download artifacts (green)"
         uses: actions/download-artifact@v4
         with:
-          name: dist
+          name: green
           path: dist
 
       - name: Deploy
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          command: pages deploy --project-name=demo-engity-green dist/green
+          command: pages deploy --project-name=demo-engity-green dist
 
   deploy-red:
     name: "Deploy: red"
@@ -60,14 +66,14 @@ jobs:
       name: red
       url: https://demo.engity.app
     steps:
-      - name: "Download artifacts"
+      - name: "Download artifacts (red)"
         uses: actions/download-artifact@v4
         with:
-          name: dist
+          name: red
           path: dist
 
       - name: Deploy
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          command: pages deploy --project-name=demo-engity-red dist/red
+          command: pages deploy --project-name=demo-engity-red dist
