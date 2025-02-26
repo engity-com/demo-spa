@@ -139,7 +139,7 @@ export function SideBarProvider({ children, ...props }: SideBarProviderProps) {
         const resolved = resolveSideBarState(provided);
         setResolved(resolved);
 
-        if (watchPrefers) {
+        if (watchPrefers && 'addEventListener' in watchPrefers) {
             const onChange = (e: MediaQueryListEvent) => {
                 localStorage.removeItem(storageKey);
                 const resolved = mediaSelectorMatchesToSideBarState(e.matches);
