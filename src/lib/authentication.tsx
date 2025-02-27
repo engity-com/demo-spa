@@ -22,6 +22,7 @@ function environmentVariantUriPrefix(environment: Environment, variant: Environm
 
 function AuthenticationOutlet(props: AuthenticationOutletProps) {
     const auth = useAuth();
+    const location = useLocation();
 
     useEffect(() => {
         if (!hasAuthParams() && !auth.isAuthenticated && !auth.activeNavigator && !auth.isLoading) {
@@ -40,7 +41,7 @@ function AuthenticationOutlet(props: AuthenticationOutletProps) {
                     state: {
                         // We're preserving the original location to redirect the user back in case it was
                         // successful.
-                        location: useLocation(),
+                        location: location,
                     },
                     extraQueryParams: {
                         // This is an optional extra parameter the Engity IdP supports.
@@ -50,7 +51,7 @@ function AuthenticationOutlet(props: AuthenticationOutletProps) {
                 });
             });
         }
-    }, [auth, props]);
+    }, [auth, props, location]);
 
     if (!auth.isAuthenticated) {
         return <Loading defaultTitle={true} visibilityDelay={true} />;

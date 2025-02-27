@@ -33,7 +33,10 @@ export default {
         loading: {
             shortMessage: 'Bitte warten...',
         },
-        logout: 'Ausloggen',
+        login: {
+            as: 'Angemeldet als {{name}}',
+        },
+        logout: 'Abmelden',
         notFound: 'Nicht gefunden',
         notifications: 'Benachrichtigungen',
         stats: {

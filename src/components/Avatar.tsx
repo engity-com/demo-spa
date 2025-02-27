@@ -10,7 +10,13 @@ interface AvatarProps {
 }
 
 export function Avatar(props: AvatarProps) {
-    return <RAvatar fallback={props.initials} src={props.src} className='Avatar' radius='full' />;
+    const { t } = useTranslation();
+
+    return (
+        <RAvatar fallback={props.initials} src={props.src} radius='full' asChild>
+            <div className='Avatar' title={t('login.as', { name: props.name })} />
+        </RAvatar>
+    );
 }
 
 export function CurrentUserAvatar() {
@@ -18,6 +24,7 @@ export function CurrentUserAvatar() {
     const auth = useAuth();
     const name = extractName(auth) || t('anonymous');
     const initials = extractInitials(auth) || t('anonymous.initials');
+    console.log(name);
     return <Avatar name={name} initials={initials} />;
 }
 
@@ -55,20 +62,28 @@ function extractInitials(auth: AuthContextProps): string | undefined {
         return profile.given_name[0].toUpperCase() + profile.family_name[0].toUpperCase();
     }
     if (profile.given_name) {
-        return profile.given_name[0].toUpperCase();
+        return profile.given_name[0]?.toUpperCase();
     }
     if (profile.family_name) {
-        return profile.family_name[0].toUpperCase();
+        return profile.family_name[0]?.toUpperCase();
     }
     if (profile.name) {
         const parts = profile.name.split(/[,;. ]+/);
         if (parts.length === 1) {
             return parts[0].toUpperCase();
         }
-        return parts[0].toUpperCase() + parts[parts.length - 1].toUpperCase();
+        return parts[0][0]?.toUpperCase() + parts[parts.length - 1][0]?.toUpperCase();
     }
     if (profile.email) {
-        return profile.email;
+        const mainParts = profile.email.split(/@+/);
+        if (mainParts.length >= 2) {
+            const nameParts = mainParts[0].split(/[,+._-]+/);
+            if (nameParts.length === 1) {
+                return nameParts[0].toUpperCase();
+            }
+            return nameParts[0][0]?.toUpperCase() + nameParts[nameParts.length - 1][0]?.toUpperCase();
+        }
+        return undefined;
     }
     return undefined;
 }

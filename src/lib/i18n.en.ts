@@ -42,6 +42,9 @@ export default {
         loading: {
             shortMessage: 'Please wait...',
         },
+        login: {
+            as: 'Logged in as {{name}}',
+        },
         logout: 'Logout',
         notFound: 'Not found',
         notifications: 'Notifications',
