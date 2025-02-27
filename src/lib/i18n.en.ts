@@ -6,6 +6,7 @@ export default {
     title: 'English',
     dateLocale: enUS,
     translation: {
+        actions: 'Actions',
         anonymous: {
             '.': 'Anonymous',
             initials: 'AN',
@@ -30,7 +31,12 @@ export default {
         dashboard: 'Dashboard',
         date: 'Date',
         demo: {
-            note: 'This application is used to demonstrate how the Engity IdP works. All values on this page are examples. Further details on all functions can be found <here>here</here>.',
+            note: 'This application is used to demonstrate how the Engity IdP works. All values on this page are examples. <here>Further details on all functions can be found here</here>. Special information for developers are <developer>available in a separate section</developer>.',
+            sourceHint: 'Please find the full source code and documentation of this demo <here>here</here>.',
+        },
+        developer: {
+            '.': 'Developer',
+            introduction: 'This page provides an overview of some of the technical details of the current user.',
         },
         email: 'Email',
         home: 'Home',
@@ -58,6 +64,7 @@ export default {
                 message: 'An unexpected problem occurred. Kindly reach out to our support team with a comprehensive explanation of the process.',
             },
         },
+        profile: 'Profile',
         stats: {
             adViews: 'Ad Views',
             completedTasks: { '.': 'Completed Tasks', subTitle: 'Since last campaign' },
@@ -87,6 +94,10 @@ export default {
                     switchTo: 'Switch to light mode',
                 },
             },
+        },
+        token: {
+            '.': 'Token',
+            renew: 'Renew token',
         },
         views: 'Views',
     },
