@@ -24,7 +24,6 @@ export function CurrentUserAvatar() {
     const auth = useAuth();
     const name = extractName(auth) || t('anonymous');
     const initials = extractInitials(auth) || t('anonymous.initials');
-    console.log(name);
     return <Avatar name={name} initials={initials} />;
 }
 
