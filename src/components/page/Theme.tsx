@@ -56,7 +56,6 @@ export function Theme({ children, ...props }: ThemeProps) {
     const [provided, setProvided] = useState<ThemeMode | undefined>(() => (localStorage.getItem(storageKey) as ThemeMode | undefined) || undefined);
     const [resolved, setResolved] = useState<ThemeMode>(() => resolveMode(provided));
     const [def, setDefault] = useState<ThemeMode>(() => resolveMode(undefined));
-    const watchPrefers = window.matchMedia?.(mediaSelector);
 
     useEffect(() => {
         const resolved = resolveMode(provided);
@@ -66,6 +65,7 @@ export function Theme({ children, ...props }: ThemeProps) {
         root.classList.add(resolved);
         root.classList.remove(invertMode(resolved));
 
+        const watchPrefers = window.matchMedia?.(mediaSelector);
         if (!provided && watchPrefers && 'addEventListener' in watchPrefers) {
             const onChange = (e: MediaQueryListEvent) => {
                 localStorage.removeItem(storageKey);
@@ -76,7 +76,7 @@ export function Theme({ children, ...props }: ThemeProps) {
             watchPrefers.addEventListener('change', onChange);
             return () => watchPrefers.removeEventListener('change', onChange);
         }
-    }, [provided, watchPrefers]);
+    }, [provided]);
 
     class StateImpl implements ThemeState {
         get mode() {
