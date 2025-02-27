@@ -1,6 +1,6 @@
 import type { RouteConfiguration } from '@/lib';
-import { Billing, Chat, Dashboard, NotFound, Notifications } from '@/pages';
-import { Bell, Coins, Home, MessageCircleMore } from 'lucide-react';
+import { Billing, Chat, Dashboard, Developer, NotFound, Notifications } from '@/pages';
+import { Bell, Coins, FileCode, Home, MessageCircleMore } from 'lucide-react';
 
 export const routes: RouteConfiguration[] = [
     {
@@ -9,6 +9,15 @@ export const routes: RouteConfiguration[] = [
         handle: {
             titleKey: 'dashboard',
             icon: Home,
+            sideBar: { visible: true },
+        },
+    },
+    {
+        path: 'developer',
+        Component: Developer,
+        handle: {
+            titleKey: 'developer',
+            icon: FileCode,
             sideBar: { visible: true },
         },
     },

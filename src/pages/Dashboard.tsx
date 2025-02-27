@@ -15,7 +15,12 @@ export function Dashboard() {
                     <Info />
                 </Callout.Icon>
                 <Callout.Text size='2'>
-                    <Trans i18nKey='demo.note' t={t} i18n={i18n} components={{ here: <Link toKey='app.product.url' /> }} />
+                    <Trans
+                        i18nKey='demo.note'
+                        t={t}
+                        i18n={i18n}
+                        components={{ here: <Link toKey='app.product.url' />, developer: <Link to='/developer' /> }}
+                    />
                 </Callout.Text>
             </Callout.Root>
             <Columns columns='4'>

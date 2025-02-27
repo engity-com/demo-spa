@@ -6,6 +6,7 @@ export default {
     dateLocale: de,
     title: 'Deutsch',
     translation: {
+        actions: 'Aktionen',
         app: {
             product: {
                 url: 'https://engity.com/de/iam-produkt/',
@@ -21,8 +22,13 @@ export default {
         company: 'Unternehmen',
         contact: 'Kontakt',
         date: 'Datum',
+        developer: {
+            '.': 'Entwickler',
+            introduction: 'Diese Seite gibt einen Überblick über einige technische Details des aktuellen Benutzers.',
+        },
         demo: {
-            note: 'Diese Anwendung dient zur Demonstration der Funktionsweise des Engity IdP. Alle Werte auf dieser Seite sind Beispiele. Weitere Details zu allen Funktionen finden Sie <here>hier</here>.',
+            note: 'Diese Anwendung dient zur Demonstration der Funktionsweise des Engity IdP. Alle Werte auf dieser Seite sind Beispiele. <here>Weitere Details zu allen Funktionen finden Sie hier</here>. Spezielle Informationen für Entwickler sind in <developer>einem separaten Abschnitt verfügbar</developer>.',
+            sourceHint: 'Alle Informationen zu dieser Demo inkl. Dokumentation und Quelltext sind <here>hier</here> verfügbar.',
         },
         email: 'E-Mail',
         language: 'Sprache',
@@ -39,6 +45,7 @@ export default {
         logout: 'Abmelden',
         notFound: 'Nicht gefunden',
         notifications: 'Benachrichtigungen',
+        profile: 'Profil',
         stats: {
             adViews: 'Ad Anzeigen',
             completedTasks: { '.': 'Abgeschlossene Aufgaben', subTitle: 'Seit letzter Kampagne' },
@@ -64,6 +71,10 @@ export default {
                     switchTo: 'Zum hellen Modus wechseln',
                 },
             },
+        },
+        token: {
+            '.': 'Token',
+            renew: 'Token erneuern',
         },
         views: 'Ansichten',
     },

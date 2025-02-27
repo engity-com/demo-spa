@@ -1,5 +1,6 @@
 export * from './Billing';
 export * from './Dashboard';
+export * from './Developer';
 export * from './Notifications';
 export * from './Chat';
 export * from './Loading';

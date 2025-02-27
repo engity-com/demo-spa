@@ -109,4 +109,17 @@
             height: 50dvh;
         }
     }
+
+    code pre {
+        margin: 0;
+    }
+
+    .rt-CalloutText {
+        & a {
+            text-decoration: underline;
+        }
+        & .rt-Text:where([data-accent-clor]) {
+            color: var(--accent-a11);
+        }
+    }
 }
