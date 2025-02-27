@@ -147,12 +147,12 @@ export function SideBarProvider({ children, ...props }: SideBarProviderProps) {
           }
         | undefined
     >(undefined);
-    const watchPrefers = window.matchMedia?.(mediaSelector);
 
     useEffect(() => {
         const resolved = resolveSideBarState(provided);
         setResolved(resolved);
 
+        const watchPrefers = window.matchMedia?.(mediaSelector);
         if (watchPrefers && 'addEventListener' in watchPrefers) {
             const onChange = (e: MediaQueryListEvent) => {
                 localStorage.removeItem(storageKey);
@@ -168,7 +168,7 @@ export function SideBarProvider({ children, ...props }: SideBarProviderProps) {
             watchPrefers.addEventListener('change', onChange);
             return () => watchPrefers.removeEventListener('change', onChange);
         }
-    }, [provided, watchPrefers]);
+    }, [provided]);
 
     class StateImpl implements SideBarProviderState {
         get state() {

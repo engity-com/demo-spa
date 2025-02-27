@@ -1,6 +1,6 @@
 import { Spinner } from '@/components';
 import { Container, Flex, Grid, Text } from '@radix-ui/themes';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 interface LoadingProps {
@@ -8,29 +8,29 @@ interface LoadingProps {
     title?: string | undefined;
     defaultTitle?: boolean | undefined;
 
-    visibilityDelay?: number;
+    visibilityDelay?: number | boolean;
 }
 
 export function Loading(props: LoadingProps) {
     const [visible, setVisible] = useState(false);
-
-    if (props.visibilityDelay) {
-        const [timer, setTimer] = useState<NodeJS.Timeout | null>(null);
-        useEffect(() => {
-            setTimer(
-                setTimeout(() => {
+    const timerRef = useRef<NodeJS.Timeout | null>(null);
+    useEffect(() => {
+        if (props.visibilityDelay) {
+            timerRef.current = setTimeout(
+                () => {
                     setVisible(true);
-                }, props.visibilityDelay),
+                },
+                typeof props.visibilityDelay === 'number' ? props.visibilityDelay : 2000,
             );
 
             return () => {
-                if (timer) {
-                    clearTimeout(timer);
-                    setTimer(null);
+                if (timerRef.current) {
+                    clearTimeout(timerRef.current);
+                    timerRef.current = null;
                 }
             };
-        }, [props.visibilityDelay, timer]);
-    }
+        }
+    }, [props.visibilityDelay]);
 
     const { t } = useTranslation();
     const title = props.title || (props.titleKey && t(props.titleKey)) || (props.defaultTitle === true && t('loading.shortMessage')) || undefined;
