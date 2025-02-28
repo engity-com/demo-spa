@@ -56,11 +56,19 @@
     }
 
     body {
-        /*background-attachment: fixed;
+        background-attachment: fixed;
         background-size: cover;
         background-position: center;
-        background-image: url("assets/background.svg");*/
+        background-image: url("assets/background.svg");
         background-color: var(--color-background);
+    }
+    @supports (-webkit-touch-callout: none) {
+        /* This is an ugly workaround because iOS Safari has a problem with
+           SVG images and background-attachment: fixed; therefore simply
+           deactivate it there. */
+        body {
+            background: var(--color-background);
+        }
     }
 
     .logo-with-text_svg__secondary,
