@@ -56,10 +56,10 @@
     }
 
     body {
-        background-attachment: fixed;
+        /*background-attachment: fixed;
         background-size: cover;
         background-position: center;
-        background-image: url("assets/background.svg");
+        background-image: url("assets/background.svg");*/
         background-color: var(--color-background);
     }
 
