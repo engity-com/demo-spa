@@ -17,12 +17,13 @@ export function DailySales(props: DailySalesProps) {
     today.setHours(12, 0, 0, 0);
 
     const values: TimedValue[] = [];
+    const rand = random.mulberry32(today.getTime() + 122);
     for (let i = props.amountOfDays; i >= 0; i--) {
         const date = new Date(today);
-        date.setDate(today.getDate() * i * -1);
+        date.setDate(today.getDate() - i);
         values.push({
             date: date,
-            value: Math.round(random.inRange(random.mulberry32(date.getTime()), 0, 600)),
+            value: Math.round(random.inRange(rand, 0, 600)),
         });
     }
 

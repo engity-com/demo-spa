@@ -18,12 +18,13 @@ export function CompletedTasks(props: CompletedTasksProps) {
     thisMonth.setDate(1);
 
     const values: TimedValue[] = [];
+    const rand = random.mulberry32(thisMonth.getTime() + 121);
     for (let i = props.amountOfMonths; i >= 0; i--) {
         const date = new Date(thisMonth);
-        date.setMonth(thisMonth.getMonth() * i * -1);
+        date.setMonth(thisMonth.getMonth() - i);
         values.push({
             date: date,
-            value: Math.round(random.inRange(random.mulberry32(date.getTime()), 0, 750)),
+            value: Math.round(random.inRange(rand, 0, 750)),
         });
     }
 
