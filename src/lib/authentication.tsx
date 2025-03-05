@@ -5,8 +5,10 @@ import { Loading } from '@/pages';
 import { UserManager, WebStorageStateStore } from 'oidc-client-ts';
 import type React from 'react';
 import { useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { AuthProvider, hasAuthParams, useAuth } from 'react-oidc-context';
 import { type Location, Navigate, Outlet, useLocation } from 'react-router';
+import { useTheme } from '../components/page';
 
 interface AuthenticationOutletProps {
     readonly environment: Environment;
@@ -23,6 +25,7 @@ function environmentVariantUriPrefix(environment: Environment, variant: Environm
 function AuthenticationOutlet(props: AuthenticationOutletProps) {
     const auth = useAuth();
     const location = useLocation();
+    const theme = useTheme();
 
     useEffect(() => {
         if (!hasAuthParams() && !auth.isAuthenticated && !auth.activeNavigator && !auth.isLoading) {
@@ -44,14 +47,17 @@ function AuthenticationOutlet(props: AuthenticationOutletProps) {
                         location: location,
                     },
                     extraQueryParams: {
-                        // This is an optional extra parameter the Engity IdP supports.
+                        // These are optional extra parameter the Engity IdP supports.
+
                         // The user can click on cancel at the login dialog.
                         cancel_redirect_uri: `${environmentVariantUriPrefix(props.environment, props.variant)}after-cancel`,
+                        // Take the color scheme (light|dark) with to the login page.
+                        color_scheme: theme.mode || 'normal',
                     },
                 });
             });
         }
-    }, [auth, props, location]);
+    }, [auth, props, location, theme.mode]);
 
     if (!auth.isAuthenticated) {
         return <Loading defaultTitle={true} visibilityDelay={true} />;
@@ -72,26 +78,28 @@ function Authentication(props: AuthenticationProps) {
         prefix: `${props.variant.key}.`,
         store: window.localStorage,
     });
+    const { i18n } = useTranslation();
 
     const um = new UserManager({
         authority: props.variant.stsAuthority,
         client_id: props.variant.clientId,
         stateStore: store,
         userStore: store,
-        // ui_locales: this._translateService.currentLang,
+
+        // Ensures the authentication page also uses our picks.
+        ui_locales: i18n?.language,
 
         scope: 'openid profile email contacts offline',
         redirect_uri: `${prefix}after-login`,
         silent_redirect_uri: `${prefix}after-silent-login`,
-
-        // As it does not make sense to redirect to this application after redirect,
-        // we directly redirect to the homepage of Engity. From there the user can
-        // see some content and/or can log in again.
-        post_logout_redirect_uri: 'https://engity.com',
+        post_logout_redirect_uri: `${prefix}after-logout`,
 
         // Ensures to be automatic renew the tokens before it will expire.
         // Note: By default this is already set to `true`; we keep it here just for documentation.
         automaticSilentRenew: true,
+
+        // @ts-ignore
+        internalVariant: props.variant,
     });
 
     return (
@@ -125,12 +133,18 @@ function AfterLogin(props: CallbackProps) {
     return <Navigate to={location} />;
 }
 
-function AfterCancel() {
-    // As it does not make sense to redirect to our application,
-    // because it does only work if logged-in, we redirect on cancel
-    // to our homepage.
-    document.location.href = 'https://engity.com';
-    return [];
+function AfterCancelAndLogout(props: CallbackProps) {
+    if (props.environment.afterLogoutUrl) {
+        // As it does not make sense to redirect to our application,
+        // because it does only work if logged-in, we redirect on cancel
+        // to our homepage.
+        document.location.href = props.environment.afterLogoutUrl;
+    }
+
+    // If this property is not as (as on local or green) trigger again the login,
+    // by navigating to the root page...
+    // This is better for local testing scenarios.
+    return <Navigate to={`/${props.variant.subPath || ''}`} />;
 }
 
 export function authenticationRouteConfigurations(children: RouteConfiguration[], environment?: Environment | undefined): RouteConfiguration[] {
@@ -154,7 +168,11 @@ export function authenticationRouteConfigurations(children: RouteConfiguration[]
                     },
                     {
                         path: 'after-cancel',
-                        element: <AfterCancel />,
+                        element: <AfterCancelAndLogout variant={v} environment={env} />,
+                    },
+                    {
+                        path: 'after-logout',
+                        element: <AfterCancelAndLogout variant={v} environment={env} />,
                     },
                     {
                         path: '*',

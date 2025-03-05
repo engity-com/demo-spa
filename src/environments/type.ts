@@ -11,5 +11,6 @@ export interface NamedEnvironmentVariant extends EnvironmentVariant {
 export interface Environment {
     readonly production: boolean;
     readonly clientRoot: string;
+    readonly afterLogoutUrl?: string;
     readonly variants: Record<string, EnvironmentVariant>;
 }

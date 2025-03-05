@@ -16,14 +16,19 @@ export function Loading(props: LoadingProps) {
     const timerRef = useRef<NodeJS.Timeout | null>(null);
     useEffect(() => {
         if (props.visibilityDelay) {
+            let mounted = true;
+
             timerRef.current = setTimeout(
                 () => {
-                    setVisible(true);
+                    if (mounted) {
+                        setVisible(true);
+                    }
                 },
                 typeof props.visibilityDelay === 'number' ? props.visibilityDelay : 2000,
             );
 
             return () => {
+                mounted = false;
                 if (timerRef.current) {
                     clearTimeout(timerRef.current);
                     timerRef.current = null;

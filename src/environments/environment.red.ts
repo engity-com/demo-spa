@@ -3,6 +3,7 @@ import type { Environment } from './type';
 export const environment: Environment = {
     production: true,
     clientRoot: 'https://demo.engity.app/',
+    afterLogoutUrl: 'https://engity.com',
     variants: {
         default: {
             stsAuthority: 'https://id.demo.engity.app/v1/',
