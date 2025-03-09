@@ -1,9 +1,15 @@
-import { type HasShortTitle, type HasShortTitleKey, type HasTitle, type HasTitleKey, resolveShortTitle, resolveTitle } from '@/lib';
+import {
+    type HasShortTitle,
+    type HasShortTitleKey,
+    type HasTitle,
+    type HasTitleKey,
+    resolveShortTitle,
+    resolveTitle,
+    useEnvironmentVariant,
+} from '@/lib';
 import type React from 'react';
 import { useTranslation } from 'react-i18next';
-import { useAuth } from 'react-oidc-context';
 import { NavLink as RLink, type NavLinkProps as RLinkProps, type To } from 'react-router';
-import type { NamedEnvironmentVariant } from '../environments';
 
 interface LinkProps
     extends Omit<RLinkProps, 'to' | 'title'>,
@@ -26,14 +32,21 @@ interface ToKeyLinkProps extends LinkProps {
 }
 export function Link(props: ToLinkProps | ToKeyLinkProps) {
     const { t } = useTranslation();
-    const auth = useAuth();
-    const variant = ('internalVariant' in auth && (auth.internalVariant as NamedEnvironmentVariant)) || undefined;
+    const variant = useEnvironmentVariant();
     const title =
         resolveTitle(props, t) ||
         (props.shortTitleFrom && resolveShortTitle(props.shortTitleFrom, t)) ||
         (props.titleFrom && resolveShortTitle(props.titleFrom, t)) ||
         undefined;
-    const to = ('to' in props && props.to) || (('toKey' in props && props.toKey && t(props.toKey)) as To);
+    let to = ('to' in props && props.to) || (('toKey' in props && props.toKey && t(props.toKey)) as To);
+    if (variant?.subPath && typeof to === 'string') {
+        try {
+            new URL(to);
+        } catch (ignored) {
+            to = `/${variant?.subPath}${to}`;
+        }
+    }
+
     const downstreamProps: Omit<
         ToLinkProps | ToKeyLinkProps,
         'toKey' | 'titleFrom' | 'titleKey' | 'shortTitleFrom' | 'shortTitle' | 'shortTitleKey'
@@ -41,12 +54,7 @@ export function Link(props: ToLinkProps | ToKeyLinkProps) {
     > = (({ toKey, titleFrom, titleKey, shortTitleFrom, shortTitle, shortTitleKey, ...rest }) => rest)(props);
 
     return (
-        <RLink
-            {...downstreamProps}
-            to={variant?.subPath && typeof to === 'string' ? `/${variant?.subPath}${to}` : to}
-            data-accent-color
-            className={`rt-Text rt-reset rt-Link rt-underline-auto ${props.className}`}
-        >
+        <RLink {...downstreamProps} to={to} data-accent-color className={`rt-Text rt-reset rt-Link rt-underline-auto ${props.className}`}>
             {props.children}
             {title}
         </RLink>

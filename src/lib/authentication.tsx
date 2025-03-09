@@ -2,13 +2,18 @@ import type { Environment, EnvironmentVariant, NamedEnvironmentVariant } from '@
 import { environment as defaultEnvironment } from '@/environments';
 import type { RouteConfiguration } from '@/lib';
 import { Loading } from '@/pages';
-import { UserManager, WebStorageStateStore } from 'oidc-client-ts';
+import { WebStorageStateStore } from 'oidc-client-ts';
 import type React from 'react';
-import { useEffect } from 'react';
+import { createContext, useContext, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { AuthProvider, hasAuthParams, useAuth } from 'react-oidc-context';
 import { type Location, Navigate, Outlet, useLocation } from 'react-router';
 import { useTheme } from '../components/page';
+
+interface ContextState {
+    variant: NamedEnvironmentVariant;
+}
+const Context = createContext<ContextState | undefined>(undefined);
 
 interface AuthenticationOutletProps {
     readonly environment: Environment;
@@ -80,33 +85,33 @@ function Authentication(props: AuthenticationProps) {
     });
     const { i18n } = useTranslation();
 
-    const um = new UserManager({
-        authority: props.variant.stsAuthority,
-        client_id: props.variant.clientId,
-        stateStore: store,
-        userStore: store,
-
-        // Ensures the authentication page also uses our picks.
-        ui_locales: i18n?.language,
-
-        scope: 'openid profile email contacts offline',
-        redirect_uri: `${prefix}after-login`,
-        silent_redirect_uri: `${prefix}after-silent-login`,
-        post_logout_redirect_uri: `${prefix}after-logout`,
-
-        // Ensures to be automatic renew the tokens before it will expire.
-        // Note: By default this is already set to `true`; we keep it here just for documentation.
-        automaticSilentRenew: true,
-
-        // @ts-ignore
-        internalVariant: props.variant,
-    });
-
     return (
-        <AuthProvider userManager={um}>
-            <Outlet />
-        </AuthProvider>
+        <Context.Provider value={{ variant: props.variant }}>
+            <AuthProvider
+                authority={props.variant.stsAuthority}
+                client_id={props.variant.clientId}
+                stateStore={store}
+                userStore={store}
+                // Ensures the authentication page also uses our picks.
+                ui_locales={i18n?.language}
+                scope='openid profile email contacts offline'
+                redirect_uri={`${prefix}after-login`}
+                silent_redirect_uri={`${prefix}after-silent-login`}
+                post_logout_redirect_uri={`${prefix}after-logout`}
+                // Ensures to be automatic renew the tokens before it will expire.
+                // Note: By default this is already set to `true`; we keep it here just for documentation.
+                automaticSilentRenew={true}
+                // @ts-ignore
+                internalVariant={props.variant}
+            >
+                <Outlet />
+            </AuthProvider>
+        </Context.Provider>
     );
+}
+
+export function useEnvironmentVariant() {
+    return useContext(Context)?.variant;
 }
 
 interface CallbackProps {
