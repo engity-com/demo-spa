@@ -2,53 +2,62 @@
 import Img from '@/assets/dead-computer.svg';
 import { Flex, Separator, Text } from '@radix-ui/themes';
 import i18next from 'i18next';
-import { PureComponent, type ReactNode } from 'react';
+import { createContext, PureComponent, type ReactNode, useContext } from 'react';
 import { useRouteError } from 'react-router';
+
+type ProblemSink = (e: unknown, msg?: string) => void;
+const Context = createContext<ProblemSink | undefined>(undefined);
 
 interface ProblemProps {
     readonly children?: ReactNode | undefined;
-    readonly error?: unknown;
+    readonly problem?: unknown;
     readonly log?: boolean;
 }
 
 interface ProblemState {
-    readonly error?: unknown;
+    readonly problem?: unknown;
+}
+
+export function useProblemSink() {
+    const ctx = useContext<ProblemSink | undefined>(Context);
+
+    return ctx || (() => undefined);
 }
 
 export class Problem extends PureComponent<ProblemProps, ProblemState> {
     constructor(props: ProblemProps) {
         super(props);
         this.state = {
-            error: this.props.error,
+            problem: this.props.problem,
         };
-        this.doWithError(this.props.error);
+        this.doWithProblem(this.props.problem);
     }
 
-    private doOnError(error: unknown) {
-        this.doWithError(error);
+    private doOnProblem(e: unknown, msg?: string) {
+        this.doWithProblem(e, msg);
         this.setState({
             ...this.state,
-            error,
+            problem: e,
         });
     }
 
-    private doWithError(error: unknown) {
-        if (!error) {
+    private doWithProblem(e: unknown, msg?: string) {
+        if (!e) {
             return;
         }
 
         if (this.props.log === undefined || this.props.log) {
-            console.error('Unhandled problem occurred: ', error);
+            console.error(msg || 'Unhandled problem occurred.', e);
         }
     }
 
     componentDidCatch(error: Error) {
-        this.doOnError(error);
+        this.doOnProblem(error);
     }
 
     render() {
-        if (!this.state.error) {
-            return this.props.children;
+        if (!this.state.problem) {
+            return <Context.Provider value={(e: unknown) => this.doOnProblem(e)}>{this.props.children}</Context.Provider>;
         }
 
         const t = i18next.t;
@@ -70,5 +79,5 @@ export class Problem extends PureComponent<ProblemProps, ProblemState> {
 
 export function ProblemInRouter() {
     const error = useRouteError() as Error;
-    return <Problem error={error} log={false} />;
+    return <Problem problem={error} log={false} />;
 }

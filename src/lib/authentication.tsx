@@ -1,7 +1,7 @@
 import type { Environment, EnvironmentVariant, NamedEnvironmentVariant } from '@/environments';
 import { environment as defaultEnvironment } from '@/environments';
 import type { RouteConfiguration } from '@/lib';
-import { Loading } from '@/pages';
+import { Loading, useProblemSink } from '@/pages';
 import { WebStorageStateStore } from 'oidc-client-ts';
 import type React from 'react';
 import { createContext, useContext, useEffect } from 'react';
@@ -31,38 +31,50 @@ function AuthenticationOutlet(props: AuthenticationOutletProps) {
     const auth = useAuth();
     const location = useLocation();
     const theme = useTheme();
+    const problemSink = useProblemSink();
 
     useEffect(() => {
-        if (!hasAuthParams() && !auth.isAuthenticated && !auth.activeNavigator && !auth.isLoading) {
-            // Try at first the silent version ensures no flickering for the user
-            // in case he still has a valid session at the IdP.
-            auth.signinSilent().then((u) => {
-                if (u) {
-                    console.log('Silent login was successful.');
-                    return;
-                }
-
-                // If there is no u:User object, this means the silent login was
-                // not successful. Now we're trying the redirect login...
-                console.log('Silent login was not successful, trying interactive...');
-                auth.signinRedirect({
-                    state: {
-                        // We're preserving the original location to redirect the user back in case it was
-                        // successful.
-                        location: location,
-                    },
-                    extraQueryParams: {
-                        // These are optional extra parameter the Engity IdP supports.
-
-                        // The user can click on cancel at the login dialog.
-                        cancel_redirect_uri: `${environmentVariantUriPrefix(props.environment, props.variant)}after-cancel`,
-                        // Take the color scheme (light|dark) with to the login page.
-                        color_scheme: theme.mode || 'normal',
-                    },
-                });
-            });
+        const authProblem = auth.error;
+        if (authProblem) {
+            problemSink(authProblem, 'Authorization context failed.');
+            return;
         }
-    }, [auth, props, location, theme.mode]);
+        if (!hasAuthParams() && !auth.isAuthenticated && !auth.activeNavigator && !auth.isLoading) {
+            (async () => {
+                try {
+                    // Try at first the silent version ensures no flickering for the user
+                    // in case he still has a valid session at the IdP.
+                    const u = await auth.signinSilent();
+                    if (u) {
+                        console.log('Silent login was successful.');
+                        return;
+                    }
+
+                    // If there is no u:User object, this means the silent login was
+                    // not successful. Now we're trying the redirect login...
+                    console.log('Silent login was not successful, trying interactive...');
+
+                    await auth.signinRedirect({
+                        state: {
+                            // We're preserving the original location to redirect the user back in case it was
+                            // successful.
+                            location: location,
+                        },
+                        extraQueryParams: {
+                            // These are optional extra parameter the Engity IdP supports.
+
+                            // The user can click on cancel at the login dialog.
+                            cancel_redirect_uri: `${environmentVariantUriPrefix(props.environment, props.variant)}after-cancel`,
+                            // Take the color scheme (light|dark) with to the login page.
+                            color_scheme: theme.mode || 'normal',
+                        },
+                    });
+                } catch (e) {
+                    console.error('DOH!', e);
+                }
+            })();
+        }
+    }, [auth, props, location, theme.mode, problemSink]);
 
     if (!auth.isAuthenticated) {
         return <Loading defaultTitle={true} visibilityDelay={true} />;
