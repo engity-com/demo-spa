@@ -1,9 +1,10 @@
 import './App.css';
 import { Breadcrumb, Header, SideBar, SideBarProvider, Theme } from '@/components/page';
-import { type RouteConfiguration, authenticationRouteConfigurations, resolveTitle, useResolvedRoutes } from '@/lib';
+import { authenticationRouteConfigurations, resolveTitle, type RouteConfiguration, useResolvedRoutes } from '@/lib';
 import { Problem, ProblemInRouter, routes as pageRoutes } from '@/pages';
+import { type RefObject, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Outlet, RouterProvider, createBrowserRouter } from 'react-router';
+import { createBrowserRouter, Outlet, RouterProvider } from 'react-router';
 
 function Heading() {
     const routes = useResolvedRoutes();
@@ -53,10 +54,23 @@ export const routes: RouteConfiguration[] = authenticationRouteConfigurations([
 
 export const router = createBrowserRouter(routes);
 
-export function App() {
+interface AppProps {
+    readonly problemSinkRef: RefObject<((e: unknown, msg?: string) => void) | null>;
+}
+
+export function App(props: AppProps) {
+    const problemRef = useRef<Problem | null>(null);
+
+    useEffect(() => {
+        props.problemSinkRef.current = (e: unknown, msg?: string) => problemRef.current?.doOnProblem(e, msg);
+        return () => {
+            props.problemSinkRef.current = null;
+        };
+    }, [props.problemSinkRef]);
+
     return (
         <Theme className='App' id='app'>
-            <Problem>
+            <Problem ref={problemRef}>
                 <RouterProvider router={router} />
             </Problem>
         </Theme>

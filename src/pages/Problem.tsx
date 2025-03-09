@@ -18,13 +18,17 @@ interface ProblemState {
     readonly problem?: unknown;
 }
 
+export interface WithProblemSink {
+    readonly doOnProblem: (e: unknown, msg?: string) => void;
+}
+
 export function useProblemSink() {
     const ctx = useContext<ProblemSink | undefined>(Context);
 
     return ctx || (() => undefined);
 }
 
-export class Problem extends PureComponent<ProblemProps, ProblemState> {
+export class Problem extends PureComponent<ProblemProps, ProblemState> implements WithProblemSink {
     constructor(props: ProblemProps) {
         super(props);
         this.state = {
@@ -33,7 +37,7 @@ export class Problem extends PureComponent<ProblemProps, ProblemState> {
         this.doWithProblem(this.props.problem);
     }
 
-    private doOnProblem(e: unknown, msg?: string) {
+    doOnProblem(e: unknown, msg?: string) {
         this.doWithProblem(e, msg);
         this.setState({
             ...this.state,
@@ -57,7 +61,7 @@ export class Problem extends PureComponent<ProblemProps, ProblemState> {
 
     render() {
         if (!this.state.problem) {
-            return <Context.Provider value={(e: unknown) => this.doOnProblem(e)}>{this.props.children}</Context.Provider>;
+            return <Context.Provider value={(e: unknown, msg?: string) => this.doOnProblem(e, msg)}>{this.props.children}</Context.Provider>;
         }
 
         const t = i18next.t;

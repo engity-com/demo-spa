@@ -2,7 +2,7 @@ import type { Environment, EnvironmentVariant, NamedEnvironmentVariant } from '@
 import { environment as defaultEnvironment } from '@/environments';
 import type { RouteConfiguration } from '@/lib';
 import { Loading, useProblemSink } from '@/pages';
-import { WebStorageStateStore } from 'oidc-client-ts';
+import { ErrorResponse, Log, WebStorageStateStore } from 'oidc-client-ts';
 import type React from 'react';
 import { createContext, useContext, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -35,19 +35,33 @@ function AuthenticationOutlet(props: AuthenticationOutletProps) {
 
     useEffect(() => {
         const authProblem = auth.error;
+        let silentLoginPossible = true;
         if (authProblem) {
-            problemSink(authProblem, 'Authorization context failed.');
-            return;
+            if (authProblem instanceof ErrorResponse && authProblem.error === 'interaction_required') {
+                // Workaround for oidc-client-ts as it does throw an exception on 'interaction_required' instead
+                // of simply be not successful, silently.
+                silentLoginPossible = false;
+            } else if (authProblem instanceof Error && authProblem.message === 'No matching state found in storage') {
+                // Workaround for oidc-client-ts as it does throw an exception if an item in storage cannot be found
+                // of simply be not successful, silently.
+                silentLoginPossible = false;
+            } else {
+                problemSink(authProblem, 'Authorization context failed.');
+                return;
+            }
         }
+
         if (!hasAuthParams() && !auth.isAuthenticated && !auth.activeNavigator && !auth.isLoading) {
             (async () => {
                 try {
-                    // Try at first the silent version ensures no flickering for the user
-                    // in case he still has a valid session at the IdP.
-                    const u = await auth.signinSilent();
-                    if (u) {
-                        console.log('Silent login was successful.');
-                        return;
+                    if (silentLoginPossible) {
+                        // Try at first the silent version ensures no flickering for the user
+                        // in case he still has a valid session at the IdP.
+                        const u = await auth.signinSilent();
+                        if (u) {
+                            console.log('Silent login was successful.');
+                            return;
+                        }
                     }
 
                     // If there is no u:User object, this means the silent login was
@@ -200,3 +214,6 @@ export function authenticationRouteConfigurations(children: RouteConfiguration[]
             }),
         );
 }
+
+Log.setLevel(Log.DEBUG);
+Log.setLogger(window.console);
