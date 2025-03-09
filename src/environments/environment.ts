@@ -1,4 +1,6 @@
-export const environment = {
+import type { Environment } from './type';
+
+export const environment: Environment = {
     production: false,
     clientRoot: 'https://local.engity.dev:4200/',
     variants: {

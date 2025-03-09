@@ -1,0 +1,73 @@
+@layer component {
+    .App {
+        min-height: 100vh;
+        @supports (min-height: 100dvh) {
+            min-height: 100dvh;
+        }
+    }
+}
+
+@layer base {
+    .App {
+        --header-size: calc(38px * var(--scaling));
+        --sidebar-width: calc(200px * var(--scaling));
+        --sidebar-animation-duration: 1s;
+        --sidebar-animation: var(--sidebar-animation-duration) ease;
+        --sidebar-spacing-top: 0;
+
+        & > aside {
+            width: var(--sidebar-width);
+            top: 0;
+            bottom: 0;
+            left: 0;
+            margin: 0;
+            padding-top: var(--sidebar-spacing-top);
+            position: fixed;
+            transition: left var(--sidebar-animation);
+
+            &[data-state="collapsed"] {
+                left: calc(calc(var(--sidebar-width) + var(--section-border-size)) * -1);
+
+                & + * {
+                    margin-left: 0;
+                }
+            }
+
+            @mixin max-responsive {
+                & {
+                    --sidebar-spacing-top: var(--header-size);
+                }
+            }
+        }
+
+        & > .container {
+            transition: margin-left var(--sidebar-animation);
+            margin-left: calc(var(--sidebar-width) - calc(1px * var(--scaling)));
+
+            @mixin max-responsive {
+                & {
+                    transition: none;
+                    margin-left: 0;
+                }
+            }
+
+            & > main {
+                padding: var(--content-padding);
+                overflow: auto;
+
+                & > *:first-child {
+                    margin-top: 0;
+                }
+            }
+        }
+    }
+}
+
+@layer component {
+    .App > .container > .Breadcrumb {
+        padding: var(--content-padding);
+        @mixin min-responsive {
+            display: none;
+        }
+    }
+}

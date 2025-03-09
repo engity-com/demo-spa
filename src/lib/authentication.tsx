@@ -1,0 +1,219 @@
+import type { Environment, EnvironmentVariant, NamedEnvironmentVariant } from '@/environments';
+import { environment as defaultEnvironment } from '@/environments';
+import type { RouteConfiguration } from '@/lib';
+import { Loading, useProblemSink } from '@/pages';
+import { ErrorResponse, Log, WebStorageStateStore } from 'oidc-client-ts';
+import type React from 'react';
+import { createContext, useContext, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
+import { AuthProvider, hasAuthParams, useAuth } from 'react-oidc-context';
+import { type Location, Navigate, Outlet, useLocation } from 'react-router';
+import { useTheme } from '../components/page';
+
+interface ContextState {
+    variant: NamedEnvironmentVariant;
+}
+const Context = createContext<ContextState | undefined>(undefined);
+
+interface AuthenticationOutletProps {
+    readonly environment: Environment;
+    readonly variant: NamedEnvironmentVariant;
+}
+
+function environmentVariantUriPrefix(environment: Environment, variant: EnvironmentVariant): string {
+    if (!variant.subPath) {
+        return environment.clientRoot;
+    }
+    return `${environment.clientRoot}${variant.subPath}/`;
+}
+
+function AuthenticationOutlet(props: AuthenticationOutletProps) {
+    const auth = useAuth();
+    const location = useLocation();
+    const theme = useTheme();
+    const problemSink = useProblemSink();
+
+    useEffect(() => {
+        const authProblem = auth.error;
+        let silentLoginPossible = true;
+        if (authProblem) {
+            if (authProblem instanceof ErrorResponse && authProblem.error === 'interaction_required') {
+                // Workaround for oidc-client-ts as it does throw an exception on 'interaction_required' instead
+                // of simply be not successful, silently.
+                silentLoginPossible = false;
+            } else if (authProblem instanceof Error && authProblem.message === 'No matching state found in storage') {
+                // Workaround for oidc-client-ts as it does throw an exception if an item in storage cannot be found
+                // of simply be not successful, silently.
+                silentLoginPossible = false;
+            } else {
+                problemSink(authProblem, 'Authorization context failed.');
+                return;
+            }
+        }
+
+        if (!hasAuthParams() && !auth.isAuthenticated && !auth.activeNavigator && !auth.isLoading) {
+            (async () => {
+                try {
+                    if (silentLoginPossible) {
+                        // Try at first the silent version ensures no flickering for the user
+                        // in case he still has a valid session at the IdP.
+                        const u = await auth.signinSilent();
+                        if (u) {
+                            console.log('Silent login was successful.');
+                            return;
+                        }
+                    }
+
+                    // If there is no u:User object, this means the silent login was
+                    // not successful. Now we're trying the redirect login...
+                    console.log('Silent login was not successful, trying interactive...');
+
+                    await auth.signinRedirect({
+                        state: {
+                            // We're preserving the original location to redirect the user back in case it was
+                            // successful.
+                            location: location,
+                        },
+                        extraQueryParams: {
+                            // These are optional extra parameter the Engity IdP supports.
+
+                            // The user can click on cancel at the login dialog.
+                            cancel_redirect_uri: `${environmentVariantUriPrefix(props.environment, props.variant)}after-cancel`,
+                            // Take the color scheme (light|dark) with to the login page.
+                            color_scheme: theme.mode || 'normal',
+                        },
+                    });
+                } catch (e) {
+                    console.error('DOH!', e);
+                }
+            })();
+        }
+    }, [auth, props, location, theme.mode, problemSink]);
+
+    if (!auth.isAuthenticated) {
+        return <Loading defaultTitle={true} visibilityDelay={true} />;
+    }
+
+    return <Outlet />;
+}
+
+interface AuthenticationProps {
+    readonly children?: React.ReactNode;
+    readonly environment: Environment;
+    readonly variant: NamedEnvironmentVariant;
+}
+
+function Authentication(props: AuthenticationProps) {
+    const prefix = environmentVariantUriPrefix(props.environment, props.variant);
+    const store = new WebStorageStateStore({
+        prefix: `${props.variant.key}.`,
+        store: window.localStorage,
+    });
+    const { i18n } = useTranslation();
+
+    return (
+        <Context.Provider value={{ variant: props.variant }}>
+            <AuthProvider
+                authority={props.variant.stsAuthority}
+                client_id={props.variant.clientId}
+                stateStore={store}
+                userStore={store}
+                // Ensures the authentication page also uses our picks.
+                ui_locales={i18n?.language}
+                scope='openid profile email contacts offline'
+                redirect_uri={`${prefix}after-login`}
+                silent_redirect_uri={`${prefix}after-silent-login`}
+                post_logout_redirect_uri={`${prefix}after-logout`}
+                // Ensures to be automatic renew the tokens before it will expire.
+                // Note: By default this is already set to `true`; we keep it here just for documentation.
+                automaticSilentRenew={true}
+                // @ts-ignore
+                internalVariant={props.variant}
+            >
+                <Outlet />
+            </AuthProvider>
+        </Context.Provider>
+    );
+}
+
+export function useEnvironmentVariant() {
+    return useContext(Context)?.variant;
+}
+
+interface CallbackProps {
+    readonly environment: Environment;
+    readonly variant: NamedEnvironmentVariant;
+}
+
+function AfterLogin(props: CallbackProps) {
+    if (!hasAuthParams()) {
+        return <Navigate to={`/${props.variant.subPath || ''}`} />;
+    }
+
+    const auth = useAuth();
+    if (auth.isLoading) {
+        return <Loading defaultTitle={true} visibilityDelay={true} />;
+    }
+
+    // @ts-ignore
+    const location: Location = auth?.user?.state?.location;
+    if (!location) {
+        return <Navigate to={`/${props.variant.subPath || ''}`} />;
+    }
+
+    return <Navigate to={location} />;
+}
+
+function AfterCancelAndLogout(props: CallbackProps) {
+    if (props.environment.afterLogoutUrl) {
+        // As it does not make sense to redirect to our application,
+        // because it does only work if logged-in, we redirect on cancel
+        // to our homepage.
+        document.location.href = props.environment.afterLogoutUrl;
+    }
+
+    // If this property is not as (as on local or green) trigger again the login,
+    // by navigating to the root page...
+    // This is better for local testing scenarios.
+    return <Navigate to={`/${props.variant.subPath || ''}`} />;
+}
+
+export function authenticationRouteConfigurations(children: RouteConfiguration[], environment?: Environment | undefined): RouteConfiguration[] {
+    const env = environment || defaultEnvironment;
+    return Object.entries(env.variants)
+        .map(
+            ([key, v]): NamedEnvironmentVariant => ({
+                ...v,
+                subPath: v.subPath || '',
+                key: key,
+            }),
+        )
+        .map(
+            (v): RouteConfiguration => ({
+                path: `${v.subPath || ''}`,
+                element: <Authentication environment={env} variant={v} />,
+                children: [
+                    {
+                        path: 'after-login',
+                        element: <AfterLogin variant={v} environment={env} />,
+                    },
+                    {
+                        path: 'after-cancel',
+                        element: <AfterCancelAndLogout variant={v} environment={env} />,
+                    },
+                    {
+                        path: 'after-logout',
+                        element: <AfterCancelAndLogout variant={v} environment={env} />,
+                    },
+                    {
+                        path: '*',
+                        children: children,
+                        element: <AuthenticationOutlet variant={v} environment={env} />,
+                    },
+                ],
+            }),
+        );
+}
+
+Log.setLevel(Log.DEBUG);
+Log.setLogger(window.console);

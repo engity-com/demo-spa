@@ -1,13 +1,8 @@
 /dist
-/.angular
 /node_modules
 /tmp
+/var
+/.cache
 /.vscode
-npm-debug.log
-yarn-error.log
-testem.log
 .DS_Store
 Thumbs.db
-
-.nx/cache
-.nx/workspace-data
