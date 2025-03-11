@@ -35,7 +35,11 @@ function AuthenticationOutlet(props: AuthenticationOutletProps) {
     useEffect(() => {
         let silentLoginPossible = true;
         if (auth.error) {
-            if (auth.errorContext?.kind === 'renewSilent' || auth.errorContext?.kind === 'signinSilent') {
+            if (
+                auth.errorContext?.kind === 'renewSilent' ||
+                auth.errorContext?.kind === 'signinSilent' ||
+                auth.errorContext?.kind === 'signinCallback'
+            ) {
                 // While silent renew or signinSilent there can be errors, if so, we silently ignore them here,
                 // because following we're trying the regular login...
                 silentLoginPossible = false;
