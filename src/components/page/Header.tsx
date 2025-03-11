@@ -9,7 +9,7 @@ import { Globe, LogOut, Star } from 'lucide-react';
 import type React from 'react';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useAuth } from 'react-oidc-context';
+import { useAuth } from '@echocat/react-oidc-context';
 
 const scrollTopThreshold = 1;
 

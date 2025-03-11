@@ -1,14 +1,14 @@
+import { useTheme } from '@/components/page';
 import type { Environment, EnvironmentVariant, NamedEnvironmentVariant } from '@/environments';
 import { environment as defaultEnvironment } from '@/environments';
 import type { RouteConfiguration } from '@/lib';
 import { Loading, useProblemSink } from '@/pages';
-import { ErrorResponse, Log, WebStorageStateStore } from 'oidc-client-ts';
+import { AuthProvider, hasAuthParams, useAuth } from '@echocat/react-oidc-context';
+import { Log, WebStorageStateStore } from 'oidc-client-ts';
 import type React from 'react';
 import { createContext, useContext, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { AuthProvider, hasAuthParams, useAuth } from 'react-oidc-context';
-import { type Location, Navigate, Outlet, useLocation } from 'react-router';
-import { useTheme } from '../components/page';
+import { type Location, Navigate, Outlet } from 'react-router';
 
 interface ContextState {
     variant: NamedEnvironmentVariant;
@@ -29,24 +29,18 @@ function environmentVariantUriPrefix(environment: Environment, variant: Environm
 
 function AuthenticationOutlet(props: AuthenticationOutletProps) {
     const auth = useAuth();
-    const location = useLocation();
     const theme = useTheme();
     const problemSink = useProblemSink();
 
     useEffect(() => {
-        const authProblem = auth.error;
         let silentLoginPossible = true;
-        if (authProblem) {
-            if (authProblem instanceof ErrorResponse && authProblem.error === 'interaction_required') {
-                // Workaround for oidc-client-ts as it does throw an exception on 'interaction_required' instead
-                // of simply be not successful, silently.
-                silentLoginPossible = false;
-            } else if (authProblem instanceof Error && authProblem.message === 'No matching state found in storage') {
-                // Workaround for oidc-client-ts as it does throw an exception if an item in storage cannot be found
-                // of simply be not successful, silently.
+        if (auth.error) {
+            if (auth.errorContext?.kind === 'renewSilent' || auth.errorContext?.kind === 'signinSilent') {
+                // While silent renew or signinSilent there can be errors, if so, we silently ignore them here,
+                // because following we're trying the regular login...
                 silentLoginPossible = false;
             } else {
-                problemSink(authProblem, 'Authorization context failed.');
+                problemSink(auth.error, `Authorization context failed within ${auth.errorContext?.kind}.`);
                 return;
             }
         }
@@ -55,9 +49,12 @@ function AuthenticationOutlet(props: AuthenticationOutletProps) {
             (async () => {
                 try {
                     if (silentLoginPossible) {
+                        const prefix = environmentVariantUriPrefix(props.environment, props.variant);
                         // Try at first the silent version ensures no flickering for the user
                         // in case he still has a valid session at the IdP.
-                        const u = await auth.signinSilent();
+                        const u = await auth.signinSilent({
+                            redirect_uri: `${prefix}after-silent-login`,
+                        });
                         if (u) {
                             console.log('Silent login was successful.');
                             return;
@@ -88,7 +85,7 @@ function AuthenticationOutlet(props: AuthenticationOutletProps) {
                 }
             })();
         }
-    }, [auth, props, location, theme.mode, problemSink]);
+    }, [props, theme.mode, auth, problemSink]);
 
     if (!auth.isAuthenticated) {
         return <Loading defaultTitle={true} visibilityDelay={true} />;
@@ -127,8 +124,6 @@ function Authentication(props: AuthenticationProps) {
                 // Ensures to be automatic renew the tokens before it will expire.
                 // Note: By default this is already set to `true`; we keep it here just for documentation.
                 automaticSilentRenew={true}
-                // @ts-ignore
-                internalVariant={props.variant}
             >
                 <Outlet />
             </AuthProvider>
@@ -146,11 +141,14 @@ interface CallbackProps {
 }
 
 function AfterLogin(props: CallbackProps) {
-    if (!hasAuthParams()) {
+    const auth = useAuth();
+
+    // If there are not authParams and/or there is an error redirect to root
+    // all this stuff will be handled there.
+    if (!hasAuthParams() || auth.error) {
         return <Navigate to={`/${props.variant.subPath || ''}`} />;
     }
 
-    const auth = useAuth();
     if (auth.isLoading) {
         return <Loading defaultTitle={true} visibilityDelay={true} />;
     }
@@ -165,11 +163,11 @@ function AfterLogin(props: CallbackProps) {
 }
 
 function AfterCancelAndLogout(props: CallbackProps) {
-    if (props.environment.afterLogoutUrl) {
+    if (props.variant.afterLogoutUrl) {
         // As it does not make sense to redirect to our application,
         // because it does only work if logged-in, we redirect on cancel
         // to our homepage.
-        document.location.href = props.environment.afterLogoutUrl;
+        document.location.href = props.variant.afterLogoutUrl;
     }
 
     // If this property is not as (as on local or green) trigger again the login,
@@ -215,5 +213,6 @@ export function authenticationRouteConfigurations(children: RouteConfiguration[]
         );
 }
 
-Log.setLevel(Log.DEBUG);
+// Let's enable the logging framework of oidc-client-ts.
+Log.setLevel(Log.INFO);
 Log.setLogger(window.console);

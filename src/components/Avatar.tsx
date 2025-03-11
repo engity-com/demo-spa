@@ -1,7 +1,7 @@
 import './Avatar.css';
 import { Avatar as RAvatar } from '@radix-ui/themes';
 import { useTranslation } from 'react-i18next';
-import { type AuthContextProps, useAuth } from 'react-oidc-context';
+import { type AuthContextProps, useAuth } from '@echocat/react-oidc-context';
 
 interface AvatarProps {
     readonly src?: string | undefined;
