@@ -13,6 +13,7 @@ import { type Location, Navigate, Outlet } from 'react-router';
 interface ContextState {
     variant: NamedEnvironmentVariant;
 }
+
 const Context = createContext<ContextState | undefined>(undefined);
 
 interface AuthenticationOutletProps {
@@ -71,14 +72,19 @@ function AuthenticationOutlet(props: AuthenticationOutletProps) {
                             // successful.
                             location: location,
                         },
-                        extraQueryParams: {
+                        extraQueryParams: stripEmptyParameters({
                             // These are optional extra parameter the Engity IdP supports.
 
+                            // Tip: The conditional expression is to ensure we only set these parameters
+                            // if they're present.
+
                             // The user can click on cancel at the login dialog.
-                            cancel_redirect_uri: `${environmentVariantUriPrefix(props.environment, props.variant)}after-cancel`,
+                            cancel_redirect_uri:
+                                props.variant.afterLogoutUrl && `${environmentVariantUriPrefix(props.environment, props.variant)}after-cancel`,
+
                             // Take the color scheme (light|dark) with to the login page.
-                            color_scheme: theme.mode || 'normal',
-                        },
+                            color_scheme: theme.mode,
+                        }),
                     });
                 } catch (e) {
                     console.error('DOH!', e);
@@ -211,6 +217,13 @@ export function authenticationRouteConfigurations(children: RouteConfiguration[]
                 ],
             }),
         );
+}
+
+function stripEmptyParameters(v: Record<string, string | number | boolean | null | undefined>) {
+    return Object.fromEntries(Object.entries(v).filter(([_, v]) => v !== undefined && v !== null && v !== '')) as Record<
+        string,
+        string | number | boolean
+    >;
 }
 
 // Let's enable the logging framework of oidc-client-ts.
