@@ -1,26 +1,24 @@
 {
-    "compileOnSave": false,
-    "compilerOptions": {
-        "baseUrl": "./",
-        "outDir": "./dist/out-tsc",
-        "sourceMap": true,
-        "declaration": false,
-        "module": "es2020",
-        "moduleResolution": "node",
-        "emitDecoratorMetadata": true,
-        "experimentalDecorators": true,
-        "importHelpers": true,
-        "target": "es2022",
-        "typeRoots": ["node_modules/@types"],
-        "lib": ["es2020", "dom"]
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"]
     },
-    "angularCompilerOptions": {
-        "fullTemplateTypeCheck": true,
-        "strictTemplates": true,
-        "strictInjectionParameters": true
-    },
-    "files": [
-        "src/main.ts",
-        "src/polyfills.ts"
-    ]
+    "lib": ["DOM", "ES2021"],
+    "jsx": "react-jsx",
+    "target": "ES2021",
+    "noEmit": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "useDefineForClassFields": true,
+    "module": "ESNext",
+    "isolatedModules": true,
+    "resolveJsonModule": true,
+    "moduleResolution": "Bundler",
+    "allowImportingTsExtensions": true,
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true
+  },
+  "include": ["app", "lib"]
 }

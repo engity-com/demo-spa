@@ -1,0 +1,101 @@
+@layer component {
+    aside.SideBar {
+        --spacing: var(--space-2);
+
+        display: flex;
+        background-color: oklch(from var(--gray-2) l c h / 0.8);
+        backdrop-filter: saturate(8) blur(5px);
+        border-right: var(--section-border);
+        width: calc(var(--sidebar-width) - var(--section-border-size));
+        z-index: 1;
+
+        &:focus-visible,
+        &:focus {
+            outline: none;
+        }
+
+        & > .container {
+            margin: var(--space-2);
+            @mixin max-responsive {
+                & {
+                    margin-top: 0;
+                }
+            }
+
+            overflow-y: auto;
+            @mixin scrollbar-thin;
+
+            display: grid;
+            grid-template-columns: 1fr;
+            grid-template-rows: 1fr auto;
+
+            & > .content {
+                & .about {
+                    display: flex;
+                    column-gap: var(--space-3);
+                    height: calc(var(--header-size) - var(--spacing));
+                    align-items: center;
+                    padding: 0 var(--spacing);
+                    @mixin navigation-link;
+
+                    & .logo {
+                        height: calc(var(--font-size-5) * 1.2);
+                    }
+
+                    & .title {
+                        padding-top: calc(1px * var(--scaling));
+                        margin-bottom: calc(-1px * var(--scaling));
+                    }
+
+                    @mixin max-responsive {
+                        & {
+                            display: none;
+                        }
+                    }
+                }
+
+                & .rt-Separator {
+                    margin: var(--space-2) 0 var(--space-5) 0;
+                    background: linear-gradient(90deg, var(--accent-a2), var(--accent-a6), var(--accent-a2));
+                }
+
+                & > nav {
+                    & a {
+                        display: flex;
+                        flex-direction: row;
+                        align-items: center;
+                        gap: var(--space-2);
+                        padding: var(--space-1) var(--space-2);
+                        @mixin navigation-link;
+
+                        &.active {
+                            background: var(--gray-4);
+                            color: var(--color-foreground);
+
+                            &::before {
+                                border-radius: 1px;
+                                content: "";
+                                width: 2px;
+                                height: 0.8em;
+                                display: block;
+                                position: absolute;
+                                margin-left: calc(var(--space-2) * -0.6);
+                                background-color: var(--accent-9);
+                                color: var(--accent-contrast);
+                            }
+                        }
+                    }
+
+                    & > * > ul {
+                        margin: 0;
+                        padding: 0;
+                        list-style: none;
+                        display: grid;
+                        min-width: max-content;
+                        gap: var(--space-1);
+                    }
+                }
+            }
+        }
+    }
+}

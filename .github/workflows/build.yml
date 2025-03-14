@@ -8,7 +8,6 @@ on:
 jobs:
   build:
     name: Build
-    concurrency: ci-${{ github.ref }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -16,17 +15,12 @@ jobs:
 
       - name: Install
         run: |
+          node --version
           npm ci
 
-      - name: "Build: Red"
+      - name: "Build"
         run: |
-          npm run build:red
-          mv dist/App dist/app-red
-
-      - name: "Build: Green"
-        run: |
-          npm run build:green
-          mv dist/App dist/app-green
+          npm run build:production
 
       - name: "Upload artifacts"
         uses: actions/upload-artifact@v4
@@ -36,7 +30,6 @@ jobs:
 
   deploy-green:
     name: "Deploy: green"
-    concurrency: ci-${{ github.ref }}
     runs-on: ubuntu-latest
     needs: build
     if: github.ref != 'refs/heads/main'
@@ -54,11 +47,10 @@ jobs:
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          command: pages deploy --project-name=demo-engity-green dist/app-green
+          command: pages deploy --project-name=demo-engity-green dist/green
 
   deploy-red:
     name: "Deploy: red"
-    concurrency: ci-${{ github.ref }}
     runs-on: ubuntu-latest
     needs: build
     if: github.ref == 'refs/heads/main'
@@ -76,5 +68,4 @@ jobs:
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          command: pages deploy --project-name=demo-engity-red dist/app-red
-
+          command: pages deploy --project-name=demo-engity-red dist/red

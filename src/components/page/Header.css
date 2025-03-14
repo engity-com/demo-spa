@@ -1,0 +1,172 @@
+:root {
+    --transition: 1s ease-out;
+}
+
+@layer base {
+    *,
+    *::before,
+    *::after {
+        scroll-margin-top: calc(60px * var(--scaling));
+    }
+}
+
+@layer component {
+    header {
+        --avatar-height: calc(38px * var(--scaling));
+        --active-background: oklch(from var(--gray-4) l c h / 0.8);
+
+        border-bottom: var(--section-border-size) solid transparent;
+        border-left: var(--section-border-size) solid transparent;
+
+        &[data-scroll-over="true"] {
+            border-bottom-color: var(--section-border-color);
+            border-left-color: oklch(from var(--gray-2) l c h / 0.4);
+            background-color: oklch(from var(--gray-2) l c h / 0.8);
+            backdrop-filter: saturate(8) blur(5px);
+        }
+
+        display: grid;
+        min-width: max-content;
+        grid-template-columns: 1fr auto;
+        grid-template-rows: auto;
+        gap: 1.5em;
+        align-items: center;
+        transition: border var(--transition), background var(--transition);
+        z-index: 2;
+
+        top: 0;
+        margin: 0 0 0 calc(var(--section-border-size) * -0.5);
+        padding: var(--space-1);
+        position: sticky;
+
+        & > * {
+            height: var(--header-size);
+        }
+
+        & > * > .about {
+            display: none;
+            align-items: center;
+            gap: 1em;
+            @mixin navigation-link;
+            padding: calc(8px * var(--scaling));
+        }
+
+        @mixin max-responsive {
+            & {
+                top: 0;
+                margin: 0;
+
+                & > * > .about {
+                    display: flex;
+                    min-width: calc(112px * var(--scaling));
+                }
+
+                & > * > .Breadcrumb {
+                    &::before {
+                        content: "|";
+                        transition: color var(--transition);
+                        color: var(--gray-10);
+                    }
+
+                    @mixin max-responsive {
+                        display: none;
+                    }
+                }
+            }
+        }
+
+        & > * > * {
+            display: flex;
+            align-items: center;
+        }
+
+        & .logo {
+            height: calc(var(--font-size-5) * 1.2);
+        }
+        & .title,
+        & .Breadcrumb {
+            padding-top: calc(1px * var(--scaling));
+            margin-bottom: calc(-1px * var(--scaling));
+            white-space: nowrap;
+        }
+
+        & button:has(&.hamburger),
+        & button:has(.Avatar) {
+            padding: 0;
+        }
+
+        & button:has(.Avatar) {
+            border-radius: 100%;
+        }
+
+        & .hamburger {
+            height: calc(32px * var(--scaling));
+            margin: -4px;
+            aspect-ratio: 1 / 1;
+            -webkit-tap-highlight-color: transparent;
+            transition: transform 400ms;
+            -moz-user-select: none;
+            -webkit-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            & .line {
+                fill: none;
+                transition: stroke-dasharray 400ms, stroke-dashoffset 400ms;
+                stroke: var(--color-foreground);
+                stroke-width: 5.5;
+                stroke-linecap: round;
+            }
+            & .top {
+                stroke-dasharray: 40 82;
+            }
+            & .bottom {
+                stroke-dasharray: 40 82;
+            }
+
+            &[data-state="expanded"] {
+                transform: rotate(180deg);
+                & .top {
+                    stroke-dasharray: 14 82;
+                    stroke-dashoffset: -72px;
+                }
+                & .bottom {
+                    stroke-dasharray: 14 82;
+                    stroke-dashoffset: -72px;
+                }
+            }
+        }
+
+        & button {
+            padding: var(--space-1);
+            margin: 0;
+            background: transparent;
+            border: 0;
+            border-radius: var(--radius-2);
+
+            &:hover {
+                background-color: var(--accent-9);
+                color: var(--accent-contrast);
+                & .line {
+                    stroke: var(--accent-contrast);
+                }
+            }
+
+            &:focus-visible {
+                outline: calc(var(--section-border-size) * 1.5) solid var(--section-border-color);
+                border-radius: var(--radius-1);
+            }
+        }
+    }
+
+    body:has(aside.SideBar[data-state="expanded"]) {
+        @mixin max-responsive {
+            & header[data-scroll-over="false"] {
+                & > * > .Breadcrumb {
+                    &::before {
+                        color: transparent;
+                    }
+                }
+            }
+        }
+    }
+}

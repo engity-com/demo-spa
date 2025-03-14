@@ -1,0 +1,133 @@
+@layer base, page, component;
+
+@layer base {
+    @import "@radix-ui/themes/components.css";
+    @import "@radix-ui/themes/utilities.css";
+    @import "@radix-ui/themes/tokens/base.css";
+    @import "@radix-ui/themes/tokens/colors/indigo.css";
+    @import "@radix-ui/themes/tokens/colors/gray.css";
+    @import "@radix-ui/themes/tokens/colors/green.css";
+    @import "@radix-ui/themes/tokens/colors/red.css";
+
+    :root {
+        --section-border-size: 1px;
+        --section-border-color: var(--gray-a7);
+        --section-border: var(--section-border-size) solid var(--section-border-color);
+        --base-padding: 16px;
+        --content-padding: var(--base-padding);
+    }
+
+    :root,
+    .light,
+    .light-theme {
+        --engity-main: #ffc000;
+        --engity-secondary: #284696;
+        --color-background: #fff;
+        --color-foreground: var(--gray-12);
+    }
+
+    .dark,
+    .dark-theme {
+        --engity-secondary: #77a4ff;
+        --color-background: #111;
+    }
+
+    .radix-themes {
+        --font-size-1: calc(10px * var(--scaling));
+        --font-size-2: calc(12px * var(--scaling));
+        --font-size-3: calc(14px * var(--scaling));
+        --font-size-4: calc(16px * var(--scaling));
+        --font-size-5: calc(18px * var(--scaling));
+        --font-size-6: calc(22px * var(--scaling));
+        --font-size-7: calc(26px * var(--scaling));
+        --font-size-8: calc(36px * var(--scaling));
+        --font-size-9: calc(60px * var(--scaling));
+        --cursor-button: var(--cursor-link);
+    }
+
+    :root {
+        fill: var(--color-foreground);
+    }
+
+    html,
+    body {
+        margin: 0;
+        padding: 0;
+    }
+
+    body {
+        background-attachment: fixed;
+        background-size: 100% 100%;
+        background-position: center;
+        background-image: url("assets/background.svg");
+        background-color: var(--color-background);
+    }
+    @supports (-webkit-touch-callout: none) {
+        /* This is an ugly workaround because iOS Safari has a problem with
+           SVG images and background-attachment: fixed; therefore simply
+           deactivate it there. */
+        body {
+            background: var(--color-background);
+        }
+    }
+
+    .logo-with-text_svg__secondary,
+    .logo-without-spacing_svg__secondary {
+        fill: var(--engity-secondary);
+    }
+    a:hover:has(.logo) {
+        & .logo-with-text_svg__secondary,
+        & .logo-without-spacing_svg__secondary {
+            fill: var(--accent-contrast);
+        }
+    }
+
+    .logo-with-text_svg__primary,
+    .logo-without-spacing_svg__primary {
+        fill: var(--engity-main);
+    }
+
+    button,
+    a,
+    [role="menuitem"],
+    [role="menuitemradio"] {
+        cursor: var(--cursor-link);
+    }
+
+    [disabled],
+    [data-disabled] {
+        cursor: var(--cursor-disabled);
+    }
+
+    .navigator-height-100 {
+        height: 100vh;
+        @supports (height: 100dvh) {
+            height: 100dvh;
+        }
+    }
+    .navigator-height-75 {
+        height: 75vh;
+        @supports (height: 75dvh) {
+            height: 75dvh;
+        }
+    }
+    .navigator-height-50 {
+        height: 50vh;
+        @supports (height: 50dvh) {
+            height: 50dvh;
+        }
+    }
+
+    code pre {
+        margin: 0;
+    }
+
+    .rt-CalloutText {
+        & a {
+            text-decoration: underline;
+        }
+        & .rt-Text:where([data-accent-clor]) {
+            color: var(--accent-a11);
+        }
+    }
+}

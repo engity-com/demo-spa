@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="100%" height="100%" viewBox="0 0 1920 1080" preserveAspectRatio="none" version="1.1" xmlns="http://www.w3.org/2000/svg">
+    <style>
+        #Group {
+            opacity: 0.3;
+        }
+        @media (prefers-color-scheme: dark) {
+            #Group {
+                opacity: 0.08;
+            }
+        }
+        /* This is an ugly workaround because iOS Safari has a problem with
+           feTurbulence, so we better disable this on iOS with this query,
+           which only iOS Safari understands. */
+        @supports (-webkit-touch-callout: none) {
+            #noise {
+                display: none;
+                filter: none !important;
+            }
+        }
+    </style>
+    <filter id="noiseFilter">
+        <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="999" stitchTiles="stitch" />
+    </filter>
+    <defs>
+        <radialGradient id="radial1" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="matrix(-4.48639e-13,1411.8,-1438.69,-6.63615e-13,718.542,403.8)">
+            <stop offset="0" style="stop-color:#404c40;stop-opacity:1"/>
+            <stop offset="1" style="stop-color:#c4c4c4;stop-opacity:1"/>
+        </radialGradient>
+        <radialGradient id="radial2" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="matrix(-3.87064e-13,1101.6,-1240.61,-5.17546e-13,1336.9,968.018)">
+            <stop offset="0" style="stop-color:#5c6c78;stop-opacity:0.79"/>
+            <stop offset="1" style="stop-color:#c4c4c4;stop-opacity:0.79"/>
+        </radialGradient>
+        <radialGradient id="radial3" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="matrix(-3.07062e-13,1120.21,-985.038,-5.26745e-13,619.202,304.292)">
+            <stop offset="0" style="stop-color:#7d655c;stop-opacity:0.54"/>
+            <stop offset="1" style="stop-color:#c4c4c4;stop-opacity:0.54"/>
+        </radialGradient>
+    </defs>
+
+    <g id="Group" opacity="0.2">
+        <path d="M718.542,1815.6c794.565,0 1438.69,-632.087 1438.69,-1411.8c-0,-779.713 -644.125,-1411.8 -1438.69,-1411.8c-794.565,-0 -1438.69,632.085 -1438.69,1411.8c0,779.715 644.123,1411.8 1438.69,1411.8Z" style="fill:url(#radial1);fill-rule:nonzero;"/>
+        <path d="M1336.89,2069.62c685.17,0 1240.61,-493.2 1240.61,-1101.6c0,-608.4 -555.438,-1101.6 -1240.61,-1101.6c-685.17,0 -1240.61,493.203 -1240.61,1101.6c-0,608.397 555.438,1101.6 1240.61,1101.6Z" style="fill:url(#radial2);fill-rule:nonzero;"/>
+        <path d="M619.202,1424.5c544.022,0 985.038,-501.536 985.038,-1120.21c0,-618.677 -441.016,-1120.21 -985.038,-1120.21c-544.022,0 -985.038,501.536 -985.038,1120.21c-0,618.676 441.017,1120.21 985.038,1120.21Z" style="fill:url(#radial3);fill-rule:nonzero;"/>
+        <rect width="100%" height="100%" filter='url(#noiseFilter)' />
+    </g>
+</svg>

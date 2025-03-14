@@ -1,0 +1,11 @@
+@layer base {
+    :root {
+        --avatar-height: calc(48px * var(--scaling));
+    }
+}
+
+@layer component {
+    .Avatar {
+        height: var(--avatar-height);
+    }
+}

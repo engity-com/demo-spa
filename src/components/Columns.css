@@ -1,0 +1,45 @@
+@layer component {
+    ul.Columns {
+        list-style: none;
+        padding: 0;
+        display: grid;
+        flex-direction: row;
+        gap: var(--space-3);
+
+        &[data-columns="2"] {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            @mixin max-responsive-s {
+                & {
+                    grid-template-columns: minmax(0, 1fr);
+                }
+            }
+        }
+
+        &[data-columns="3"] {
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            @mixin max-responsive {
+                & {
+                    grid-template-columns: minmax(0, 1fr);
+                }
+            }
+        }
+
+        &[data-columns="4"] {
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            @mixin max-responsive-x {
+                & {
+                    grid-template-columns: repeat(2, minmax(0, 1fr));
+                }
+            }
+            @mixin max-responsive-s {
+                & {
+                    grid-template-columns: minmax(0, 1fr);
+                }
+            }
+        }
+
+        & > li {
+            margin: 0;
+        }
+    }
+}
