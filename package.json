@@ -46,7 +46,7 @@
     "@csstools/postcss-cascade-layers": "^5.0.1",
     "@rsbuild/core": "1.2.19",
     "@rsbuild/plugin-basic-ssl": "1.1.1",
-    "@rsbuild/plugin-react": "1.1.0",
+    "@rsbuild/plugin-react": "1.1.1",
     "@rsbuild/plugin-svgr": "1.0.6",
     "@tailwindcss/postcss": "4.0.6",
     "@types/node": "22.13.2",
