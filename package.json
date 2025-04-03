@@ -52,7 +52,7 @@
     "@tailwindcss/postcss": "4.0.17",
     "@types/node": "22.14.0",
     "@types/react": "19.0.12",
-    "@types/react-dom": "19.0.4",
+    "@types/react-dom": "19.1.1",
     "cross-env": "7.0.3",
     "postcss": "^8.5.3",
     "postcss-inline-svg": "6.0.0",
