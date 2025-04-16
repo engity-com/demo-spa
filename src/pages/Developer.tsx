@@ -5,7 +5,7 @@ import { Info } from 'lucide-react';
 import type { User, UserProfile } from 'oidc-client-ts';
 import { type ReactNode, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
-import { useAuth } from '@echocat/react-oidc-context';
+import { useAuth } from 'react-oidc-context';
 import { stringify as stringifyUuid } from 'uuid';
 
 interface ActionsProps {
