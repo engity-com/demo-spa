@@ -3,7 +3,7 @@ import type { Environment, EnvironmentVariant, NamedEnvironmentVariant } from '@
 import { environment as defaultEnvironment } from '@/environments';
 import type { RouteConfiguration } from '@/lib';
 import { Loading, useProblemSink } from '@/pages';
-import { AuthProvider, hasAuthParams, useAuth } from '@echocat/react-oidc-context';
+import { AuthProvider, hasAuthParams, useAuth } from 'react-oidc-context';
 import { Log, WebStorageStateStore } from 'oidc-client-ts';
 import type React from 'react';
 import { createContext, useContext, useEffect } from 'react';
@@ -48,47 +48,43 @@ function AuthenticationOutlet(props: AuthenticationOutletProps) {
 
         if (!hasAuthParams() && !auth.isAuthenticated && !auth.activeNavigator && !auth.isLoading) {
             (async () => {
-                try {
-                    if (silentLoginPossible) {
-                        const prefix = environmentVariantUriPrefix(props.environment, props.variant);
-                        // Try at first the silent version ensures no flickering for the user
-                        // in case he still has a valid session at the IdP.
-                        const u = await auth.signinSilent({
-                            redirect_uri: `${prefix}after-silent-login`,
-                        });
-                        if (u) {
-                            console.log('Silent login was successful.');
-                            return;
-                        }
-                    }
-
-                    // If there is no u:User object, this means the silent login was
-                    // not successful. Now we're trying the redirect login...
-                    console.log('Silent login was not successful, trying interactive...');
-
-                    await auth.signinRedirect({
-                        state: {
-                            // We're preserving the original location to redirect the user back in case it was
-                            // successful.
-                            location: location,
-                        },
-                        extraQueryParams: stripEmptyParameters({
-                            // These are optional extra parameter the Engity IdP supports.
-
-                            // Tip: The conditional expression is to ensure we only set these parameters
-                            // if they're present.
-
-                            // The user can click on cancel at the login dialog.
-                            cancel_redirect_uri:
-                                props.variant.afterLogoutUrl && `${environmentVariantUriPrefix(props.environment, props.variant)}after-cancel`,
-
-                            // Take the color scheme (light|dark) with to the login page.
-                            color_scheme: theme.mode,
-                        }),
+                if (silentLoginPossible) {
+                    const prefix = environmentVariantUriPrefix(props.environment, props.variant);
+                    // Try at first the silent version ensures no flickering for the user
+                    // in case he still has a valid session at the IdP.
+                    const u = await auth.signinSilent({
+                        redirect_uri: `${prefix}after-silent-login`,
                     });
-                } catch (e) {
-                    console.error('DOH!', e);
+                    if (u) {
+                        console.log('Silent login was successful.');
+                        return;
+                    }
                 }
+
+                // If there is no u:User object, this means the silent login was
+                // not successful. Now we're trying the redirect login...
+                console.log('Silent login was not successful, trying interactive...');
+
+                await auth.signinRedirect({
+                    state: {
+                        // We're preserving the original location to redirect the user back in case it was
+                        // successful.
+                        location: location,
+                    },
+                    extraQueryParams: stripEmptyParameters({
+                        // These are optional extra parameter the Engity IdP supports.
+
+                        // Tip: The conditional expression is to ensure we only set these parameters
+                        // if they're present.
+
+                        // The user can click on cancel at the login dialog.
+                        cancel_redirect_uri:
+                            props.variant.afterLogoutUrl && `${environmentVariantUriPrefix(props.environment, props.variant)}after-cancel`,
+
+                        // Take the color scheme (light|dark) with to the login page.
+                        color_scheme: theme.mode,
+                    }),
+                });
             })();
         }
     }, [props, theme.mode, auth, problemSink]);
