@@ -28,7 +28,7 @@
   "dependencies": {
     "react-oidc-context": "^3.3.0",
     "@radix-ui/themes": "3.2.1",
-    "apexcharts": "^4.6.0",
+    "apexcharts": "^4.7.0",
     "base58-js": "^3.0.2",
     "date-fns": "^4.1.0",
     "i18next": "^25.0.1",
