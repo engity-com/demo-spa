@@ -32,7 +32,6 @@ jobs:
     name: "Deploy: green"
     runs-on: ubuntu-latest
     needs: build
-    if: github.ref != 'refs/heads/main'
     environment:
       name: green
       url: https://demo.engity.green
