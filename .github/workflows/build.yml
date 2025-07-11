@@ -20,8 +20,8 @@ jobs:
 
       - name: "Prepare"
         run: |
-          npm ensure-ca
-          npm issue-cert
+          npm run ensure-ca
+          npm run issue-cert
 
       - name: "Build"
         run: |
