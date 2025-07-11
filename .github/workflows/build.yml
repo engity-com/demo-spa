@@ -18,6 +18,11 @@ jobs:
           node --version
           npm ci
 
+      - name: "Prepare"
+        run: |
+          npm ensure-ca
+          npm issue-cert
+
       - name: "Build"
         run: |
           npm run build:production
