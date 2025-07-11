@@ -15,11 +15,14 @@ jobs:
 
       - name: Install
         run: |
-          node --version
+          mkdir -p .cache/bin
+          curl -JLO "https://dl.filippo.io/mkcert/latest?for=linux/amd64" -o .cache/bin/mkcert
+          chmod +x .cache/bin/mkcert
           npm ci
 
       - name: "Prepare"
         run: |
+          export PATH="$PATH:${PWD}/.cache/bin"
           npm run ensure-ca
           npm run issue-cert
 
