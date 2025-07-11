@@ -1,6 +1,6 @@
+import * as fs from 'node:fs';
 import path from 'node:path';
 import { defineConfig } from '@rsbuild/core';
-import { pluginBasicSsl } from '@rsbuild/plugin-basic-ssl';
 import { pluginReact } from '@rsbuild/plugin-react';
 import { pluginSvgr } from '@rsbuild/plugin-svgr';
 
@@ -98,14 +98,6 @@ export default defineConfig({
         },
     },
     plugins: [
-        pluginBasicSsl({
-            outputPath: path.join(__dirname, '.cache/cert'),
-            selfsignedAttrs: [{ name: 'commonName', value: 'local.engity.dev' }],
-            selfsignedOptions: {
-                keySize: 2048,
-                days: 30,
-            },
-        }),
         pluginReact({
             // @ts-ignore
             enableProfiler: process.env.REACT_PROFILER === 'true',
@@ -139,6 +131,9 @@ export default defineConfig({
     server: {
         host: 'local.engity.dev',
         port: 4200,
-        strictPort: true,
+        https: {
+            key: fs.readFileSync('.cache/server.pem'),
+            cert: fs.readFileSync('.cache/server.crt'),
+        },
     },
 });

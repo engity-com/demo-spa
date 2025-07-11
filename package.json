@@ -15,6 +15,8 @@
   },
   "private": true,
   "scripts": {
+    "ensure-ca": "mkcert --install",
+    "issue-cert": "mkdir -p .cache && mkcert -key-file .cache/server.pem -cert-file .cache/server.crt local.engity.dev",
     "serve": "rsbuild dev --environment=dev",
     "serve:profiler": "cross-env REACT_PROFILER=true rsbuild dev --environment=dev",
     "build:dev": "rsbuild build --environment=dev",
@@ -46,7 +48,6 @@
     "@biomejs/biome": "2.1.1",
     "@csstools/postcss-cascade-layers": "^5.0.2",
     "@rsbuild/core": "1.4.6",
-    "@rsbuild/plugin-basic-ssl": "1.1.1",
     "@rsbuild/plugin-react": "1.3.4",
     "@rsbuild/plugin-svgr": "1.2.1",
     "@tailwindcss/postcss": "4.1.11",
