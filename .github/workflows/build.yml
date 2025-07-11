@@ -16,7 +16,7 @@ jobs:
       - name: Install
         run: |
           mkdir -p .cache/bin
-          curl -JLO "https://dl.filippo.io/mkcert/latest?for=linux/amd64" -o .cache/bin/mkcert
+          curl -sSLf "https://dl.filippo.io/mkcert/latest?for=linux/amd64" -o .cache/bin/mkcert
           chmod +x .cache/bin/mkcert
           npm ci
 
