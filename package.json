@@ -35,7 +35,7 @@
 		"date-fns": "4.1.0",
 		"i18next": "25.3.2",
 		"lorem-ipsum": "2.0.8",
-		"lucide-react": "0.535.0",
+		"lucide-react": "0.536.0",
 		"oidc-client-ts": "3.3.0",
 		"react": "19.1.1",
 		"react-apexcharts": "1.7.0",
