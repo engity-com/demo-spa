@@ -33,7 +33,7 @@
 		"apexcharts": "5.3.3",
 		"base58-js": "3.0.3",
 		"date-fns": "4.1.0",
-		"i18next": "25.3.6",
+		"i18next": "25.4.0",
 		"lorem-ipsum": "2.0.8",
 		"lucide-react": "0.540.0",
 		"oidc-client-ts": "3.3.0",
