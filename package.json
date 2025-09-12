@@ -45,7 +45,7 @@
 		"uuid": "13.0.0"
 	},
 	"devDependencies": {
-		"@biomejs/biome": "2.2.3",
+		"@biomejs/biome": "2.2.4",
 		"@csstools/postcss-cascade-layers": "5.0.2",
 		"@rsbuild/core": "1.5.4",
 		"@rsbuild/plugin-react": "1.4.0",
