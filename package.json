@@ -30,7 +30,7 @@
 	"dependencies": {
 		"react-oidc-context": "3.3.0",
 		"@radix-ui/themes": "3.2.1",
-		"apexcharts": "5.3.5",
+		"apexcharts": "5.3.6",
 		"base58-js": "3.0.3",
 		"date-fns": "4.1.0",
 		"i18next": "25.6.0",
