@@ -33,6 +33,7 @@
                 }
             }
 
+            /* biome-ignore lint/suspicious/noUnknownAtRules: custom rule */
             @mixin max-responsive {
                 & {
                     --sidebar-spacing-top: var(--header-size);
@@ -44,6 +45,7 @@
             transition: margin-left var(--sidebar-animation);
             margin-left: calc(var(--sidebar-width) - calc(1px * var(--scaling)));
 
+            /* biome-ignore lint/suspicious/noUnknownAtRules: custom rule */
             @mixin max-responsive {
                 & {
                     transition: none;
@@ -66,6 +68,7 @@
 @layer component {
     .App > .container > .Breadcrumb {
         padding: var(--content-padding);
+        /* biome-ignore lint/suspicious/noUnknownAtRules: custom rule */
         @mixin min-responsive {
             display: none;
         }

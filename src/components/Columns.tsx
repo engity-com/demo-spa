@@ -7,7 +7,7 @@ interface ColumnsProps {
 }
 
 export function Columns(props: ColumnsProps) {
-    const columns = typeof props.columns === 'string' ? Number.parseInt(props.columns) : props.columns;
+    const columns = typeof props.columns === 'string' ? Number.parseInt(props.columns, 10) : props.columns;
     if (props.children.length % columns !== 0) {
         throw Error(`An amount of child elements which is a multiply of ${columns}; but got: ${props.children.length}.`);
     }

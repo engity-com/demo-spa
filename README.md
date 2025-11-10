@@ -19,7 +19,7 @@ It is available at [https://demo.engity.app](https://demo.engity.app/).
 
 
 * Language: [TypeScript](https://www.typescriptlang.org/) ([tsconfig.json](tsconfig.json))
-* Build system: [RSBuild](https://rsbuild.rs/) ([rsbuild.config.ts](rsbuild.config.ts))
+* Build system: [RSBuild](https://rsbuild.rs/) ([rsbuild.config.cts](rsbuild.config.cts))
 * Linting/Formatting: [Biome](https://biomejs.dev/) ([biome.jsonc](biome.jsonc))
 * I18n: [i18next](https://www.i18next.com/) with [react-i18next](https://react.i18next.com/) ([src/lib/i18n.ts](src/lib/i18n.ts))
 * Router: [React Router](https://reactrouter.com/)

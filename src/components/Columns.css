@@ -8,6 +8,7 @@
 
         &[data-columns="2"] {
             grid-template-columns: repeat(2, minmax(0, 1fr));
+            /* biome-ignore lint/suspicious/noUnknownAtRules: custom rule */
             @mixin max-responsive-s {
                 & {
                     grid-template-columns: minmax(0, 1fr);
@@ -17,6 +18,7 @@
 
         &[data-columns="3"] {
             grid-template-columns: repeat(3, minmax(0, 1fr));
+            /* biome-ignore lint/suspicious/noUnknownAtRules: custom rule */
             @mixin max-responsive {
                 & {
                     grid-template-columns: minmax(0, 1fr);
@@ -26,11 +28,13 @@
 
         &[data-columns="4"] {
             grid-template-columns: repeat(4, minmax(0, 1fr));
+            /* biome-ignore lint/suspicious/noUnknownAtRules: custom rule */
             @mixin max-responsive-x {
                 & {
                     grid-template-columns: repeat(2, minmax(0, 1fr));
                 }
             }
+            /* biome-ignore lint/suspicious/noUnknownAtRules: custom rule */
             @mixin max-responsive-s {
                 & {
                     grid-template-columns: minmax(0, 1fr);

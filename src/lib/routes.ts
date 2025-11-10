@@ -43,7 +43,8 @@ function asResolvedRoute(given: any): ResolvedRoute | undefined {
 }
 
 export function useResolvedRoutes(routes?: UIMatch[]): ResolvedRoute[] {
-    const actualRoutes = routes || useMatches();
+    const used = useMatches();
+    const actualRoutes = routes || used;
     const result: ResolvedRoute[] = [];
     for (const route of actualRoutes) {
         const resolved = asResolvedRoute(route);

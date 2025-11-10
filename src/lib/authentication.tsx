@@ -155,7 +155,7 @@ function AfterLogin(props: CallbackProps) {
         return <Loading defaultTitle={true} visibilityDelay={true} />;
     }
 
-    // @ts-ignore
+    // @ts-expect-error
     const location: Location = auth?.user?.state?.location;
     if (!location) {
         return <Navigate to={`/${props.variant.subPath || ''}`} />;

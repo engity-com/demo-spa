@@ -7,12 +7,12 @@ import { useTranslation } from 'react-i18next';
 import { createBrowserRouter, Outlet, RouterProvider } from 'react-router';
 
 function Heading() {
+    const { t } = useTranslation();
+
     const routes = useResolvedRoutes();
     if (routes.length <= 0) {
         return;
     }
-
-    const { t } = useTranslation();
     const route = routes[routes.length - 1];
 
     if (route.handle.displayHeading === false) {

@@ -1,64 +1,64 @@
 {
-	"name": "engity-idp-demo-spa",
-	"version": "development",
-	"author": {
-		"name": "Engity GmbH",
-		"email": "hello@engity.com",
-		"url": "https://engity.com"
-	},
-	"description": "Demonstrates how to work with the Engity IdP in a Single Page Application.",
-	"homepage": "https://github.com/engity-com/demo-spa",
-	"license": "MIT",
-	"repository": {
-		"type": "Git",
-		"url": "https://github.com/engity-com/demo-spa.git"
-	},
-	"private": true,
-	"scripts": {
-		"ensure-ca": "mkcert --install",
-		"issue-cert": "mkdir -p .cache && mkcert -key-file .cache/server.pem -cert-file .cache/server.crt local.engity.dev",
-		"serve": "rsbuild dev --environment=dev",
-		"serve:profiler": "cross-env REACT_PROFILER=true rsbuild dev --environment=dev",
-		"build:dev": "rsbuild build --environment=dev",
-		"build:green": "rsbuild build --environment=green",
-		"build:red": "rsbuild build --environment=red",
-		"build:production": "rsbuild build --environment=green --environment=red",
-		"preview": "rsbuild preview",
-		"lint": "biome lint --fix",
-		"format": "biome format --fix"
-	},
-	"dependencies": {
-		"react-oidc-context": "3.3.0",
-		"@radix-ui/themes": "3.2.1",
-		"apexcharts": "5.3.6",
-		"base58-js": "3.0.3",
-		"date-fns": "4.1.0",
-		"i18next": "25.6.1",
-		"lorem-ipsum": "2.0.8",
-		"lucide-react": "0.552.0",
-		"oidc-client-ts": "3.3.0",
-		"react": "19.2.0",
-		"react-apexcharts": "1.8.0",
-		"react-dom": "19.2.0",
-		"react-i18next": "16.2.4",
-		"react-router": "7.9.5",
-		"uuid": "13.0.0"
-	},
-	"devDependencies": {
-		"@biomejs/biome": "2.3.4",
-		"@csstools/postcss-cascade-layers": "5.0.2",
-		"@rsbuild/core": "1.6.3",
-		"@rsbuild/plugin-react": "1.4.2",
-		"@rsbuild/plugin-svgr": "1.2.2",
-		"@tailwindcss/postcss": "4.1.17",
-		"@types/node": "24.10.0",
-		"@types/react": "19.2.2",
-		"@types/react-dom": "19.2.2",
-		"cross-env": "10.1.0",
-		"postcss": "8.5.6",
-		"postcss-inline-svg": "6.0.0",
-		"postcss-mixins": "12.1.2",
-		"postcss-nested": "7.0.2",
-		"typescript": "5.9.3"
-	}
+  "name": "engity-idp-demo-spa",
+  "version": "development",
+  "author": {
+    "name": "Engity GmbH",
+    "email": "hello@engity.com",
+    "url": "https://engity.com"
+  },
+  "description": "Demonstrates how to work with the Engity IdP in a Single Page Application.",
+  "homepage": "https://github.com/engity-com/demo-spa",
+  "license": "MIT",
+  "repository": {
+    "type": "Git",
+    "url": "https://github.com/engity-com/demo-spa.git"
+  },
+  "private": true,
+  "scripts": {
+    "ensure-ca": "mkcert --install",
+    "issue-cert": "mkdir -p .cache && mkcert -key-file .cache/server.pem -cert-file .cache/server.crt local.engity.dev",
+    "serve": "rsbuild dev --environment=dev",
+    "serve:profiler": "cross-env REACT_PROFILER=true rsbuild dev --environment=dev",
+    "build:dev": "rsbuild build --environment=dev",
+    "build:green": "rsbuild build --environment=green",
+    "build:red": "rsbuild build --environment=red",
+    "build:production": "rsbuild build --environment=green --environment=red",
+    "preview": "rsbuild preview",
+    "lint": "biome lint --fix",
+    "format": "biome format --fix"
+  },
+  "dependencies": {
+    "react-oidc-context": "3.3.0",
+    "@radix-ui/themes": "3.2.1",
+    "apexcharts": "5.3.6",
+    "base58-js": "3.0.3",
+    "date-fns": "4.1.0",
+    "i18next": "25.6.1",
+    "lorem-ipsum": "2.0.8",
+    "lucide-react": "0.552.0",
+    "oidc-client-ts": "3.3.0",
+    "react": "19.2.0",
+    "react-apexcharts": "1.8.0",
+    "react-dom": "19.2.0",
+    "react-i18next": "16.2.4",
+    "react-router": "7.9.5",
+    "uuid": "13.0.0"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.3.4",
+    "@csstools/postcss-cascade-layers": "5.0.2",
+    "@rsbuild/core": "1.6.3",
+    "@rsbuild/plugin-react": "1.4.2",
+    "@rsbuild/plugin-svgr": "1.2.2",
+    "@tailwindcss/postcss": "4.1.17",
+    "@types/node": "24.10.0",
+    "@types/react": "19.2.2",
+    "@types/react-dom": "19.2.2",
+    "cross-env": "10.1.0",
+    "postcss": "8.5.6",
+    "postcss-inline-svg": "6.0.0",
+    "postcss-mixins": "12.1.2",
+    "postcss-nested": "7.0.2",
+    "typescript": "5.9.3"
+  }
 }
