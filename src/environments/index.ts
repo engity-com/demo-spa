@@ -1,4 +1,4 @@
-// @ts-ignore
+// @ts-expect-error
 import { environment as source } from '@environment';
 import type { Environment } from './type';
 

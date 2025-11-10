@@ -73,6 +73,6 @@ export function resolveShortTitle(
         }
     }
 
-    // @ts-ignore
+    // @ts-expect-error
     return resolveTitle(from as HasTitle | HasTitleKey | undefined, t, tOpts);
 }

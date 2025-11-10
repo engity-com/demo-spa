@@ -1,5 +1,5 @@
 import './Header.css';
-// @ts-ignore
+// @ts-expect-error
 import Logo from '@/assets/logo-without-spacing.svg';
 import { CurrentUserAvatar, Link } from '@/components';
 import { Breadcrumb, ThemeToggle, useSideBar } from '@/components/page';

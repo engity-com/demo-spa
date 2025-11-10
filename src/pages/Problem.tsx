@@ -1,4 +1,4 @@
-// @ts-ignore
+// @ts-expect-error
 import Img from '@/assets/dead-computer.svg';
 import { Flex, Separator, Text } from '@radix-ui/themes';
 import i18next from 'i18next';

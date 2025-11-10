@@ -1,5 +1,5 @@
 import './SideBar.css';
-// @ts-ignore
+// @ts-expect-error
 import Logo from '@/assets/logo-without-spacing.svg';
 import { Link } from '@/components';
 import { Footer } from '@/components/page';
@@ -159,7 +159,7 @@ export function SideBarProvider({ children, ...props }: SideBarProviderProps) {
                 const resolved = mediaSelectorMatchesToSideBarState(e.matches);
                 setStateLast({
                     value: provided,
-                    ts: new Date().getTime(),
+                    ts: Date.now(),
                 });
                 setProvided(undefined);
                 setDefault(resolved);
@@ -188,7 +188,7 @@ export function SideBarProvider({ children, ...props }: SideBarProviderProps) {
         }
 
         setState(v: SideBarSate | undefined) {
-            const tsNow = new Date().getTime();
+            const tsNow = Date.now();
             if (def === 'collapsed' && stateLast?.value === 'expanded' && stateLast?.ts + 250 > tsNow) {
                 // Prevent doubles...
                 return;

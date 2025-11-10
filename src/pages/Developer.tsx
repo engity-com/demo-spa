@@ -13,12 +13,12 @@ interface ActionsProps {
 }
 
 function Actions(props: ActionsProps) {
+    const { t } = useTranslation();
+    const [renewResult, setRenewResult] = useState<boolean | 'active' | undefined>(undefined);
+
     if (!props.triggerRenew) {
         return [];
     }
-
-    const { t } = useTranslation();
-    const [renewResult, setRenewResult] = useState<boolean | 'active' | undefined>(undefined);
 
     return (
         <Card>
@@ -51,16 +51,16 @@ interface ProfileProps {
 }
 
 function Profile(props: ProfileProps) {
-    if (!props.profile) {
-        return [];
-    }
-
     const { t, i18n } = useTranslation();
 
     const dateFormat = Intl.DateTimeFormat(i18n.language, {
         dateStyle: 'medium',
         timeStyle: 'medium',
     }).format;
+
+    if (!props.profile) {
+        return [];
+    }
 
     function formatId(v: string, combined?: boolean): ReactNode {
         let result = v;
@@ -71,7 +71,7 @@ function Profile(props: ProfileProps) {
                 if (combined !== false) {
                     result = `${v} / ${result}`;
                 }
-            } catch (ignored) {}
+            } catch (_) {}
         }
         return <Code variant='ghost'>{result}</Code>;
     }

@@ -30,6 +30,7 @@ interface ToLinkProps extends LinkProps {
 interface ToKeyLinkProps extends LinkProps {
     readonly toKey: string;
 }
+
 export function Link(props: ToLinkProps | ToKeyLinkProps) {
     const { t } = useTranslation();
     const variant = useEnvironmentVariant();
@@ -42,7 +43,7 @@ export function Link(props: ToLinkProps | ToKeyLinkProps) {
     if (variant?.subPath && typeof to === 'string') {
         try {
             new URL(to);
-        } catch (ignored) {
+        } catch (_) {
             to = `/${variant?.subPath}${to}`;
         }
     }
@@ -50,7 +51,7 @@ export function Link(props: ToLinkProps | ToKeyLinkProps) {
     const downstreamProps: Omit<
         ToLinkProps | ToKeyLinkProps,
         'toKey' | 'titleFrom' | 'titleKey' | 'shortTitleFrom' | 'shortTitle' | 'shortTitleKey'
-        // @ts-ignore
+        // @ts-expect-error
     > = (({ toKey, titleFrom, titleKey, shortTitleFrom, shortTitle, shortTitleKey, ...rest }) => rest)(props);
 
     return (
