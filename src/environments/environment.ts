@@ -6,17 +6,32 @@ export const environment: Environment = {
     variants: {
         default: {
             stsAuthority: 'https://id.local.engity.dev:8988/v1/',
-            clientId: '12f95feb-9e3e-11ec-93d7-f02f741c664b',
+            clientId: '3LtsS8SrpAwkAEs5eBUVe2',
         },
         magicLink: {
             subPath: 'magic-link',
             stsAuthority: 'https://id.local.engity.dev:8988/magic-link/v1/',
-            clientId: '12f95feb-9e3e-11ec-93d7-f02f741c664c',
+            clientId: '3LtsS8SrpAwkAEs5eBUVe3',
         },
         username: {
             subPath: 'username',
             stsAuthority: 'https://id.local.engity.dev:8988/username/v1/',
-            clientId: '12f95feb-9e3e-11ec-93d7-f02f741c664d',
+            clientId: '3LtsS8SrpAwkAEs5eBUVe4',
+        },
+        tfaRequired: {
+            subPath: 'tfa-required',
+            stsAuthority: 'https://id.local.engity.dev:8988/tfa-required/v1/',
+            clientId: '9KjGEminbyhUB5sXAn3bBT',
+        },
+        tfaForbidden: {
+            subPath: 'tfa-forbidden',
+            stsAuthority: 'https://id.local.engity.dev:8988/tfa-forbidden/v1/',
+            clientId: '6Ud9hjFmUQfHQTQp1o4KQH',
+        },
+        exposeExistence: {
+            subPath: 'expose-existence',
+            stsAuthority: 'https://id.local.engity.dev:8988/expose-existence/v1/',
+            clientId: 'ExpsjPRjj6oVhaJTqvYvN9',
         },
     },
 };
