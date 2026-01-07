@@ -108,6 +108,7 @@ function Authentication(props: AuthenticationProps) {
         prefix: `${props.variant.key}.`,
         store: window.localStorage,
     });
+    const theme = useTheme();
     const { i18n } = useTranslation();
 
     return (
@@ -121,6 +122,12 @@ function Authentication(props: AuthenticationProps) {
                 ui_locales={i18n?.language}
                 scope='openid profile email contacts offline'
                 redirect_uri={`${prefix}after-login`}
+                extraQueryParams={{
+                    ...(props.variant.afterLogoutUrl
+                        ? { cancel_redirect_uri: `${environmentVariantUriPrefix(props.environment, props.variant)}after-cancel` }
+                        : {}),
+                    ...(theme.mode ? { color_scheme: `${environmentVariantUriPrefix(props.environment, props.variant)}after-cancel` } : {}),
+                }}
                 silent_redirect_uri={`${prefix}after-silent-login`}
                 post_logout_redirect_uri={`${prefix}after-logout`}
                 // Ensures to be automatic renew the tokens before it will expire.
