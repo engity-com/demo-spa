@@ -29,8 +29,8 @@ export const environment: Environment = {
             clientId: '6Ud9hjFmUQfHQTQp1o4KQH',
         },
         exposeExistence: {
-            subPath: 'expose-existence',
-            stsAuthority: 'https://id.demo.engity.green/expose-existence/v1/',
+            subPath: 'existence-expose',
+            stsAuthority: 'https://id.demo.engity.green/existence-expose/v1/',
             clientId: 'ExpsjPRjj6oVhaJTqvYvN9',
         },
     },
