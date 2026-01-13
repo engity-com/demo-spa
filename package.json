@@ -51,7 +51,7 @@
     "@rsbuild/plugin-react": "1.4.2",
     "@rsbuild/plugin-svgr": "1.2.3",
     "@tailwindcss/postcss": "4.1.18",
-    "@types/node": "25.0.6",
+    "@types/node": "25.0.7",
     "@types/react": "19.2.8",
     "@types/react-dom": "19.2.3",
     "cross-env": "10.1.0",
