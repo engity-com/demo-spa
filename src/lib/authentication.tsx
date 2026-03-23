@@ -1,14 +1,14 @@
+import { Log, WebStorageStateStore } from 'oidc-client-ts';
+import type React from 'react';
+import { createContext, useContext, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
+import { AuthProvider, hasAuthParams, useAuth } from 'react-oidc-context';
+import { type Location, Navigate, Outlet } from 'react-router';
 import { useTheme } from '@/components/page';
 import type { Environment, EnvironmentVariant, NamedEnvironmentVariant } from '@/environments';
 import { environment as defaultEnvironment } from '@/environments';
 import type { RouteConfiguration } from '@/lib';
 import { Loading, useProblemSink } from '@/pages';
-import { AuthProvider, hasAuthParams, useAuth } from 'react-oidc-context';
-import { Log, WebStorageStateStore } from 'oidc-client-ts';
-import type React from 'react';
-import { createContext, useContext, useEffect } from 'react';
-import { useTranslation } from 'react-i18next';
-import { type Location, Navigate, Outlet } from 'react-router';
 
 interface ContextState {
     variant: NamedEnvironmentVariant;
@@ -69,7 +69,7 @@ function AuthenticationOutlet(props: AuthenticationOutletProps) {
                     state: {
                         // We're preserving the original location to redirect the user back in case it was
                         // successful.
-                        location: location,
+                        location,
                     },
                     extraQueryParams: stripEmptyParameters({
                         // These are optional extra parameter the Engity IdP supports.
@@ -122,17 +122,16 @@ function Authentication(props: AuthenticationProps) {
                 ui_locales={i18n?.language}
                 scope='openid profile email contacts offline'
                 redirect_uri={`${prefix}after-login`}
-                extraQueryParams={{
-                    ...(props.variant.afterLogoutUrl
-                        ? { cancel_redirect_uri: `${environmentVariantUriPrefix(props.environment, props.variant)}after-cancel` }
-                        : {}),
-                    ...(theme.mode ? { color_scheme: `${environmentVariantUriPrefix(props.environment, props.variant)}after-cancel` } : {}),
-                }}
+                extraQueryParams={stripEmptyParameters({
+                    cancel_redirect_uri:
+                        props.variant.afterLogoutUrl && `${environmentVariantUriPrefix(props.environment, props.variant)}after-cancel`,
+                    color_scheme: theme.mode,
+                })}
                 silent_redirect_uri={`${prefix}after-silent-login`}
                 post_logout_redirect_uri={`${prefix}after-logout`}
                 // Ensures to be automatic renew the tokens before it will expire.
                 // Note: By default this is already set to `true`; we keep it here just for documentation.
-                automaticSilentRenew={true}
+                automaticSilentRenew
             >
                 <Outlet />
             </AuthProvider>
