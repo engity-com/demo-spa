@@ -1,15 +1,14 @@
 import './Header.css';
-// @ts-expect-error
+import { DropdownMenu, Flex, Text } from '@radix-ui/themes';
+import { Globe, Key, LogOut, QrCode, Shield, Star } from 'lucide-react';
+import type React from 'react';
+import { useEffect, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useAuth } from 'react-oidc-context';
 import Logo from '@/assets/logo-without-spacing.svg';
 import { CurrentUserAvatar, Link } from '@/components';
 import { Breadcrumb, ThemeToggle, useSideBar } from '@/components/page';
-import { isBrowsersDefaultLanguage, languages } from '@/lib';
-import { DropdownMenu, Flex, Text } from '@radix-ui/themes';
-import { Globe, LogOut, Star } from 'lucide-react';
-import type React from 'react';
-import { useEffect, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useAuth } from 'react-oidc-context';
+import { isBrowsersDefaultLanguage, languages, useMetadata } from '@/lib';
 
 const scrollTopThreshold = 1;
 
@@ -21,6 +20,16 @@ export function Header(props: HeaderProps) {
     const [scrollOver, setScrollOver] = useState<boolean>(false);
     const sideBar = useSideBar();
     const auth = useAuth();
+    const metadata = useMetadata();
+    const [ffaUrl, tfaUrl] = useMemo(() => {
+        if (!metadata) {
+            return [undefined, undefined];
+        }
+        return [
+            'ffa_url' in metadata && typeof metadata.ffa_url === 'string' ? metadata.ffa_url : undefined,
+            'tfa_url' in metadata && typeof metadata.tfa_url === 'string' ? metadata.tfa_url : undefined,
+        ];
+    }, [metadata]);
 
     useEffect(() => {
         const onScroll = () => setScrollOver(document.body.scrollTop > scrollTopThreshold || document.documentElement.scrollTop > scrollTopThreshold);
@@ -82,6 +91,28 @@ export function Header(props: HeaderProps) {
                                 </DropdownMenu.RadioGroup>
                             </DropdownMenu.SubContent>
                         </DropdownMenu.Sub>
+                        {(ffaUrl || tfaUrl) && (
+                            <DropdownMenu.Sub>
+                                <DropdownMenu.SubTrigger>
+                                    <Shield size={menuIconSize} /> {t('security')}
+                                </DropdownMenu.SubTrigger>
+                                <DropdownMenu.SubContent>
+                                    {ffaUrl && (
+                                        <DropdownMenu.Item onClick={() => (location.href = ffaUrl)}>
+                                            <Key size={menuIconSize} />
+                                            {t('ffa')}
+                                        </DropdownMenu.Item>
+                                    )}
+                                    {tfaUrl && (
+                                        <DropdownMenu.Item onClick={() => (location.href = tfaUrl)}>
+                                            <QrCode size={menuIconSize} />
+                                            {t('tfa')}
+                                        </DropdownMenu.Item>
+                                    )}
+                                </DropdownMenu.SubContent>
+                            </DropdownMenu.Sub>
+                        )}
+
                         <DropdownMenu.Item onClick={() => auth.signoutRedirect()}>
                             <LogOut size={menuIconSize} />
                             {t('logout')}

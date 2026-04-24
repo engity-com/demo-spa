@@ -31,6 +31,7 @@ export default {
             sourceHint: 'Alle Informationen zu dieser Demo inkl. Dokumentation und Quelltext sind <here>hier</here> verfügbar.',
         },
         email: 'E-Mail',
+        ffa: 'Anmeldeverfahren',
         language: 'Sprache',
         legalNotice: {
             '.': 'Impressum',
@@ -56,6 +57,7 @@ export default {
         notFound: 'Nicht gefunden',
         notifications: 'Benachrichtigungen',
         profile: 'Profil',
+        security: 'Sicherheit',
         stats: {
             adViews: 'Ad Anzeigen',
             completedTasks: { '.': 'Abgeschlossene Aufgaben', subTitle: 'Seit letzter Kampagne' },
@@ -82,6 +84,7 @@ export default {
                 },
             },
         },
+        tfa: 'Zwei-Faktor Authentifizierung',
         token: {
             '.': 'Token',
             renew: {

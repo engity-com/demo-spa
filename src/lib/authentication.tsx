@@ -1,7 +1,7 @@
-import type { SigninRedirectArgs, User } from 'oidc-client-ts';
-import { Log, WebStorageStateStore } from 'oidc-client-ts';
+import type { OidcMetadata, SigninRedirectArgs, User } from 'oidc-client-ts';
+import { Log, UserManager, WebStorageStateStore } from 'oidc-client-ts';
 import type React from 'react';
-import { createContext, useContext, useEffect, useMemo } from 'react';
+import { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { type AuthContextProps, AuthProvider, hasAuthParams, useAuth } from 'react-oidc-context';
 import { Navigate, Outlet, type Location as RouterLocation, useLocation } from 'react-router';
@@ -14,14 +14,10 @@ import { Loading, useProblemSink } from '@/pages';
 interface ContextState {
     variant: NamedEnvironmentVariant;
     environment: Environment;
+    userManager: UserManager;
 }
 
 const Context = createContext<ContextState | undefined>(undefined);
-
-interface AuthenticationOutletProps {
-    readonly environment: Environment;
-    readonly variant: NamedEnvironmentVariant;
-}
 
 function environmentVariantUriPrefix(environment: Pick<Environment, 'clientRoot'>, variant: Pick<EnvironmentVariant, 'subPath'>): string {
     if (!variant.subPath) {
@@ -30,7 +26,7 @@ function environmentVariantUriPrefix(environment: Pick<Environment, 'clientRoot'
     return `${environment.clientRoot}${variant.subPath}/`;
 }
 
-function AuthenticationOutlet(props: AuthenticationOutletProps) {
+function AuthenticationOutlet() {
     const auth = useAuth();
     const theme = useTheme();
     const problemSink = useProblemSink();
@@ -52,12 +48,7 @@ function AuthenticationOutlet(props: AuthenticationOutletProps) {
         if (!hasAuthParams(location as any as Location) && !auth.isAuthenticated && !auth.activeNavigator && !auth.isLoading) {
             (async () => {
                 if (silentLoginPossible) {
-                    const prefix = environmentVariantUriPrefix(props.environment, props.variant);
-                    // Try at first the silent version ensures no flickering for the user
-                    // in case he still has a valid session at the IdP.
-                    const u = await auth.signinSilent({
-                        redirect_uri: `${prefix}after-silent-login`,
-                    });
+                    const u = await auth.signinSilent();
                     if (u) {
                         console.log('Silent login was successful.');
                         return;
@@ -78,7 +69,7 @@ function AuthenticationOutlet(props: AuthenticationOutletProps) {
                 });
             })();
         }
-    }, [props.environment, props.variant, auth, problemSink, theme?.mode, location]);
+    }, [auth, problemSink, theme?.mode, location]);
 
     if (!auth.isAuthenticated) {
         return <Loading defaultTitle={true} visibilityDelay={true} />;
@@ -104,29 +95,36 @@ function Authentication({
     const theme = useTheme();
     const { i18n } = useTranslation();
     const authProviderKey = `${variant.key}:${hasAuthParams(location as any as Location) ? 'auth-callback' : 'app'}`;
+    const userManager = useMemo(
+        () =>
+            new UserManager({
+                authority: variant.stsAuthority,
+                client_id: variant.clientId,
+                stateStore: store,
+                userStore: store,
+                filterProtocolClaims: ['nbf', 'jti', 'nonce', 'acr', 'amr', 'azp', 'at_hash'],
 
-    return (
-        <Context.Provider value={{ variant, environment }}>
-            <AuthProvider
-                key={authProviderKey}
-                authority={variant.stsAuthority}
-                client_id={variant.clientId}
-                stateStore={store}
-                userStore={store}
-                filterProtocolClaims={['nbf', 'jti', 'nonce', 'acr', 'amr', 'azp', 'at_hash']}
                 // Ensures the authentication page also uses our picks.
-                ui_locales={i18n?.language}
-                scope='openid profile email contacts offline'
-                redirect_uri={`${prefix}after-login`}
-                extraQueryParams={stripEmptyParameters({
+                ui_locales: i18n?.language,
+                scope: 'openid profile email contacts offline',
+                redirect_uri: `${prefix}callback`,
+                extraQueryParams: stripEmptyParameters({
                     color_scheme: theme.mode,
-                })}
-                silent_redirect_uri={`${prefix}after-silent-login`}
-                post_logout_redirect_uri={`${prefix}after-logout`}
+                }),
+
+                // If this is empty, the IdP will end its flow on the login page.
+                post_logout_redirect_uri: variant.afterLogoutUrl,
+
                 // Ensures to be automatic renew the tokens before it will expire.
                 // Note: By default, this is already set to `true`; we keep it here just for documentation.
-                automaticSilentRenew
-            >
+                automaticSilentRenew: true,
+            }),
+        [i18n?.language, prefix, store, theme.mode, variant.clientId, variant.stsAuthority, variant.afterLogoutUrl],
+    );
+
+    return (
+        <Context.Provider value={{ variant, environment, userManager }}>
+            <AuthProvider key={authProviderKey} userManager={userManager}>
                 <Outlet />
             </AuthProvider>
         </Context.Provider>
@@ -135,6 +133,16 @@ function Authentication({
 
 export function useEnvironmentVariant() {
     return useContext(Context)?.variant;
+}
+
+export function useMetadata(): Partial<OidcMetadata> | undefined {
+    const context = useContext(Context);
+    const [state, setState] = useState<Partial<OidcMetadata> | undefined>();
+    useEffect(
+        () => void (async () => setState(await context?.userManager.metadataService.getMetadata()))(),
+        [context?.userManager.metadataService.getMetadata],
+    );
+    return state;
 }
 
 async function signinRedirect(
@@ -243,8 +251,8 @@ interface CallbackProps {
 }
 
 function AfterLogin(props: CallbackProps) {
-    const auth = useAuth();
     const location = useLocation();
+    const auth = useAuth();
 
     // If there are not authParams and/or there is an error redirect to root
     // all this stuff will be handled there.
@@ -284,20 +292,6 @@ function AfterLogin(props: CallbackProps) {
     return <Navigate to={location} />;
 }
 
-function AfterLogout(props: CallbackProps) {
-    if (props.variant.afterLogoutUrl) {
-        // As it does not make sense to redirect to our application,
-        // because it does only work if logged-in, we redirect on cancel
-        // to our homepage.
-        document.location.href = props.variant.afterLogoutUrl;
-    }
-
-    // If this property is not as (as on local or green) trigger again the login,
-    // by navigating to the root page...
-    // This is better for local testing scenarios.
-    return <Navigate to={`/${props.variant.subPath || ''}`} />;
-}
-
 export function authenticationRouteConfigurations(children: RouteConfiguration[], environment?: Environment | undefined): RouteConfiguration[] {
     const env = environment || defaultEnvironment;
     return Object.entries(env.variants)
@@ -314,21 +308,13 @@ export function authenticationRouteConfigurations(children: RouteConfiguration[]
                 element: <Authentication environment={env} variant={v} />,
                 children: [
                     {
-                        path: 'after-login',
+                        path: 'callback',
                         element: <AfterLogin variant={v} environment={env} />,
-                    },
-                    {
-                        path: 'after-signup',
-                        element: <AfterLogin variant={v} environment={env} />,
-                    },
-                    {
-                        path: 'after-logout',
-                        element: <AfterLogout variant={v} environment={env} />,
                     },
                     {
                         path: '*',
                         children: children,
-                        element: <AuthenticationOutlet variant={v} environment={env} />,
+                        element: <AuthenticationOutlet />,
                     },
                 ],
             }),

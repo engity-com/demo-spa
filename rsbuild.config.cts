@@ -33,7 +33,6 @@ export default defineConfig({
 				require('postcss-inline-svg'),
 				require('postcss-mixins')({ mixinsDir: path.join(__dirname, 'src', 'mixins') }),
 				require('postcss-nested'),
-				require('@csstools/postcss-cascade-layers'),
 			]);
 		},
 	},
