@@ -37,7 +37,18 @@
         "useButtonType": "off"
       },
       "correctness": {
-        "noUnknownMediaFeatureName": "off"
+        "noUnknownMediaFeatureName": "off",
+        "useExhaustiveDependencies": {
+          "level": "error",
+          "options": {
+            "hooks": [
+              {
+                "name": "useToast",
+                "stableResult": ["add"]
+              }
+            ]
+          }
+        }
       },
       "style": {
         "noNonNullAssertion": "off"

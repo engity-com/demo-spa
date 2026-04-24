@@ -54,6 +54,11 @@ export default {
                 '.': 'Require login from last 5 minutes',
                 now: 'Login jetzt erzwingen',
             },
+            result: {
+                cancelled: 'Login cancelled.',
+                failed: 'Login failed ({{error}}).',
+                failedMessage: 'Details: {{details}}',
+            },
         },
         logout: 'Logout',
         notFound: 'Not found',
@@ -101,7 +106,12 @@ export default {
         },
         token: {
             '.': 'Token',
-            renew: 'Renew token',
+            renew: {
+                '.': 'Renew token',
+                success: 'Renew of the token was successful.',
+                failed: 'Renew of the token failed.',
+                failedMessage: 'Details: {{details}}',
+            },
         },
         views: 'Views',
     },

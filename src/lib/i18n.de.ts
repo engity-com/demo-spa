@@ -44,6 +44,12 @@ export default {
             freshen: {
                 '.': 'Login der letzten 5 Minuten erzwingen',
                 now: 'Login jetzt erzwingen',
+                upToDate: 'Der Login ist noch aktuell.',
+            },
+            result: {
+                cancelled: 'Anmeldung abgebrochen.',
+                failed: 'Anmeldung fehlgeschlagen ({{error}}).',
+                failedMessage: 'Details: {{details}}',
             },
         },
         logout: 'Abmelden',
@@ -78,7 +84,12 @@ export default {
         },
         token: {
             '.': 'Token',
-            renew: 'Token erneuern',
+            renew: {
+                '.': 'Token erneuern',
+                success: 'Erneuerung des Tokens war erfolgreich.',
+                failed: 'Erneuerung des Tokens ist fehlgeschlagen.',
+                failedMessage: 'Details: {{details}}',
+            },
         },
         views: 'Ansichten',
     },

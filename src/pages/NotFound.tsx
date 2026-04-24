@@ -1,7 +1,6 @@
-// @ts-expect-error
-import Img from '@/assets/dead-computer.svg';
 import { Flex, Separator, Text } from '@radix-ui/themes';
 import { useTranslation } from 'react-i18next';
+import Img from '@/assets/dead-computer.svg';
 
 export function NotFound() {
     const { t } = useTranslation();

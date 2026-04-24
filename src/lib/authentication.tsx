@@ -4,13 +4,12 @@ import type React from 'react';
 import { createContext, useContext, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { type AuthContextProps, AuthProvider, hasAuthParams, useAuth } from 'react-oidc-context';
-import { type Location, Navigate, Outlet, useLocation } from 'react-router';
-import { useTheme } from '@/components/page';
+import { Navigate, Outlet, type Location as RouterLocation, useLocation } from 'react-router';
+import { stateWithToastMessage, type ThemeMode, type ToastMessage, useTheme, useToast } from '@/components/page';
 import type { Environment, EnvironmentVariant, NamedEnvironmentVariant } from '@/environments';
 import { environment as defaultEnvironment } from '@/environments';
 import type { RouteConfiguration } from '@/lib';
 import { Loading, useProblemSink } from '@/pages';
-import type { ThemeMode } from '../components/page';
 
 interface ContextState {
     variant: NamedEnvironmentVariant;
@@ -44,14 +43,13 @@ function AuthenticationOutlet(props: AuthenticationOutletProps) {
                 // While silent renew or signinSilent there can be errors, if so, we silently ignore them here,
                 // because following we're trying the regular login...
                 silentLoginPossible = false;
-                console.log('Silent login is NOT possible');
             } else {
                 problemSink(auth.error, `Authorization context failed within ${auth.error.source}: ${auth.error.message}`);
                 return;
             }
         }
 
-        if (!hasAuthParams() && !auth.isAuthenticated && !auth.activeNavigator && !auth.isLoading) {
+        if (!hasAuthParams(location as any as Location) && !auth.isAuthenticated && !auth.activeNavigator && !auth.isLoading) {
             (async () => {
                 if (silentLoginPossible) {
                     const prefix = environmentVariantUriPrefix(props.environment, props.variant);
@@ -70,7 +68,7 @@ function AuthenticationOutlet(props: AuthenticationOutletProps) {
                 // not successful. Now we're trying the redirect login...
                 console.log('Silent login was not successful, trying interactive...');
 
-                await signinRedirect(auth, props.environment, props.variant, theme?.mode, {
+                await signinRedirect(auth, theme?.mode, {
                     state: {
                         location: {
                             ...location,
@@ -80,7 +78,7 @@ function AuthenticationOutlet(props: AuthenticationOutletProps) {
                 });
             })();
         }
-    }, [props, auth, problemSink, theme?.mode, location]);
+    }, [props.environment, props.variant, auth, problemSink, theme?.mode, location]);
 
     if (!auth.isAuthenticated) {
         return <Loading defaultTitle={true} visibilityDelay={true} />;
@@ -98,16 +96,19 @@ function Authentication({
     readonly variant: NamedEnvironmentVariant;
 }) {
     const prefix = environmentVariantUriPrefix(environment, variant);
+    const location = useLocation();
     const store = new WebStorageStateStore({
         prefix: `${variant.key}.`,
         store: window.localStorage,
     });
     const theme = useTheme();
     const { i18n } = useTranslation();
+    const authProviderKey = `${variant.key}:${hasAuthParams(location as any as Location) ? 'auth-callback' : 'app'}`;
 
     return (
         <Context.Provider value={{ variant, environment }}>
             <AuthProvider
+                key={authProviderKey}
                 authority={variant.stsAuthority}
                 client_id={variant.clientId}
                 stateStore={store}
@@ -123,7 +124,7 @@ function Authentication({
                 silent_redirect_uri={`${prefix}after-silent-login`}
                 post_logout_redirect_uri={`${prefix}after-logout`}
                 // Ensures to be automatic renew the tokens before it will expire.
-                // Note: By default this is already set to `true`; we keep it here just for documentation.
+                // Note: By default, this is already set to `true`; we keep it here just for documentation.
                 automaticSilentRenew
             >
                 <Outlet />
@@ -138,8 +139,6 @@ export function useEnvironmentVariant() {
 
 async function signinRedirect(
     auth: Pick<AuthContextProps, 'signinRedirect'>,
-    environment: Pick<Environment, 'clientRoot'>,
-    variant: Pick<EnvironmentVariant, 'subPath' | 'afterLogoutUrl'>,
     themeMode: ThemeMode | undefined,
     args?: SigninRedirectArgs | undefined,
 ) {
@@ -180,42 +179,58 @@ function hasFreshAuth(user: Pick<User, 'profile'> | null | undefined, maxAgeInSe
 
 export function useEnsureFreshAuthentication() {
     const auth = useAuth();
-    const ctx = useContext(Context);
-    const variant = ctx?.variant;
-    const environment = ctx?.environment;
     const theme = useTheme();
     const location = useLocation();
+    const { add: addToast } = useToast();
 
     return useMemo(
         () =>
-            auth.user && variant && environment
+            auth.user
                 ? async (maxAgeInSeconds: number, preserveLocation = true) => {
                       if (hasFreshAuth(auth.user, maxAgeInSeconds)) {
+                          addToast({
+                              kind: 'success',
+                              titleKey: 'login.freshen.upToDate',
+                          });
                           return true;
                       }
 
-                      await signinRedirect(auth, environment, variant, theme?.mode, {
+                      await signinRedirect(auth, theme?.mode, {
                           state: {
                               location: preserveLocation ? location : undefined,
                           },
                           max_age: maxAgeInSeconds,
                       });
+
                       return true;
                   }
                 : undefined,
-        [auth, variant, environment, location, theme?.mode],
+        [auth, location, theme.mode],
     );
 }
 
 export function useSigninSilent() {
     const auth = useAuth();
+    const { add: addToast } = useToast();
 
     return useMemo(
         () =>
             auth?.user
                 ? async () => {
-                      const user = await auth.signinSilent();
-                      return !!user;
+                      if (await auth.signinSilent()) {
+                          addToast({
+                              kind: 'success',
+                              titleKey: 'token.renew.success',
+                          });
+                          return true;
+                      }
+                      addToast({
+                          kind: 'error',
+                          titleKey: 'token.renew.failed',
+                          descriptionKey: auth.error?.message ? 'token.renew.failedMessage' : undefined,
+                          descriptionOptions: { error: auth.error?.message },
+                      });
+                      return false;
                   }
                 : undefined,
         [auth],
@@ -229,20 +244,23 @@ interface CallbackProps {
 
 function AfterLogin(props: CallbackProps) {
     const auth = useAuth();
+    const location = useLocation();
 
     // If there are not authParams and/or there is an error redirect to root
     // all this stuff will be handled there.
-    if (!hasAuthParams() || auth.error) {
+    if (!hasAuthParams(location as any as Location) || auth.error) {
         if (
             auth.error?.innerError &&
             typeof auth.error.innerError === 'object' &&
             'state' in auth.error.innerError &&
-            typeof auth.error.innerError.state === 'object'
+            typeof auth.error.innerError.state === 'object' &&
+            'error' in auth.error.innerError &&
+            typeof auth.error.innerError.error === 'string'
         ) {
-            const state = auth.error.innerError.state as { location?: Location<any> };
-            if (state.location) {
-                console.log('Redirecting to location from error state:', state.location);
-                return <Navigate to={state.location} state={state.location.state} replace />;
+            const toastMessage = callbackErrorToToastMessage(auth.error);
+            const state = auth.error.innerError.state as { location?: RouterLocation<any> };
+            if (state.location && toastMessage) {
+                return <Navigate to={state.location} state={stateWithToastMessage(state.location.state, toastMessage)} replace />;
             }
         }
         return <Navigate to={`/${props.variant.subPath || ''}`} />;
@@ -259,7 +277,7 @@ function AfterLogin(props: CallbackProps) {
         auth.user.state.location &&
         typeof auth.user.state.location === 'object'
     ) {
-        const location = auth.user.state.location as Location<any>;
+        const location = auth.user.state.location as RouterLocation<any>;
         return <Navigate to={location} state={location.state} replace />;
     }
 
@@ -322,6 +340,40 @@ function stripEmptyParameters(v: Record<string, string | number | boolean | null
         string,
         string | number | boolean
     >;
+}
+
+function callbackErrorToToastMessage(error: AuthContextProps['error']): ToastMessage | undefined {
+    if (
+        !error?.innerError ||
+        typeof error.innerError !== 'object' ||
+        !('error' in error.innerError) ||
+        !error.innerError.error ||
+        typeof error.innerError.error !== 'string'
+    ) {
+        return undefined;
+    }
+
+    const errorKey = error.innerError.error;
+    const errorDescription =
+        'error_description' in error.innerError && typeof error.innerError.error_description === 'string'
+            ? error.innerError.error_description
+            : undefined;
+
+    switch (error.innerError.error) {
+        case 'access_denied':
+            return {
+                kind: 'warning',
+                titleKey: 'login.result.cancelled',
+            };
+        default:
+            return {
+                kind: 'error',
+                titleKey: 'login.result.failed',
+                titleOptions: { error: errorKey },
+                descriptionKey: errorDescription ? 'login.result.failedMessage' : undefined,
+                descriptionOptions: { details: errorDescription },
+            };
+    }
 }
 
 // Let's enable the logging framework of oidc-client-ts.

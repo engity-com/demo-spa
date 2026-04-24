@@ -1,3 +1,6 @@
+import type React from 'react';
+import { useTranslation } from 'react-i18next';
+import { NavLink as RLink, type NavLinkProps as RLinkProps, type To } from 'react-router';
 import {
     type HasShortTitle,
     type HasShortTitleKey,
@@ -7,9 +10,6 @@ import {
     resolveTitle,
     useEnvironmentVariant,
 } from '@/lib';
-import type React from 'react';
-import { useTranslation } from 'react-i18next';
-import { NavLink as RLink, type NavLinkProps as RLinkProps, type To } from 'react-router';
 
 interface LinkProps
     extends Omit<RLinkProps, 'to' | 'title'>,
@@ -25,6 +25,7 @@ interface LinkProps
 
 interface ToLinkProps extends LinkProps {
     readonly to: To;
+    readonly addSubPath?: boolean | undefined;
 }
 
 interface ToKeyLinkProps extends LinkProps {
@@ -40,7 +41,7 @@ export function Link(props: ToLinkProps | ToKeyLinkProps) {
         (props.titleFrom && resolveShortTitle(props.titleFrom, t)) ||
         undefined;
     let to = ('to' in props && props.to) || (('toKey' in props && props.toKey && t(props.toKey)) as To);
-    if (variant?.subPath && typeof to === 'string') {
+    if (variant?.subPath && typeof to === 'string' && (!('addSubPath' in props) || props.addSubPath !== false)) {
         try {
             new URL(to);
         } catch (_) {
@@ -48,11 +49,16 @@ export function Link(props: ToLinkProps | ToKeyLinkProps) {
         }
     }
 
-    const downstreamProps: Omit<
-        ToLinkProps | ToKeyLinkProps,
-        'toKey' | 'titleFrom' | 'titleKey' | 'shortTitleFrom' | 'shortTitle' | 'shortTitleKey'
-        // @ts-expect-error
-    > = (({ toKey, titleFrom, titleKey, shortTitleFrom, shortTitle, shortTitleKey, ...rest }) => rest)(props);
+    const {
+        addSubPath: _addSubPath,
+        toKey: _toKey,
+        titleFrom: _titleFrom,
+        titleKey: _titleKey,
+        shortTitleFrom: _shortTitleFrom,
+        shortTitle: _shortTitle,
+        shortTitleKey: _shortTitleKey,
+        ...downstreamProps
+    } = props as ToLinkProps & Partial<ToKeyLinkProps>;
 
     return (
         <RLink {...downstreamProps} to={to} data-accent-color className={`rt-Text rt-reset rt-Link rt-underline-auto ${props.className}`}>
