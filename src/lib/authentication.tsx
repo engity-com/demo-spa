@@ -1,17 +1,20 @@
+import type { SigninRedirectArgs, User } from 'oidc-client-ts';
 import { Log, WebStorageStateStore } from 'oidc-client-ts';
 import type React from 'react';
-import { createContext, useContext, useEffect } from 'react';
+import { createContext, useContext, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { AuthProvider, hasAuthParams, useAuth } from 'react-oidc-context';
-import { type Location, Navigate, Outlet } from 'react-router';
+import { type AuthContextProps, AuthProvider, hasAuthParams, useAuth } from 'react-oidc-context';
+import { type Location, Navigate, Outlet, useLocation } from 'react-router';
 import { useTheme } from '@/components/page';
 import type { Environment, EnvironmentVariant, NamedEnvironmentVariant } from '@/environments';
 import { environment as defaultEnvironment } from '@/environments';
 import type { RouteConfiguration } from '@/lib';
 import { Loading, useProblemSink } from '@/pages';
+import type { ThemeMode } from '../components/page';
 
 interface ContextState {
     variant: NamedEnvironmentVariant;
+    environment: Environment;
 }
 
 const Context = createContext<ContextState | undefined>(undefined);
@@ -21,7 +24,7 @@ interface AuthenticationOutletProps {
     readonly variant: NamedEnvironmentVariant;
 }
 
-function environmentVariantUriPrefix(environment: Environment, variant: EnvironmentVariant): string {
+function environmentVariantUriPrefix(environment: Pick<Environment, 'clientRoot'>, variant: Pick<EnvironmentVariant, 'subPath'>): string {
     if (!variant.subPath) {
         return environment.clientRoot;
     }
@@ -32,6 +35,7 @@ function AuthenticationOutlet(props: AuthenticationOutletProps) {
     const auth = useAuth();
     const theme = useTheme();
     const problemSink = useProblemSink();
+    const location = useLocation();
 
     useEffect(() => {
         let silentLoginPossible = true;
@@ -40,6 +44,7 @@ function AuthenticationOutlet(props: AuthenticationOutletProps) {
                 // While silent renew or signinSilent there can be errors, if so, we silently ignore them here,
                 // because following we're trying the regular login...
                 silentLoginPossible = false;
+                console.log('Silent login is NOT possible');
             } else {
                 problemSink(auth.error, `Authorization context failed within ${auth.error.source}: ${auth.error.message}`);
                 return;
@@ -65,29 +70,17 @@ function AuthenticationOutlet(props: AuthenticationOutletProps) {
                 // not successful. Now we're trying the redirect login...
                 console.log('Silent login was not successful, trying interactive...');
 
-                await auth.signinRedirect({
+                await signinRedirect(auth, props.environment, props.variant, theme?.mode, {
                     state: {
-                        // We're preserving the original location to redirect the user back in case it was
-                        // successful.
-                        location,
+                        location: {
+                            ...location,
+                            state: undefined,
+                        },
                     },
-                    extraQueryParams: stripEmptyParameters({
-                        // These are optional extra parameter the Engity IdP supports.
-
-                        // Tip: The conditional expression is to ensure we only set these parameters
-                        // if they're present.
-
-                        // The user can click on cancel at the login dialog.
-                        cancel_redirect_uri:
-                            props.variant.afterLogoutUrl && `${environmentVariantUriPrefix(props.environment, props.variant)}after-cancel`,
-
-                        // Take the color scheme (light|dark) with to the login page.
-                        color_scheme: theme.mode,
-                    }),
                 });
             })();
         }
-    }, [props, theme.mode, auth, problemSink]);
+    }, [props, auth, problemSink, theme?.mode, location]);
 
     if (!auth.isAuthenticated) {
         return <Loading defaultTitle={true} visibilityDelay={true} />;
@@ -96,35 +89,35 @@ function AuthenticationOutlet(props: AuthenticationOutletProps) {
     return <Outlet />;
 }
 
-interface AuthenticationProps {
+function Authentication({
+    environment,
+    variant,
+}: {
     readonly children?: React.ReactNode;
     readonly environment: Environment;
     readonly variant: NamedEnvironmentVariant;
-}
-
-function Authentication(props: AuthenticationProps) {
-    const prefix = environmentVariantUriPrefix(props.environment, props.variant);
+}) {
+    const prefix = environmentVariantUriPrefix(environment, variant);
     const store = new WebStorageStateStore({
-        prefix: `${props.variant.key}.`,
+        prefix: `${variant.key}.`,
         store: window.localStorage,
     });
     const theme = useTheme();
     const { i18n } = useTranslation();
 
     return (
-        <Context.Provider value={{ variant: props.variant }}>
+        <Context.Provider value={{ variant, environment }}>
             <AuthProvider
-                authority={props.variant.stsAuthority}
-                client_id={props.variant.clientId}
+                authority={variant.stsAuthority}
+                client_id={variant.clientId}
                 stateStore={store}
                 userStore={store}
+                filterProtocolClaims={['nbf', 'jti', 'nonce', 'acr', 'amr', 'azp', 'at_hash']}
                 // Ensures the authentication page also uses our picks.
                 ui_locales={i18n?.language}
                 scope='openid profile email contacts offline'
                 redirect_uri={`${prefix}after-login`}
                 extraQueryParams={stripEmptyParameters({
-                    cancel_redirect_uri:
-                        props.variant.afterLogoutUrl && `${environmentVariantUriPrefix(props.environment, props.variant)}after-cancel`,
                     color_scheme: theme.mode,
                 })}
                 silent_redirect_uri={`${prefix}after-silent-login`}
@@ -143,6 +136,92 @@ export function useEnvironmentVariant() {
     return useContext(Context)?.variant;
 }
 
+async function signinRedirect(
+    auth: Pick<AuthContextProps, 'signinRedirect'>,
+    environment: Pick<Environment, 'clientRoot'>,
+    variant: Pick<EnvironmentVariant, 'subPath' | 'afterLogoutUrl'>,
+    themeMode: ThemeMode | undefined,
+    args?: SigninRedirectArgs | undefined,
+) {
+    return await auth.signinRedirect({
+        ...(args || {}),
+        extraQueryParams: stripEmptyParameters({
+            // These are optional extra parameter the Engity IdP supports.
+
+            // Tip: The conditional expression is to ensure we only set these parameters
+            // if they're present.
+            ...(args?.extraQueryParams || {}),
+
+            // Take the color scheme (light|dark) with to the login page.
+            color_scheme: themeMode,
+        }),
+    });
+}
+
+function authTimeStampOf(user: Pick<User, 'profile'> | null | undefined) {
+    let value = user?.profile?.auth_time;
+    if (typeof value === 'string') {
+        value = Number(value);
+    }
+    if (typeof value === 'number' && Number.isFinite(value) && value > 0) {
+        return value;
+    }
+    return undefined;
+}
+
+function hasFreshAuth(user: Pick<User, 'profile'> | null | undefined, maxAgeInSeconds: number) {
+    const authenticatedAt = authTimeStampOf(user);
+    if (!authenticatedAt) {
+        return false;
+    }
+
+    return Math.floor(Date.now() / 1000) - authenticatedAt <= maxAgeInSeconds;
+}
+
+export function useEnsureFreshAuthentication() {
+    const auth = useAuth();
+    const ctx = useContext(Context);
+    const variant = ctx?.variant;
+    const environment = ctx?.environment;
+    const theme = useTheme();
+    const location = useLocation();
+
+    return useMemo(
+        () =>
+            auth.user && variant && environment
+                ? async (maxAgeInSeconds: number, preserveLocation = true) => {
+                      if (hasFreshAuth(auth.user, maxAgeInSeconds)) {
+                          return true;
+                      }
+
+                      await signinRedirect(auth, environment, variant, theme?.mode, {
+                          state: {
+                              location: preserveLocation ? location : undefined,
+                          },
+                          max_age: maxAgeInSeconds,
+                      });
+                      return true;
+                  }
+                : undefined,
+        [auth, variant, environment, location, theme?.mode],
+    );
+}
+
+export function useSigninSilent() {
+    const auth = useAuth();
+
+    return useMemo(
+        () =>
+            auth?.user
+                ? async () => {
+                      const user = await auth.signinSilent();
+                      return !!user;
+                  }
+                : undefined,
+        [auth],
+    );
+}
+
 interface CallbackProps {
     readonly environment: Environment;
     readonly variant: NamedEnvironmentVariant;
@@ -154,6 +233,18 @@ function AfterLogin(props: CallbackProps) {
     // If there are not authParams and/or there is an error redirect to root
     // all this stuff will be handled there.
     if (!hasAuthParams() || auth.error) {
+        if (
+            auth.error?.innerError &&
+            typeof auth.error.innerError === 'object' &&
+            'state' in auth.error.innerError &&
+            typeof auth.error.innerError.state === 'object'
+        ) {
+            const state = auth.error.innerError.state as { location?: Location<any> };
+            if (state.location) {
+                console.log('Redirecting to location from error state:', state.location);
+                return <Navigate to={state.location} state={state.location.state} replace />;
+            }
+        }
         return <Navigate to={`/${props.variant.subPath || ''}`} />;
     }
 
@@ -161,16 +252,21 @@ function AfterLogin(props: CallbackProps) {
         return <Loading defaultTitle={true} visibilityDelay={true} />;
     }
 
-    // @ts-expect-error
-    const location: Location = auth?.user?.state?.location;
-    if (!location) {
-        return <Navigate to={`/${props.variant.subPath || ''}`} />;
+    if (
+        auth.user?.state &&
+        typeof auth.user.state === 'object' &&
+        'location' in auth.user.state &&
+        auth.user.state.location &&
+        typeof auth.user.state.location === 'object'
+    ) {
+        const location = auth.user.state.location as Location<any>;
+        return <Navigate to={location} state={location.state} replace />;
     }
 
     return <Navigate to={location} />;
 }
 
-function AfterCancelAndLogout(props: CallbackProps) {
+function AfterLogout(props: CallbackProps) {
     if (props.variant.afterLogoutUrl) {
         // As it does not make sense to redirect to our application,
         // because it does only work if logged-in, we redirect on cancel
@@ -204,12 +300,12 @@ export function authenticationRouteConfigurations(children: RouteConfiguration[]
                         element: <AfterLogin variant={v} environment={env} />,
                     },
                     {
-                        path: 'after-cancel',
-                        element: <AfterCancelAndLogout variant={v} environment={env} />,
+                        path: 'after-signup',
+                        element: <AfterLogin variant={v} environment={env} />,
                     },
                     {
                         path: 'after-logout',
-                        element: <AfterCancelAndLogout variant={v} environment={env} />,
+                        element: <AfterLogout variant={v} environment={env} />,
                     },
                     {
                         path: '*',

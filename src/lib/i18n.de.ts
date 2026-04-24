@@ -41,6 +41,10 @@ export default {
         },
         login: {
             as: 'Angemeldet als {{name}}',
+            freshen: {
+                '.': 'Login der letzten 5 Minuten erzwingen',
+                now: 'Login jetzt erzwingen',
+            },
         },
         logout: 'Abmelden',
         notFound: 'Nicht gefunden',

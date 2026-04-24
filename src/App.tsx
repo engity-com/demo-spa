@@ -1,10 +1,10 @@
 import './App.css';
-import { Breadcrumb, Header, SideBar, SideBarProvider, Theme } from '@/components/page';
-import { authenticationRouteConfigurations, resolveTitle, type RouteConfiguration, useResolvedRoutes } from '@/lib';
-import { Problem, ProblemInRouter, routes as pageRoutes } from '@/pages';
 import { type RefObject, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { createBrowserRouter, Outlet, RouterProvider } from 'react-router';
+import { Breadcrumb, Header, SideBar, SideBarProvider, Theme } from '@/components/page';
+import { authenticationRouteConfigurations, type RouteConfiguration, resolveTitle, useResolvedRoutes } from '@/lib';
+import { Problem, ProblemInRouter, routes as pageRoutes } from '@/pages';
 
 function Heading() {
     const { t } = useTranslation();

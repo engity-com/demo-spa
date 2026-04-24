@@ -50,6 +50,10 @@ export default {
         },
         login: {
             as: 'Logged in as {{name}}',
+            freshen: {
+                '.': 'Require login from last 5 minutes',
+                now: 'Login jetzt erzwingen',
+            },
         },
         logout: 'Logout',
         notFound: 'Not found',

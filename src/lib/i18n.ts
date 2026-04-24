@@ -118,6 +118,7 @@ i18next
             acc[l.code] = l;
             return acc;
         }, {}),
+        showSupportNotice: false,
         supportedLngs: languages.map((l) => l.code),
         fallbackLng: languages[0].code,
         interpolation: {

@@ -1,8 +1,8 @@
-import './index.css';
+import '@/index.css';
 import '@/lib/i18n';
-import { App } from '@/App';
 import React, { type RefObject } from 'react';
 import ReactDOM from 'react-dom/client';
+import { App } from '@/App';
 
 const problemSinkRef: RefObject<((e: unknown, msg?: string) => void) | null> = { current: null };
 
@@ -13,7 +13,3 @@ ReactDOM.createRoot(document.body, {
         <App problemSinkRef={problemSinkRef} />
     </React.StrictMode>,
 );
-
-window.onunhandledrejection = (ev) => {
-    problemSinkRef.current?.(ev.reason, 'DHO!!!???');
-};
