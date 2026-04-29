@@ -31,6 +31,7 @@ export default {
             sourceHint: 'Alle Informationen zu dieser Demo inkl. Dokumentation und Quelltext sind <here>hier</here> verfügbar.',
         },
         email: 'E-Mail',
+        ffa: 'Anmeldeverfahren',
         language: 'Sprache',
         legalNotice: {
             '.': 'Impressum',
@@ -41,11 +42,22 @@ export default {
         },
         login: {
             as: 'Angemeldet als {{name}}',
+            freshen: {
+                '.': 'Login der letzten 5 Minuten erzwingen',
+                now: 'Login jetzt erzwingen',
+                upToDate: 'Der Login ist noch aktuell.',
+            },
+            result: {
+                cancelled: 'Anmeldung abgebrochen.',
+                failed: 'Anmeldung fehlgeschlagen ({{error}}).',
+                failedMessage: 'Details: {{details}}',
+            },
         },
         logout: 'Abmelden',
         notFound: 'Nicht gefunden',
         notifications: 'Benachrichtigungen',
         profile: 'Profil',
+        security: 'Sicherheit',
         stats: {
             adViews: 'Ad Anzeigen',
             completedTasks: { '.': 'Abgeschlossene Aufgaben', subTitle: 'Seit letzter Kampagne' },
@@ -72,9 +84,15 @@ export default {
                 },
             },
         },
+        tfa: 'Zwei-Faktor Authentifizierung',
         token: {
             '.': 'Token',
-            renew: 'Token erneuern',
+            renew: {
+                '.': 'Token erneuern',
+                success: 'Erneuerung des Tokens war erfolgreich.',
+                failed: 'Erneuerung des Tokens ist fehlgeschlagen.',
+                failedMessage: 'Details: {{details}}',
+            },
         },
         views: 'Ansichten',
     },

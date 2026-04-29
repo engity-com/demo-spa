@@ -1,10 +1,11 @@
 import './App.css';
-import { Breadcrumb, Header, SideBar, SideBarProvider, Theme } from '@/components/page';
-import { authenticationRouteConfigurations, resolveTitle, type RouteConfiguration, useResolvedRoutes } from '@/lib';
-import { Problem, ProblemInRouter, routes as pageRoutes } from '@/pages';
 import { type RefObject, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { createBrowserRouter, Outlet, RouterProvider } from 'react-router';
+import { Breadcrumb, Header, SideBar, SideBarProvider, Theme, Toast } from '@/components/page';
+import { authenticationRouteConfigurations, type RouteConfiguration, resolveTitle, useResolvedRoutes } from '@/lib';
+import { Problem, ProblemInRouter, routes as pageRoutes } from '@/pages';
+import { ToastProvider } from './components/page';
 
 function Heading() {
     const { t } = useTranslation();
@@ -28,17 +29,20 @@ function Heading() {
 
 function Layout() {
     return (
-        <SideBarProvider>
-            <SideBar id='app-sidebar' />
-            <div className='container'>
-                <Header id='app-header' />
-                <Breadcrumb />
-                <main id='app-main'>
-                    <Heading />
-                    <Outlet />
-                </main>
-            </div>
-        </SideBarProvider>
+        <ToastProvider>
+            <SideBarProvider>
+                <SideBar id='app-sidebar' />
+                <div className='container'>
+                    <Header id='app-header' />
+                    <Breadcrumb />
+                    <main id='app-main'>
+                        <Heading />
+                        <Toast />
+                        <Outlet />
+                    </main>
+                </div>
+            </SideBarProvider>
+        </ToastProvider>
     );
 }
 

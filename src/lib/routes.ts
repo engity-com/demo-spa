@@ -1,6 +1,6 @@
-import type { HasShortTitle, HasShortTitleKey, HasTitle, HasTitleKey } from '@/lib/title';
-import type { ComponentType } from 'react';
+import { type ComponentType, useMemo } from 'react';
 import { type IndexRouteObject, type NonIndexRouteObject, type UIMatch, useMatches } from 'react-router';
+import type { HasShortTitle, HasShortTitleKey, HasTitle, HasTitleKey } from '@/lib/title';
 
 export interface RouteHandle extends HasTitle, HasTitleKey, HasShortTitle, HasShortTitleKey {
     readonly displayHeading?: boolean | undefined;
@@ -44,18 +44,20 @@ function asResolvedRoute(given: any): ResolvedRoute | undefined {
 
 export function useResolvedRoutes(routes?: UIMatch[]): ResolvedRoute[] {
     const used = useMatches();
-    const actualRoutes = routes || used;
-    const result: ResolvedRoute[] = [];
-    for (const route of actualRoutes) {
-        const resolved = asResolvedRoute(route);
-        if (!resolved) {
-            continue;
+    return useMemo(() => {
+        const actualRoutes = routes || used;
+        const result: ResolvedRoute[] = [];
+        for (const route of actualRoutes) {
+            const resolved = asResolvedRoute(route);
+            if (!resolved) {
+                continue;
+            }
+            if (result.length > 0 && result[result.length - 1].pathname === resolved.pathname) {
+                result[result.length - 1] = resolved;
+                continue;
+            }
+            result.push(resolved);
         }
-        if (result.length > 0 && result[result.length - 1].pathname === resolved.pathname) {
-            result[result.length - 1] = resolved;
-            continue;
-        }
-        result.push(resolved);
-    }
-    return result;
+        return result;
+    }, [routes, used]);
 }

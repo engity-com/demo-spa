@@ -39,6 +39,7 @@ export default {
             introduction: 'This page provides an overview of some of the technical details of the current user.',
         },
         email: 'Email',
+        ffa: 'Credentials',
         home: 'Home',
         language: 'Language',
         legalNotice: {
@@ -50,6 +51,16 @@ export default {
         },
         login: {
             as: 'Logged in as {{name}}',
+            freshen: {
+                '.': 'Require login from last 5 minutes',
+                now: 'Force login now',
+                upToDate: 'The Login is already up-to-date.',
+            },
+            result: {
+                cancelled: 'Login cancelled.',
+                failed: 'Login failed ({{error}}).',
+                failedMessage: 'Details: {{details}}',
+            },
         },
         logout: 'Logout',
         notFound: 'Not found',
@@ -65,6 +76,7 @@ export default {
             },
         },
         profile: 'Profile',
+        security: 'Security',
         stats: {
             adViews: 'Ad Views',
             completedTasks: { '.': 'Completed Tasks', subTitle: 'Since last campaign' },
@@ -85,6 +97,7 @@ export default {
             '.': 'Terms of Service',
             url: 'https://engity.com/terms/',
         },
+        tfa: 'Two-Factor Authentication',
         theme: {
             mode: {
                 dark: {
@@ -97,7 +110,12 @@ export default {
         },
         token: {
             '.': 'Token',
-            renew: 'Renew token',
+            renew: {
+                '.': 'Renew token',
+                success: 'Renew of the token was successful.',
+                failed: 'Renew of the token failed.',
+                failedMessage: 'Details: {{details}}',
+            },
         },
         views: 'Views',
     },

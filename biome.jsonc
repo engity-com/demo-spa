@@ -1,5 +1,5 @@
 {
-  "$schema": "https://biomejs.dev/schemas/2.3.4/schema.json",
+  "$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
   "files": {
     "includes": ["**", "!.idea/**/*", "!.node_modules/**/*", "!dist/**/*", "!src/components/ui/**/*"]
   },
@@ -37,7 +37,18 @@
         "useButtonType": "off"
       },
       "correctness": {
-        "noUnknownMediaFeatureName": "off"
+        "noUnknownMediaFeatureName": "off",
+        "useExhaustiveDependencies": {
+          "level": "error",
+          "options": {
+            "hooks": [
+              {
+                "name": "useToast",
+                "stableResult": ["add"]
+              }
+            ]
+          }
+        }
       },
       "style": {
         "noNonNullAssertion": "off"
