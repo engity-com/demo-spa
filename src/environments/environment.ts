@@ -8,6 +8,21 @@ export const environment: Environment = {
             stsAuthority: 'https://id.local.engity.dev:8988/v1/',
             clientId: '3LtsS8SrpAwkAEs5eBUVe2',
         },
+        passkey: {
+            subPath: 'passkey',
+            stsAuthority: 'https://id.local.engity.dev:8988/passkey/v1/',
+            clientId: 'BuEoWWcx2GPfAfgAp6FiJh',
+        },
+        password: {
+            subPath: 'password',
+            stsAuthority: 'https://id.local.engity.dev:8988/password/v1/',
+            clientId: 'Fu8SFo7hFt3sHWppGJiKfj',
+        },
+        socialLogins: {
+            subPath: 'password',
+            stsAuthority: 'https://id.local.engity.dev:8988/social-logins/v1/',
+            clientId: '6kuddgmuyvfarBcCsZrPU9',
+        },
         magicLink: {
             subPath: 'magic-link',
             stsAuthority: 'https://id.local.engity.dev:8988/magic-link/v1/',
