@@ -80,7 +80,7 @@ jobs:
           path: dist
 
       - name: Deploy
-        uses: cloudflare/wrangler-action@v3
+        uses: cloudflare/wrangler-action@v4
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           command: pages deploy --project-name=demo-engity-green dist/green
@@ -104,7 +104,7 @@ jobs:
           path: dist
 
       - name: Deploy
-        uses: cloudflare/wrangler-action@v3
+        uses: cloudflare/wrangler-action@v4
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           command: pages deploy --project-name=demo-engity-red dist/red
