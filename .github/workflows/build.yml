@@ -66,6 +66,9 @@ jobs:
   deploy-green:
     name: "Deploy: green"
     runs-on: ubuntu-latest
+    concurrency:
+      cancel-in-progress: true
+      group: ${{ github.workflow }}-${{github.ref}}-deploy-green
     needs:
       - lint
       - format
