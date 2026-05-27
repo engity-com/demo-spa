@@ -14,8 +14,7 @@ It is available at [https://demo.engity.app](https://demo.engity.app/).
 ## Structure
 
 * **OpenID Connect**: [oidc-client-ts](https://github.com/authts/oidc-client-ts) with [react-oidc-context](https://github.com/authts/react-oidc-context) ([src/lib/authentication.tsx](src/lib/authentication.tsx))
-  > [!NOTE]
-  > This project supports multiple sub-paths which are dynamically resolved (configured in [src/environments/environment.ts](src/environments/environment.ts)). As a result, the authentication procedure is a little bit more complex as a regular application. Please keep this in mind.
+  > ℹ️ This project supports multiple sub-paths which are dynamically resolved (configured in [src/environments/environment.ts](src/environments/environment.ts)). As a result, the authentication procedure is a little bit more complex as a regular application. Please keep this in mind.
 * **Basic Framework**: [React](https://react.dev/) (entry point: [src/index.tsx](src/index.tsx))
 
 
