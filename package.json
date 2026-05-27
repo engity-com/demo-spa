@@ -14,23 +14,9 @@
     "url": "https://github.com/engity-com/demo-spa.git"
   },
   "private": true,
-  "scripts": {
-    "ensure-ca": "mkcert --install",
-    "issue-cert": "mkdir -p .cache && mkcert -key-file .cache/server.pem -cert-file .cache/server.crt local.engity.dev",
-    "serve": "rsbuild dev --environment=dev",
-    "serve:profiler": "cross-env REACT_PROFILER=true rsbuild dev --environment=dev",
-    "build:dev": "rsbuild build --environment=dev",
-    "build:green": "rsbuild build --environment=green",
-    "build:red": "rsbuild build --environment=red",
-    "build:production": "rsbuild build --environment=green --environment=red",
-    "preview": "rsbuild preview",
-    "lint": "biome lint --fix",
-    "format": "biome format --fix"
-  },
   "dependencies": {
-    "react-oidc-context": "3.3.1",
-    "@radix-ui/themes": "3.3.0",
     "@radix-ui/react-toast": "1.2.15",
+    "@radix-ui/themes": "3.3.0",
     "apexcharts": "5.13.0",
     "base58-js": "3.0.3",
     "core-js": "3.49.0",
@@ -43,7 +29,9 @@
     "react-apexcharts": "2.1.0",
     "react-dom": "19.2.6",
     "react-i18next": "17.0.8",
+    "react-oidc-context": "3.3.1",
     "react-router": "7.15.1",
+    "tailwindcss-animate": "1.0.7",
     "uuid": "14.0.0"
   },
   "devDependencies": {
@@ -53,6 +41,7 @@
     "@rsbuild/plugin-svgr": "2.0.2",
     "@tailwindcss/postcss": "4.3.0",
     "@types/node": "25.9.1",
+    "@types/postcss-inline-svg": "5.0.4",
     "@types/react": "19.2.15",
     "@types/react-dom": "19.2.3",
     "cross-env": "10.1.0",

@@ -1,0 +1,112 @@
+[tools]
+node = "lts"
+mkcert = "latest"
+
+[env]
+_.file = [".env"]
+EDS_CACHE_DIR = "{{ [config_root, '.cache'] | join_path }}"
+EDS_CERTIFICATE_KEY = "{{ [env.EDS_CACHE_DIR, 'server.pem'] | join_path }}"
+EDS_CERTIFICATE_CERT = "{{ [env.EDS_CACHE_DIR, 'server.crt'] | join_path }}"
+
+[tasks."install"]
+description = "Installs all required dependencies."
+run = [
+    { task = "install:node" },
+    { task = "install:cert" }
+]
+
+[tasks."install:node"]
+description = "Installs all required node dependencies."
+run = { task = "install:node:{% if get_env(name='CI', default='') == 'true' %}ci{% else %}dev{% endif %}" }
+
+[tasks."install:node:dev"]
+hide = true
+run = "npm i --no-fund"
+
+[tasks."install:node:ci"]
+hide = true
+run = "npm ci"
+
+[tasks."install:ca"]
+description = "Creates a new certificate authority (CA) and installs it into the local certificate storage."
+run = [
+    "mkcert -install",
+    { task = "install:cert" }
+]
+
+[tasks."install:cert"]
+tools.mkcert = "latest"
+description = "Creates a fresh certificate/key-pair."
+run = [
+    { task = "mkdir", args = ["{{env.EDS_CACHE_DIR}}"] },
+    "mkcert -key-file {{env.EDS_CERTIFICATE_KEY}} -cert-file {{env.EDS_CERTIFICATE_CERT}} local.engity.dev"
+]
+
+[tasks."lint"]
+description = "Lint the whole project + fix if required."
+run = [
+    { task = "lint:node" }
+]
+
+[tasks."lint:node"]
+description = "Lint the whole Nodejs based code + fix if required."
+run = "npx biome lint --fix"
+
+[tasks."format"]
+description = "Format the whole project + fix if required."
+run = [
+    { task = "format:node" }
+]
+
+[tasks."format:node"]
+description = "Format the whole Nodejs based code + fix if required."
+run = "npx biome format --fix"
+
+[tasks."serve"]
+description = "Serve the application on https://local.engity.dev:4200 and watch for changes."
+run = "npx rsbuild dev --environment=dev"
+
+[tasks."serve:profiler"]
+description = "Serve the application on https://local.engity.dev:4200 and watch for changes with React Profiler enabled."
+env.REACT_PROFILER = "true"
+run = { task = "serve" }
+
+[tasks."build"]
+description = "Build the whole application for release."
+run = "npx rsbuild build --environment=green --environment=red"
+
+[tasks."build:dev"]
+description = "Build the dev variant, only."
+run = "npx rsbuild build --environment=dev"
+
+[tasks."build:green"]
+description = "Build the green variant, only."
+run = "npx rsbuild build --environment=green"
+
+[tasks."build:red"]
+description = "Build the red variant, only."
+run = "npx rsbuild build --environment=red"
+
+[tasks."preview"]
+hide = true
+run = "npx rsbuild preview"
+
+[tasks."mkdir"]
+usage = '''
+arg "<directory>" help="The directory to create."
+'''
+hide = true
+quiet = true
+run = '''
+mkdir -p '{{usage.directory}}'
+'''
+run_windows = '''
+New-Item -ItemType Directory -Path "{{usage.directory}}" -Force | Out-Null
+'''
+
+[tool_alias]
+mkcert = "aqua:FiloSottile/mkcert"
+
+[settings]
+env_file = ".env"
+windows_default_inline_shell_args = "powershell -NoProfile -ExecutionPolicy Bypass -Command"

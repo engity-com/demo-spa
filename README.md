@@ -19,7 +19,7 @@ It is available at [https://demo.engity.app](https://demo.engity.app/).
 
 
 * Language: [TypeScript](https://www.typescriptlang.org/) ([tsconfig.json](tsconfig.json))
-* Build system: [RSBuild](https://rsbuild.rs/) ([rsbuild.config.cts](rsbuild.config.cts))
+* Build system: [mise](https://mise.jdx.dev/) ([mise.toml](mise.toml)) and [RSBuild](https://rsbuild.rs/) ([rsbuild.config.mts](rsbuild.config.mts))
 * Linting/Formatting: [Biome](https://biomejs.dev/) ([biome.jsonc](biome.jsonc))
 * I18n: [i18next](https://www.i18next.com/) with [react-i18next](https://react.i18next.com/) ([src/lib/i18n.ts](src/lib/i18n.ts))
 * Router: [React Router](https://reactrouter.com/)
@@ -30,20 +30,14 @@ It is available at [https://demo.engity.app](https://demo.engity.app/).
 
 ### Requirements
 
-1. Have at least [Nodejs 23.10+ installed](https://nodejs.org/en/download/) (`node -v`)
-2. Have at least [NPM 23.10+ installed](https://nodejs.org/en/download/) (`npm -v` and `npx -v`)
-3. Have at least [mkcert v1.4.4 installed](https://github.com/FiloSottile/mkcert) (`mkcert --version`)
-4. Have all dependencies installed
-    ```shell
-    npm install
-    ```
-5. Have a local CA for your `mkcert` installed (if not already done)
+1. Have at least [mise 2026-05+ installed](https://mise.jdx.dev/installing-mise.html) (`mise --version`)
+2. Have a local CA for your `mkcert` installed (if not already done)
    ```shell
-   npm run ensure-ca
+   mise run install:ca
    ```
-6. Ensure have a certificate and key for local development of this SPA installed
+3. Have all dependencies installed
    ```shell
-   npm run issue-cert
+   mise run install
    ```
 
 ### Run
@@ -51,13 +45,19 @@ It is available at [https://demo.engity.app](https://demo.engity.app/).
 Run the local development server.
 
 ```shell
-npm run serve
+mise run serve
 ```
 
 Now it will be available at:
 1. https://local.engity.dev:4200
-2. https://local.engity.dev:4200/magic-link
-3. https://local.engity.dev:4200/username
+2. https://local.engity.dev:4200/passkey
+3. https://local.engity.dev:4200/password
+4. https://local.engity.dev:4200/social-logins
+5. https://local.engity.dev:4200/magic-link
+6. https://local.engity.dev:4200/username
+7. https://local.engity.dev:4200/tfa-required
+8. https://local.engity.dev:4200/tfa-forbidden
+9. https://local.engity.dev:4200/existence-expose
 
 > ℹ️ If you cannot resolve the host, see [FAQ: local.engity.dev cannot be resolved](#localengitydev-cannot-be-resolved);
 
