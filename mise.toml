@@ -43,24 +43,24 @@ run = [
 ]
 
 [tasks."lint"]
-description = "Lint the whole project + fix if required."
+description = "Lint the whole project + fix if required (not in CI)."
 run = [
     { task = "lint:node" }
 ]
 
 [tasks."lint:node"]
-description = "Lint the whole Nodejs based code + fix if required."
-run = "npx biome lint --fix"
+description = "Lint the whole Nodejs based code + fix if required (not in CI)."
+run = "npx biome lint{% if get_env(name='CI', default='') != 'true' %} --fix{% endif %}"
 
 [tasks."format"]
-description = "Format the whole project + fix if required."
+description = "Format the whole project + fix if required (not in CI)."
 run = [
     { task = "format:node" }
 ]
 
 [tasks."format:node"]
-description = "Format the whole Nodejs based code + fix if required."
-run = "npx biome format --fix"
+description = "Format the whole Nodejs based code + fix if required (not in CI)."
+run = "npx biome format{% if get_env(name='CI', default='') != 'true' %} --fix{% endif %}"
 
 [tasks."serve"]
 description = "Serve the application on https://local.engity.dev:4200 and watch for changes."
