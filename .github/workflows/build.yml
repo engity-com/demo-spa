@@ -112,3 +112,4 @@ jobs:
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           command: pages deploy --project-name=demo-engity-red dist/red
+

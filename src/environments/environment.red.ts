@@ -20,7 +20,7 @@ export const environment: Environment = {
             clientId: 'Fu8SFo7hFt3sHWppGJiKfj',
         },
         socialLogins: {
-            subPath: 'password',
+            subPath: 'social-logins',
             stsAuthority: 'https://id.demo.engity.app/social-logins/v1/',
             clientId: '6kuddgmuyvfarBcCsZrPU9',
         },
