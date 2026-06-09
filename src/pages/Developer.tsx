@@ -1,4 +1,3 @@
-import { Link } from '@/components';
 import { Badge, Button, Callout, Card, Code, DataList, Flex, Heading, Separator } from '@radix-ui/themes';
 import { base58_to_binary } from 'base58-js';
 import { Info } from 'lucide-react';
@@ -7,16 +6,18 @@ import { type ReactNode, useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { useAuth } from 'react-oidc-context';
 import { stringify as stringifyUuid } from 'uuid';
+import { Link } from '@/components';
+import { useEnsureFreshAuthentication, useSigninSilent } from '@/lib';
 
-interface ActionsProps {
-    readonly triggerRenew: (() => Promise<boolean>) | undefined;
-}
-
-function Actions(props: ActionsProps) {
+function Actions() {
     const { t } = useTranslation();
     const [renewResult, setRenewResult] = useState<boolean | 'active' | undefined>(undefined);
+    const [freshLoginResult, setFreshLoginResult] = useState<boolean | 'active' | undefined>(undefined);
+    const [freshNowLoginResult, setFreshNowLoginResult] = useState<boolean | 'active' | undefined>(undefined);
+    const signinSilent = useSigninSilent();
+    const ensureFreshAuthentication = useEnsureFreshAuthentication();
 
-    if (!props.triggerRenew) {
+    if (!signinSilent || !ensureFreshAuthentication) {
         return [];
     }
 
@@ -28,18 +29,36 @@ function Actions(props: ActionsProps) {
                 </Heading>
                 <Separator orientation='horizontal' size='4' />
                 <Flex direction='row' gap='2' wrap='wrap'>
-                    {props.triggerRenew && (
-                        <Button
-                            disabled={renewResult === 'active'}
-                            color={renewResult === true ? 'green' : renewResult === false ? 'red' : undefined}
-                            onClick={() => {
-                                setRenewResult('active');
-                                props.triggerRenew?.().then((v) => setRenewResult(v));
-                            }}
-                        >
-                            {t('token.renew')}
-                        </Button>
-                    )}
+                    <Button
+                        disabled={renewResult === 'active'}
+                        color={renewResult === true ? 'green' : renewResult === false ? 'red' : undefined}
+                        onClick={async () => {
+                            setRenewResult('active');
+                            setRenewResult(await signinSilent());
+                        }}
+                    >
+                        {t('token.renew')}
+                    </Button>
+                    <Button
+                        disabled={freshLoginResult === 'active'}
+                        color={freshLoginResult === true ? 'green' : freshLoginResult === false ? 'red' : undefined}
+                        onClick={async () => {
+                            setFreshLoginResult('active');
+                            setFreshLoginResult(await ensureFreshAuthentication(5 * 60));
+                        }}
+                    >
+                        {t('login.freshen')}
+                    </Button>
+                    <Button
+                        disabled={freshNowLoginResult === 'active'}
+                        color={freshNowLoginResult === true ? 'green' : freshNowLoginResult === false ? 'red' : undefined}
+                        onClick={async () => {
+                            setFreshNowLoginResult('active');
+                            setFreshNowLoginResult(await ensureFreshAuthentication(0));
+                        }}
+                    >
+                        {t('login.freshen.now')}
+                    </Button>
                 </Flex>
             </Flex>
         </Card>
@@ -77,7 +96,7 @@ function Profile(props: ProfileProps) {
     }
 
     function formatValue(k: string, v: any): ReactNode {
-        if ((k === 'exp' || k === 'iat') && typeof v === 'number') {
+        if ((k === 'exp' || k === 'iat' || k === 'auth_time') && typeof v === 'number') {
             return dateFormat(new Date(v * 1000));
         }
         if (k === 'aud' || k === 'sub') {
@@ -248,7 +267,7 @@ export function Developer() {
                 </Callout.Text>
             </Callout.Root>
 
-            <Actions triggerRenew={() => auth.signinSilent().then((u) => !!u)} />
+            <Actions />
             <Profile profile={auth.user?.profile} />
             <Token user={auth.user} />
         </Flex>

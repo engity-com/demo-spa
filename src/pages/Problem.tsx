@@ -1,9 +1,8 @@
-// @ts-expect-error
-import Img from '@/assets/dead-computer.svg';
 import { Flex, Separator, Text } from '@radix-ui/themes';
 import i18next from 'i18next';
 import { createContext, PureComponent, type ReactNode, useContext } from 'react';
 import { useRouteError } from 'react-router';
+import Img from '@/assets/dead-computer.svg';
 
 type ProblemSink = (e: unknown, msg?: string) => void;
 const Context = createContext<ProblemSink | undefined>(undefined);

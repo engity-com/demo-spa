@@ -9,6 +9,21 @@ export const environment: Environment = {
             clientId: '3LtsS8SrpAwkAEs5eBUVe2',
             afterLogoutUrl: 'https://engity.com',
         },
+        passkey: {
+            subPath: 'passkey',
+            stsAuthority: 'https://id.demo.engity.app/passkey/v1/',
+            clientId: 'BuEoWWcx2GPfAfgAp6FiJh',
+        },
+        password: {
+            subPath: 'password',
+            stsAuthority: 'https://id.demo.engity.app/password/v1/',
+            clientId: 'Fu8SFo7hFt3sHWppGJiKfj',
+        },
+        socialLogins: {
+            subPath: 'social-logins',
+            stsAuthority: 'https://id.demo.engity.app/social-logins/v1/',
+            clientId: '6kuddgmuyvfarBcCsZrPU9',
+        },
         magicLink: {
             subPath: 'magic-link',
             stsAuthority: 'https://id.demo.engity.app/magic-link/v1/',

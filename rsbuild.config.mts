@@ -1,8 +1,15 @@
-import * as fs from 'node:fs';
-import path from 'node:path';
 import { defineConfig } from '@rsbuild/core';
 import { pluginReact } from '@rsbuild/plugin-react';
 import { pluginSvgr } from '@rsbuild/plugin-svgr';
+import tailwindcssPostcss from '@tailwindcss/postcss';
+import * as fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+import postcssInlineSvg from 'postcss-inline-svg';
+import postcssMixins from 'postcss-mixins';
+import postcssNested from 'postcss-nested';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 // noinspection JSUnusedGlobalSymbols
 export default defineConfig({
@@ -29,11 +36,10 @@ export default defineConfig({
 	tools: {
 		postcss: (_, { addPlugins }) => {
 			addPlugins([
-				require('@tailwindcss/postcss')({ optimize: { minify: true } }),
-				require('postcss-inline-svg'),
-				require('postcss-mixins')({ mixinsDir: path.join(__dirname, 'src', 'mixins') }),
-				require('postcss-nested'),
-				require('@csstools/postcss-cascade-layers'),
+				tailwindcssPostcss({ optimize: { minify: true } }),
+				postcssInlineSvg,
+				postcssMixins({ mixinsDir: path.join(__dirname, 'src', 'mixins') }),
+				postcssNested,
 			]);
 		},
 	},
