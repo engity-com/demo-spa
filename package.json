@@ -35,7 +35,7 @@
     "uuid": "14.0.0"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.4.16",
+    "@biomejs/biome": "2.5.1",
     "@rsbuild/core": "2.1.1",
     "@rsbuild/plugin-react": "2.1.0",
     "@rsbuild/plugin-svgr": "2.0.3",
