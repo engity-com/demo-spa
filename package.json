@@ -15,7 +15,7 @@
   },
   "private": true,
   "dependencies": {
-    "@radix-ui/react-toast": "1.2.18",
+    "@radix-ui/react-toast": "1.2.19",
     "@radix-ui/themes": "3.3.0",
     "apexcharts": "5.15.2",
     "base58-js": "3.0.3",
