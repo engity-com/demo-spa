@@ -48,6 +48,6 @@
     "postcss-inline-svg": "6.0.0",
     "postcss-mixins": "12.1.2",
     "postcss-nested": "7.0.2",
-    "typescript": "6.0.3"
+    "typescript": "7.0.2"
   }
 }
