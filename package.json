@@ -44,7 +44,7 @@
     "@types/postcss-inline-svg": "5.0.4",
     "@types/react": "19.2.17",
     "@types/react-dom": "19.2.3",
-    "postcss": "8.5.19",
+    "postcss": "8.5.20",
     "postcss-inline-svg": "6.0.0",
     "postcss-mixins": "12.1.2",
     "postcss-nested": "7.0.2",
