@@ -42,7 +42,7 @@
     "@tailwindcss/postcss": "4.3.3",
     "@types/node": "26.1.2",
     "@types/postcss-inline-svg": "5.0.4",
-    "@types/react": "19.2.17",
+    "@types/react": "19.2.18",
     "@types/react-dom": "19.2.4",
     "postcss": "8.5.26",
     "postcss-inline-svg": "6.0.0",
