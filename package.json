@@ -36,7 +36,7 @@
   },
   "devDependencies": {
     "@biomejs/biome": "2.5.13",
-    "@rsbuild/core": "2.2.6",
+    "@rsbuild/core": "2.2.8",
     "@rsbuild/plugin-react": "2.1.0",
     "@rsbuild/plugin-svgr": "2.0.5",
     "@tailwindcss/postcss": "4.3.3",
