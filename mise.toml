@@ -1,6 +1,7 @@
 [tools]
-node = "lts"
+node   = "lts"
 mkcert = "latest"
+deno   = "latest"
 
 [env]
 _.file = [".env"]
@@ -43,7 +44,7 @@ run = [
 tools.mkcert = "latest"
 description = "Creates a fresh certificate/key-pair."
 run = [
-    { task = "mkdir", args = ["{{env.EDS_CACHE_DIR}}"] },
+    { task = "internal:mkdir", args = ["{{env.EDS_CACHE_DIR}}"] },
     "mkcert -key-file {{env.EDS_CERTIFICATE_KEY}} -cert-file {{env.EDS_CERTIFICATE_CERT}} local.engity.dev"
 ]
 
@@ -112,22 +113,5 @@ run = "npx playwright test"
 hide = true
 run = "npx rsbuild preview"
 
-[tasks."mkdir"]
-usage = '''
-arg "<directory>" help="The directory to create."
-'''
-hide = true
-quiet = true
-run = '''
-mkdir -p '{{usage.directory}}'
-'''
-run_windows = '''
-New-Item -ItemType Directory -Path "{{usage.directory}}" -Force | Out-Null
-'''
-
 [tool_alias]
 mkcert = "aqua:FiloSottile/mkcert"
-
-[settings]
-env_file = ".env"
-windows_default_inline_shell_args = "powershell -NoProfile -ExecutionPolicy Bypass -Command"
