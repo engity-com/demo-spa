@@ -39,6 +39,10 @@ It is available at [https://demo.engity.app](https://demo.engity.app/).
    ```shell
    mise run install
    ```
+4. To run the browser smoke test (builds the green variant and starts a local preview):
+   ```shell
+   mise run test
+   ```
 
 ### Run
 

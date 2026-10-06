@@ -17,7 +17,7 @@ jobs:
         uses: jdx/mise-action@v5.0.1
 
       - name: Install dependencies
-        run: mise run install
+        run: mise run install:node
 
       - name: Lint
         run: mise run lint
@@ -33,13 +33,13 @@ jobs:
         uses: jdx/mise-action@v5.0.1
 
       - name: Install dependencies
-        run: mise run install
+        run: mise run install:node
 
       - name: Format
         run: mise run format
 
   build:
-    name: Build
+    name: Build and Test
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -54,8 +54,14 @@ jobs:
       - name: Install dependencies
         run: mise run install
 
+      - name: Test React versions
+        run: mise run test:versions
+
       - name: Build
         run: mise run build
+
+      - name: Test
+        run: mise run test:browser
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v7
@@ -112,4 +118,3 @@ jobs:
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           command: pages deploy --project-name=demo-engity-red dist/red
-
