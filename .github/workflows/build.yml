@@ -3,7 +3,8 @@ on:
   push:
     branches:
       - main
-  pull_request: { }
+  pull_request:
+    types: [opened, reopened, synchronize, labeled, unlabeled]
 
 jobs:
   lint:
@@ -79,6 +80,9 @@ jobs:
       - lint
       - format
       - build
+    if: >-
+      github.ref == 'refs/heads/main' ||
+      (github.event_name == 'pull_request' && contains(github.event.pull_request.labels.*.name, 'green'))
     environment:
       name: green
       url: https://demo.engity.green
