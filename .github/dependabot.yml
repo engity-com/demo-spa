@@ -9,3 +9,10 @@ updates:
     directory: '/'
     schedule:
       interval: 'daily'
+    groups:
+      react-core:
+        patterns:
+          - 'react'
+          - 'react-dom'
+          - '@types/react'
+          - '@types/react-dom'
