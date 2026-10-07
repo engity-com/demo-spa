@@ -15,7 +15,7 @@ jobs:
         uses: actions/checkout@v7
 
       - name: Install MISE
-        uses: jdx/mise-action@v5.0.1
+        uses: jdx/mise-action@v5.1.1
 
       - name: Install dependencies
         run: mise run install:node
@@ -31,7 +31,7 @@ jobs:
         uses: actions/checkout@v7
 
       - name: Install MISE
-        uses: jdx/mise-action@v5.0.1
+        uses: jdx/mise-action@v5.1.1
 
       - name: Install dependencies
         run: mise run install:node
@@ -47,7 +47,7 @@ jobs:
         uses: actions/checkout@v7
 
       - name: Install MISE
-        uses: jdx/mise-action@v5.0.1
+        uses: jdx/mise-action@v5.1.1
 
       - name: Install CA
         run: mise run install:ca
