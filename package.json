@@ -19,7 +19,7 @@
     "@radix-ui/themes": "3.3.0",
     "apexcharts": "8.3.1",
     "base58-js": "3.0.3",
-    "core-js": "3.50.0",
+    "core-js": "3.51.0",
     "date-fns": "4.4.0",
     "i18next": "26.4.7",
     "lorem-ipsum": "3.0.0",
