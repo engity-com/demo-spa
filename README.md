@@ -13,18 +13,17 @@ It is available at [https://demo.engity.app](https://demo.engity.app/).
 
 ## Structure
 
-* **OpenID Connect**: [oidc-client-ts](https://github.com/authts/oidc-client-ts) with [react-oidc-context](https://github.com/authts/react-oidc-context) ([src/lib/authentication.tsx](src/lib/authentication.tsx))
+- **OpenID Connect**: [oidc-client-ts](https://github.com/authts/oidc-client-ts) with [react-oidc-context](https://github.com/authts/react-oidc-context) ([src/lib/authentication.tsx](src/lib/authentication.tsx))
   > ℹ️ This project supports multiple sub-paths which are dynamically resolved (configured in [src/environments/environment.ts](src/environments/environment.ts)). As a result, the authentication procedure is a little bit more complex as a regular application. Please keep this in mind.
-* **Basic Framework**: [React](https://react.dev/) (entry point: [src/index.tsx](src/index.tsx))
+- **Basic Framework**: [React](https://react.dev/) (entry point: [src/index.tsx](src/index.tsx))
 
-
-* Language: [TypeScript](https://www.typescriptlang.org/) ([tsconfig.json](tsconfig.json))
-* Build system: [mise](https://mise.jdx.dev/) ([mise.toml](mise.toml)) and [RSBuild](https://rsbuild.rs/) ([rsbuild.config.mts](rsbuild.config.mts))
-* Linting/Formatting: [Biome](https://biomejs.dev/) ([biome.jsonc](biome.jsonc))
-* I18n: [i18next](https://www.i18next.com/) with [react-i18next](https://react.i18next.com/) ([src/lib/i18n.ts](src/lib/i18n.ts))
-* Router: [React Router](https://reactrouter.com/)
-* Theme: [Radix UI](https://www.radix-ui.com/) with [Lucide React](https://lucide.dev/guide/packages/lucide-react)
-* Charts: [React ApexCharts](https://apexcharts.com/docs/react-charts/)
+- Language: [TypeScript](https://www.typescriptlang.org/) ([tsconfig.json](tsconfig.json))
+- Build system: [mise](https://mise.jdx.dev/) ([mise.toml](mise.toml)) and [RSBuild](https://rsbuild.rs/) ([rsbuild.config.mts](rsbuild.config.mts))
+- Linting/Formatting: [Biome](https://biomejs.dev/) ([biome.jsonc](biome.jsonc))
+- I18n: [i18next](https://www.i18next.com/) with [react-i18next](https://react.i18next.com/) ([src/lib/i18n.ts](src/lib/i18n.ts))
+- Router: [React Router](https://reactrouter.com/)
+- Theme: [Radix UI](https://www.radix-ui.com/) with [Lucide React](https://lucide.dev/guide/packages/lucide-react)
+- Charts: [React ApexCharts](https://apexcharts.com/docs/react-charts/)
 
 ## Development
 
@@ -32,14 +31,17 @@ It is available at [https://demo.engity.app](https://demo.engity.app/).
 
 1. Have at least [mise 2026-05+ installed](https://mise.jdx.dev/installing-mise.html) (`mise --version`)
 2. Have a local CA for your `mkcert` installed (if not already done)
+
    ```shell
    mise run install:ca
    ```
 3. Have all dependencies installed
+
    ```shell
    mise run install
    ```
 4. To run the browser smoke test (builds the green variant and starts a local preview):
+
    ```shell
    mise run test
    ```
@@ -72,15 +74,19 @@ Now it will be available at:
 Some routers enabled a feature called _DNS rebinding protection_. These will prevent external domains (like `local.engity.dev`) to be resolved to `127.0.0.1`. In this case you need either to tell your router to accept an exception for this domain or simply add an entry to your local `/etc/hosts`:
 
 1. Open the `hosts` file on your operating system:
-   * Linux/macOS
+   - Linux/macOS
+
      ```shell
      sudo vi /etc/hosts
      ```
-   * Windows
+   - Windows
+
      ```shell
      sudo notepad c:\Windows\System32\drivers\etc\hosts
      ```
+
 2. Ensure you have the following content:
+
    ```
    127.0.0.1  local.engity.dev
    ::1        local.engity.dev
